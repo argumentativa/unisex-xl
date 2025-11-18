@@ -1,36 +1,52 @@
-# UNISEX XL - Live Coding Music Web Application
+# UNISEX XL - Live Coding Music Application
 
-A browser-based live coding music application built with Tone.js. Write pattern-based music code that plays in real-time with seamless live updates.
+A browser-based live coding music application that allows you to create electronic music by writing code in real-time.
 
-## Features
+## Core Purpose
+
+UNISEX XL is a web application for creating music through code, featuring two powerful audio frameworks:
+
+1. **Tone.js** - Full-featured Web Audio synthesis framework
+2. **Strudel** - Pattern-based music notation system (used in algorave/live coding scenes)
+
+## Key Features
 
 ### Live Coding Environment
-- **Monaco Editor**: Full-featured code editor with syntax highlighting and IntelliSense
-- **Real-time Execution**: Write Tone.js code and hear results instantly
-- **Pattern-based Composition**: Create musical patterns using sequences, loops, and patterns
-- **Example Library**: Load pre-built examples to learn and experiment
+
+- **Monaco Editor** - VS Code's editor component with syntax highlighting and IntelliSense
+- **Write & Execute** - JavaScript/TypeScript code that generates music patterns
+- **Instant Feedback** - Execute code with `Cmd/Ctrl + Enter` and hear results instantly
+- **Real-time Modification** - Change code while music is playing for live performances
 
 ### Audio Engine
-- **Multiple Instruments**:
-  - Synth (Polyphonic synthesizer)
-  - Bass (Monophonic bass synthesizer)
-  - Drums (Membrane synthesizer for percussion)
-- **Audio Effects**:
-  - Reverb - Add spatial depth
-  - Delay - Echo effects
-  - Distortion - Drive and overdrive
-  - Bit Crusher - Lo-fi digital distortion
-- **Transport Controls**: Play, pause, stop with visual feedback
-- **BPM Control**: Adjust tempo from 60-200 BPM in real-time
 
-### User Interface
-- **Split-panel Layout**: Code editor on left, controls on right
-- **Audio Visualizer**: Real-time waveform display
-- **Console Output**: View logs, errors, and execution feedback
-- **Dark/Light Theme**: Toggle between color schemes
-- **Responsive Design**: Works on desktop and tablets
+**Instruments:**
+- Polyphonic synthesizer (synth)
+- Monophonic bass synthesizer (bass)
+- Membrane synthesizer for percussion (drums)
+
+**Effects Chain:**
+```
+Instruments → Distortion → Bit Crusher → Delay → Reverb → Master Volume → Output
+```
+
+**Audio Features:**
+- Transport controls (play/pause/stop)
+- BPM control (60-200 BPM)
+- Individual instrument volume control
+- Real-time effect parameter adjustment
+- Pre-loaded audio samples (kick, snare, hat, bass, tom, pad)
+
+### Visual Interface
+
+- **Split-panel Layout** - Code editor on left, controls on right
+- **Real-time Visualizer** - Waveform display showing audio output
+- **Console** - Logs, errors, and execution feedback
+- **Theme Toggle** - Dark/light mode support
+- **Responsive Design** - Works on desktop and tablets
 
 ### Keyboard Shortcuts
+
 - `Cmd/Ctrl + Enter` - Execute code
 - `Space` - Play/Pause transport
 - `Escape` - Stop transport
@@ -38,6 +54,7 @@ A browser-based live coding music application built with Tone.js. Write pattern-
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js (v16 or higher)
 - npm or yarn
 
@@ -78,17 +95,17 @@ npm run type-check
 
 ### Basic Workflow
 
-1. **Write Code**: Use the Monaco editor to write Tone.js code
-2. **Execute**: Click "Run" button or press `Cmd/Ctrl + Enter`
-3. **Control Playback**: Use play/pause/stop buttons
-4. **Adjust Parameters**: Modify BPM, effects, and instrument volumes
-5. **Monitor**: Watch the visualizer and console for feedback
+1. **Write Code** - Use the Monaco editor to write Tone.js or Strudel code
+2. **Execute** - Click "Run" button or press `Cmd/Ctrl + Enter`
+3. **Control Playback** - Use play/pause/stop buttons
+4. **Adjust Parameters** - Modify BPM, effects, and instrument volumes in real-time
+5. **Monitor** - Watch the visualizer and console for feedback
 
 ### Example Patterns
 
-Click "Load Example" to load random example code. Examples include:
+Click "Load Example" to load random example code.
 
-#### Basic Melody
+#### Basic Melody (Tone.js)
 ```javascript
 // Create a simple melodic sequence
 const melody = new Tone.Sequence((time, note) => {
@@ -98,7 +115,7 @@ const melody = new Tone.Sequence((time, note) => {
 melody.start(0);
 ```
 
-#### Drum Pattern
+#### Drum Pattern (Tone.js)
 ```javascript
 // Create a basic drum beat
 const kick = new Tone.Loop((time) => {
@@ -108,7 +125,7 @@ const kick = new Tone.Loop((time) => {
 kick.start(0);
 ```
 
-#### Bass Line
+#### Bass Line (Tone.js)
 ```javascript
 // Create a bassline pattern
 const bassPattern = new Tone.Pattern((time, note) => {
@@ -118,9 +135,16 @@ const bassPattern = new Tone.Pattern((time, note) => {
 bassPattern.start(0);
 ```
 
-### Available Objects
+#### Strudel Pattern
+```javascript
+// Strudel's concise notation
+s("bd ~ bd ~")
+  .bank("RolandTR909")
+  .gain(0.7)
+  .lpf(120)
+```
 
-When writing code, you have access to:
+### Available Objects (Tone.js Mode)
 
 - `Tone` - Full Tone.js library
 - `Transport` - Tone.js Transport for timing
@@ -128,15 +152,6 @@ When writing code, you have access to:
 - `bass` - Bass synthesizer instance
 - `drums` - Drum synthesizer instance
 - `console` - Console for logging (log, error, warn)
-
-### Pattern Types
-
-Tone.js supports several pattern types:
-
-- **Sequence**: Play notes in order at regular intervals
-- **Loop**: Repeat a function at regular intervals
-- **Pattern**: Play notes with different iteration patterns (up, down, upDown, random, etc.)
-- **Part**: Schedule events at specific times
 
 ## Project Structure
 
@@ -150,56 +165,49 @@ unisex-xl/
 │   │   └── index.ts          # TypeScript type definitions
 │   ├── utils/
 │   │   ├── audioEngine.ts    # Tone.js audio management
+│   │   ├── strudelEngine.ts  # Strudel integration
 │   │   ├── codeExecutor.ts   # Code execution sandbox
 │   │   └── examples.ts       # Example code snippets
 │   ├── styles/
 │   │   └── main.css          # Application styles
-│   └── main.ts               # Application entry point
-├── index.html                # HTML structure
+│   ├── main.ts               # Tone.js entry point
+│   └── strudel-main.ts       # Strudel entry point
+├── samples/                   # Audio samples (.wav)
+│   ├── bass/
+│   ├── hat/
+│   ├── kick/
+│   ├── pad/
+│   ├── snare/
+│   └── tom/
+├── tracks/                    # Example patterns
+│   ├── berlin-techno.dart
+│   ├── chord-layer-progression
+│   └── ...
+├── index.html                 # Tone.js interface
+├── strudel.html              # Strudel interface
 ├── package.json              # Dependencies and scripts
 ├── tsconfig.json             # TypeScript configuration
 ├── vite.config.ts            # Vite configuration
 └── README.md                 # This file
 ```
 
-## Technical Details
+## Use Cases
 
-### Technology Stack
-- **TypeScript** - Type-safe JavaScript
+- **Live Coding Performances** - Write and modify music code in real-time during performances
+- **Music Experimentation** - Test synthesis ideas and patterns quickly
+- **Learning** - Understand Web Audio API and music programming concepts
+- **Prototyping** - Sketch musical ideas programmatically before production
+
+## Tech Stack
+
+- **TypeScript** - Type-safe JavaScript for reliability
 - **Tone.js** - Web Audio framework for music synthesis
-- **Monaco Editor** - VS Code's code editor component
-- **Vite** - Fast build tool and dev server
-- **Vanilla JavaScript** - No framework overhead
-
-### Audio Architecture
-
-The audio signal flow:
-```
-Instruments → Distortion → Bit Crusher → Delay → Reverb → Master Volume → Analyzer → Output
-```
-
-Each instrument can be:
-- Enabled/disabled individually
-- Volume controlled independently
-- Routed through the effects chain
-
-### Code Execution
-
-User code is executed in a sandboxed environment using JavaScript's `Function` constructor. The execution context provides:
-- Access to Tone.js and instrument instances
-- Safe console logging
-- Isolated scope to prevent global pollution
+- **Strudel** - Pattern-based music notation system
+- **Monaco Editor** - VS Code's powerful code editor
+- **Vite** - Fast build tool and development server
+- **Vanilla JavaScript** - No framework overhead for optimal performance
 
 ## Advanced Usage
-
-### Creating Custom Patterns
-
-```javascript
-// Use Tone.js scheduling for precise timing
-Transport.scheduleRepeat((time) => {
-  synth.triggerAttackRelease('C4', '8n', time);
-}, '4n');
-```
 
 ### Combining Multiple Instruments
 
@@ -217,31 +225,40 @@ melody.start(0);
 bassline.start(0);
 ```
 
-### Using Effects Dynamically
+### Precise Timing with Transport
 
-Effects can be controlled in real-time through the UI sliders or programmatically in your code.
+```javascript
+// Use Tone.js scheduling for precise timing
+Transport.scheduleRepeat((time) => {
+  synth.triggerAttackRelease('C4', '8n', time);
+}, '4n');
+```
 
 ## Troubleshooting
 
 ### Audio Not Playing
-- Click anywhere on the page first (browser requirement)
-- Check that instruments are enabled
+- Click anywhere on the page first (browser requirement for audio context)
+- Check that instruments are enabled in the UI
 - Verify transport is playing (press Play button)
+- Check browser console for errors
 
 ### Code Errors
-- Check console for error messages
+- Check the in-app console for error messages
 - Ensure proper Tone.js syntax
 - Verify instrument names: `synth`, `bass`, `drums`
+- Make sure to start sequences/loops with `.start(0)`
 
 ### Performance Issues
 - Reduce number of simultaneous sequences
 - Simplify complex patterns
-- Lower effect values (reverb, delay)
+- Lower effect values (reverb, delay can be CPU-intensive)
+- Check CPU usage in browser task manager
 
 ## Resources
 
 - [Tone.js Documentation](https://tonejs.github.io/)
 - [Tone.js Examples](https://tonejs.github.io/examples/)
+- [Strudel Documentation](https://strudel.cc/)
 - [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
 - [Monaco Editor](https://microsoft.github.io/monaco-editor/)
 
