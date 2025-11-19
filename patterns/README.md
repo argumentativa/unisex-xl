@@ -155,11 +155,11 @@ When adding new patterns:
 
 ## 📊 Pattern Statistics
 
-- **Total Patterns**: 14
-  - Strudel: 10 files
-  - Tone.js: 4 files
-- **Genres**: Techno, Industrial, Experimental, Ambient
-- **BPM Range**: 120-157
+- **Total Patterns**: 16
+  - Strudel: 8 files
+  - Tone.js: 8 files
+- **Genres**: Techno, Industrial, Experimental, Ambient, Drum & Bass
+- **BPM Range**: 120-202 (techno to DnB)
 
 ## 🔗 Related Files
 
