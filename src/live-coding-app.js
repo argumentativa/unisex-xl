@@ -41,34 +41,47 @@ const App = {
   
   // Init
   async init() {
-    this.log('🚀 Initializing UNISEX XL Live Coding...', 'info');
-    this.showLoading(true);
-    
-    // Wait for libraries to load
-    await this.waitForLibraries();
-    
-    // Initialize Strudel
-    const { evaluate, silence } = strudel;
-    this.evaluate = evaluate;
-    this.silence = silence;
-    
-    // Get DOM elements
-    this.getElements();
-    
-    // Initialize visualizer
-    this.initVisualizer();
-    
-    // Load pattern library
-    await this.loadPatternLibrary();
-    
-    // Setup event listeners
-    this.setupEventListeners();
-    
-    // Setup keyboard shortcuts
-    this.setupKeyboardShortcuts();
-    
-    this.showLoading(false);
-    this.log('✅ System ready - Press Ctrl+Enter to play!', 'success');
+    try {
+      this.log('🚀 Initializing UNISEX XL Live Coding...', 'info');
+      this.showLoading(true);
+      
+      // Wait for libraries to load
+      await this.waitForLibraries();
+      
+      // Get DOM elements first (needed for logging)
+      this.getElements();
+      
+      // Initialize Strudel
+      if (typeof strudel === 'undefined') {
+        throw new Error('Strudel library not loaded');
+      }
+      const { evaluate, silence } = strudel;
+      this.evaluate = evaluate;
+      this.silence = silence;
+      
+      // Initialize visualizer
+      this.initVisualizer();
+      
+      // Load pattern library
+      await this.loadPatternLibrary();
+      
+      // Setup event listeners
+      this.setupEventListeners();
+      
+      // Setup keyboard shortcuts
+      this.setupKeyboardShortcuts();
+      
+      // Set initial mode
+      this.setMode('live-coding');
+      
+      this.showLoading(false);
+      this.log('✅ System ready - Press Ctrl+Enter to play!', 'success');
+    } catch (error) {
+      this.showLoading(false);
+      this.log(`❌ Initialization error: ${error.message}`, 'error');
+      console.error('App initialization error:', error);
+      alert(`Failed to initialize app: ${error.message}\n\nCheck browser console for details.`);
+    }
   },
   
   // ============================================
@@ -107,11 +120,35 @@ const App = {
     this.mainContainer = document.getElementById('main-container');
     this.patternLibrary = document.getElementById('patternLibrary');
     this.patternList = document.getElementById('patternList');
+    
+    // Verify critical elements exist
+    const criticalElements = [
+      { name: 'playBtn', el: this.playBtn },
+      { name: 'codeEditor', el: this.codeEditor },
+      { name: 'console', el: this.console },
+      { name: 'visualizer-container', el: document.getElementById('visualizer-container') }
+    ];
+    
+    const missing = criticalElements.filter(item => !item.el);
+    if (missing.length > 0) {
+      throw new Error(`Missing DOM elements: ${missing.map(m => m.name).join(', ')}`);
+    }
   },
   
   initVisualizer() {
-    this.log('🎨 Initializing visualizer...', 'info');
-    this.visualizer = new LiveCodingVisualizer('visualizer-container');
+    try {
+      this.log('🎨 Initializing visualizer...', 'info');
+      
+      if (typeof LiveCodingVisualizer === 'undefined') {
+        throw new Error('LiveCodingVisualizer class not found. Make sure live-coding-visualizer.js is loaded.');
+      }
+      
+      this.visualizer = new LiveCodingVisualizer('visualizer-container');
+      this.log('✅ Visualizer initialized', 'success');
+    } catch (error) {
+      this.log(`❌ Visualizer error: ${error.message}`, 'error');
+      console.error('Visualizer initialization error:', error);
+    }
   },
   
   async loadPatternLibrary() {
@@ -210,7 +247,11 @@ const App = {
       await Tone.start();
       
       // Start visualizer audio connection
-      this.visualizer.startAudio();
+      if (this.visualizer) {
+        this.visualizer.startAudio();
+      } else {
+        this.log('⚠️ Visualizer not initialized', 'error');
+      }
       
       // Get code
       const code = this.codeEditor.value.trim();
@@ -324,8 +365,10 @@ const App = {
     
     // Visual preset
     this.vizPreset.addEventListener('change', (e) => {
-      this.visualizer.setPreset(e.target.value);
-      this.log(`🎨 Visual preset: ${e.target.value}`, 'info');
+      if (this.visualizer) {
+        this.visualizer.setPreset(e.target.value);
+        this.log(`🎨 Visual preset: ${e.target.value}`, 'info');
+      }
     });
     
     // Mode switching
@@ -421,15 +464,27 @@ const App = {
   // ============================================
   
   log(message, type = 'info') {
-    const line = document.createElement('div');
-    line.className = `console-line ${type}`;
-    line.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-    this.console.appendChild(line);
-    this.console.scrollTop = this.console.scrollHeight;
+    // Always log to browser console
+    const timestamp = `[${new Date().toLocaleTimeString()}]`;
+    console.log(`${timestamp} ${message}`);
     
-    // Keep console size manageable
-    while (this.console.children.length > 50) {
-      this.console.removeChild(this.console.firstChild);
+    // Also log to UI console if available
+    if (this.console) {
+      try {
+        const line = document.createElement('div');
+        line.className = `console-line ${type}`;
+        line.textContent = `${timestamp} ${message}`;
+        this.console.appendChild(line);
+        this.console.scrollTop = this.console.scrollHeight;
+        
+        // Keep console size manageable
+        while (this.console.children.length > 50) {
+          this.console.removeChild(this.console.firstChild);
+        }
+      } catch (error) {
+        // Silently fail if console element has issues
+        console.warn('Could not write to UI console:', error);
+      }
     }
   },
   
