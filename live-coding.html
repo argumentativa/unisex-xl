@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNISEX XL - Live Coding + Visualizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #00ff00;
+            overflow: hidden;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 100vh;
+            gap: 0;
+            transition: grid-template-columns 0.3s ease;
+        }
+
+        /* Mode-specific layouts */
+        .container.performance-mode {
+            grid-template-columns: 0.3fr 1fr;
+        }
+
+        .container.studio-mode {
+            grid-template-columns: 1.2fr 1fr;
+        }
+
+        .left-panel {
+            background: #0a0a0a;
+            border-right: 2px solid #00ff00;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .right-panel {
+            background: #000;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Toolbar */
+        .toolbar {
+            padding: 15px 20px;
+            background: #111;
+            border-bottom: 2px solid #00ff00;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .toolbar-section {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            background: #00ff00;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            transition: all 0.2s;
+            color: #000;
+        }
+
+        button:hover {
+            background: #00cc00;
+            transform: scale(1.05);
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        button.stop {
+            background: #ff0000;
+            color: #fff;
+        }
+
+        button.stop:hover {
+            background: #cc0000;
+        }
+
+        button.secondary {
+            background: #333;
+            color: #00ff00;
+        }
+
+        button.secondary:hover {
+            background: #444;
+        }
+
+        button.active {
+            background: #ffff00;
+            color: #000;
+            box-shadow: 0 0 10px #ffff00;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 14px;
+            background: #222;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            cursor: pointer;
+        }
+
+        select:hover {
+            background: #333;
+        }
+
+        /* Pattern Library */
+        .pattern-library {
+            padding: 15px 20px;
+            background: #0d0d0d;
+            border-bottom: 2px solid #00ff00;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .pattern-library.hidden {
+            display: none;
+        }
+
+        .pattern-library h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #00ff00;
+        }
+
+        .pattern-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .pattern-item {
+            padding: 8px 12px;
+            background: #1a1a1a;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+
+        .pattern-item:hover {
+            background: #00ff00;
+            color: #000;
+        }
+
+        /* Code Editor */
+        .code-area {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #0a0a0a;
+        }
+
+        .code-editor {
+            width: 100%;
+            height: 100%;
+            min-height: 400px;
+            background: #0a0a0a;
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: none;
+            outline: none;
+        }
+
+        .code-editor:focus {
+            border-color: #00ff88;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        /* Console */
+        .console {
+            height: 150px;
+            background: #111;
+            border-top: 2px solid #00ff00;
+            padding: 15px;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .console.hidden {
+            display: none;
+        }
+
+        .console-line {
+            margin-bottom: 5px;
+            color: #888;
+        }
+
+        .console-line.error {
+            color: #ff0000;
+        }
+
+        .console-line.success {
+            color: #00ff00;
+        }
+
+        .console-line.info {
+            color: #00ffff;
+        }
+
+        /* Visualizer Container */
+        #visualizer-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        /* Mode Indicator */
+        .mode-indicator {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 2px solid #00ff00;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 100;
+        }
+
+        /* Shortcuts Help */
+        .shortcuts-help {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #00ff00;
+            font-size: 11px;
+            line-height: 1.6;
+            z-index: 100;
+            max-width: 250px;
+            display: none;
+        }
+
+        .shortcuts-help.visible {
+            display: block;
+        }
+
+        .shortcuts-help h4 {
+            margin-bottom: 8px;
+            color: #00ff00;
+            font-size: 13px;
+        }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .shortcut-key {
+            color: #ffff00;
+            font-weight: bold;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00ff00;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00cc00;
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .loading-overlay.visible {
+            display: flex;
+        }
+
+        .loading-content {
+            text-align: center;
+        }
+
+        .loading-spinner {
+            border: 4px solid #333;
+            border-top: 4px solid #00ff00;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="main-container">
+        <!-- LEFT PANEL: Code Editor -->
+        <div class="left-panel">
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <div class="toolbar-section">
+                    <span class="title">🎵 UNISEX XL</span>
+                </div>
+                <div class="toolbar-section">
+                    <button id="playBtn" title="Play Pattern (Ctrl+Enter)">▶️ PLAY</button>
+                    <button id="stopBtn" class="stop" title="Stop Pattern (Ctrl+.)">⏹️ STOP</button>
+                </div>
+                <div class="toolbar-section">
+                    <select id="patternSelect" title="Load Pattern">
+                        <option value="">📁 Load Pattern...</option>
+                    </select>
+                    <button id="saveBtn" class="secondary" title="Save Pattern (Ctrl+S)">💾</button>
+                </div>
+                <div class="toolbar-section">
+                    <button id="liveCodingMode" class="secondary mode-btn active" data-mode="live-coding">💻 Live</button>
+                    <button id="performanceMode" class="secondary mode-btn" data-mode="performance">🎤 Performance</button>
+                    <button id="studioMode" class="secondary mode-btn" data-mode="studio">🏭 Studio</button>
+                </div>
+                <div class="toolbar-section">
+                    <select id="vizPreset" title="Visual Intensity">
+                        <option value="aggressive">Aggressive</option>
+                        <option value="extreme">Extreme</option>
+                        <option value="subtle">Subtle</option>
+                    </select>
+                    <button id="helpBtn" class="secondary" title="Keyboard Shortcuts (?)">❓</button>
+                </div>
+            </div>
+
+            <!-- Pattern Library -->
+            <div class="pattern-library" id="patternLibrary">
+                <h3>📚 Pattern Library</h3>
+                <div class="pattern-list" id="patternList">
+                    <!-- Patterns loaded dynamically -->
+                </div>
+            </div>
+
+            <!-- Code Editor -->
+            <div class="code-area">
+                <textarea class="code-editor" id="codeEditor" spellcheck="false" placeholder="// Write your Strudel pattern here...
+// Example:
+// cps(0.654) // 157 BPM
+// s(&quot;bd ~ bd ~&quot;).gain(1.2)">cps(0.654) // 157 BPM
+
+stack(
+  // Kick
+  s("bd ~ bd ~")
+    .bank("RolandTR909")
+    .lpf(120)
+    .shape(0.2)
+    .gain(1.2),
+  
+  // Bass
+  note("b1 e2 b1 d3")
+    .s("sawtooth")
+    .lpf(400)
+    .shape(0.65)
+    .gain(0.8),
+  
+  // Snare
+  s("~ sd ~ sd")
+    .bank("RolandTR909")
+    .shape(0.6)
+    .gain(0.65),
+  
+  // Hi-hats
+  s("hh*8")
+    .bank("RolandTR909")
+    .hpf(8000)
+    .gain(0.4)
+)</textarea>
+            </div>
+
+            <!-- Console -->
+            <div class="console" id="console">
+                <div class="console-line success">✅ System ready</div>
+                <div class="console-line info">💡 Press Ctrl+Enter to play, Ctrl+. to stop</div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: Visualizer -->
+        <div class="right-panel">
+            <div class="mode-indicator" id="modeIndicator">LIVE CODING MODE</div>
+            <div id="visualizer-container"></div>
+            
+            <!-- Shortcuts Help -->
+            <div class="shortcuts-help" id="shortcutsHelp">
+                <h4>⌨️ Keyboard Shortcuts</h4>
+                <div class="shortcut-item">
+                    <span>Play/Restart</span>
+                    <span class="shortcut-key">Ctrl+Enter</span>
+                </div>
+                <div class="shortcut-item">
+                    <span>Stop</span>
+                    <span class="shortcut-key">Ctrl+.</span>
+                </div>
+                <div class="shortcut-item">
+                    <span>Save Pattern</span>
+                    <span class="shortcut-key">Ctrl+S</span>
+                </div>
+                <div class="shortcut-item">
+                    <span>Toggle Editor</span>
+                    <span class="shortcut-key">Ctrl+E</span>
+                </div>
+                <div class="shortcut-item">
+                    <span>Help</span>
+                    <span class="shortcut-key">?</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div>Loading libraries...</div>
+        </div>
+    </div>
+
+    <!-- Load Libraries -->
+    <script src="p5js/libraries/p5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tone@15.0.4/build/Tone.js"></script>
+    <script src="https://unpkg.com/@strudel/core"></script>
+    <script src="https://unpkg.com/@strudel/mini"></script>
+    <script src="https://unpkg.com/@strudel/webaudio"></script>
+    <script src="https://unpkg.com/@strudel/transpiler"></script>
+
+    <!-- Main Application Script -->
+    <script src="src/live-coding-app.js"></script>
+</body>
+</html>
+
