@@ -503,15 +503,30 @@ stack(
           console.log('Loading Strudel modules via esm.sh...');
           
           // Use import map for module resolution (handles nested deps better)
-          // Load all required Strudel modules including soundfonts
+          // Load core Strudel modules first
           console.log('Loading Strudel modules...');
-          const [core, mini, webaudio, transpiler, soundfonts] = await Promise.all([
+          const [core, mini, webaudio, transpiler] = await Promise.all([
             import('@strudel/core'),
             import('@strudel/mini'),
             import('@strudel/webaudio'),
-            import('@strudel/transpiler'),
-            import('@strudel/soundfonts')
+            import('@strudel/transpiler')
           ]);
+          
+          // Try to load soundfonts (optional - may fail due to dependency issues)
+          let soundfonts = null;
+          try {
+            soundfonts = await import('@strudel/soundfonts');
+            console.log('✅ Soundfonts module loaded');
+          } catch (err) {
+            console.warn('⚠️ Could not load soundfonts module:', err.message);
+            console.warn('⚠️ Drum samples (.bank()) will not be available, but synth sounds will work');
+            // Create a dummy soundfonts object so code doesn't break
+            soundfonts = {
+              registerSoundfonts: async () => {
+                console.warn('⚠️ Soundfonts not available - skipping registration');
+              }
+            };
+          }
           
           console.log('✅ All Strudel modules loaded');
           
@@ -519,11 +534,16 @@ stack(
           console.log('Initializing Strudel webaudio REPL...');
           
           // First, set up evalScope with all modules (needed for functions like stack, setcps, etc.)
-          // IMPORTANT: Include soundfonts in evalScope so .bank() works
+          // IMPORTANT: Include soundfonts in evalScope so .bank() works (if available)
           const evalScopeFn = core.evalScope || core.default?.evalScope;
           if (evalScopeFn) {
-            await evalScopeFn(core, mini, soundfonts);
-            console.log('✅ evalScope initialized (with soundfonts)');
+            if (soundfonts && soundfonts !== null) {
+              await evalScopeFn(core, mini, soundfonts);
+              console.log('✅ evalScope initialized (with soundfonts)');
+            } else {
+              await evalScopeFn(core, mini);
+              console.log('✅ evalScope initialized (without soundfonts - synth sounds only)');
+            }
           }
           
           // Register synth sounds BEFORE webaudioRepl
