@@ -257,10 +257,11 @@ Transport.scheduleRepeat((time) => {
 ## Production Guides
 
 ### Internal Documentation
-- **[Documentation README](docs/README.md)** - Overview of all production guides
-- **[Production Guide (DRAFT)](docs/ATTACK-MAGAZINE-GUIDE-DRAFT.md)** - General dance music techniques (unverified)
-- **[Personal Notes Template](docs/ATTACK-MAGAZINE-NOTES.md)** - Template for your learning notes
-- **[Quick Reference Card](docs/QUICK-REFERENCE.md)** - Essential parameters cheat sheet
+- **[Documentation Index](docs/README.md)** - Overview of all production guides
+- **[Production Guide (DRAFT)](docs/production/ATTACK-MAGAZINE-GUIDE-DRAFT.md)** - General dance music techniques (unverified)
+- **[Personal Notes Template](docs/production/ATTACK-MAGAZINE-NOTES.md)** - Template for your learning notes
+- **[Quick Reference Card](docs/production/QUICK-REFERENCE.md)** - Essential parameters cheat sheet
+- **[Code Examples](docs/examples/SAMPLES.md)** - Working examples with custom samples
 - **[Project Analysis](PROJECT-ANALYSIS.md)** - Complete project breakdown
 
 **Note:** Production guides contain general industry knowledge, not verified book content.

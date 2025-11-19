@@ -1,8 +1,22 @@
 # UNISEX-XL Documentation
 
+## Folder Structure
+
+```
+docs/
+├── README.md (this file)
+├── production/ - Production guides & techniques
+│   ├── ATTACK-MAGAZINE-GUIDE-DRAFT.md
+│   ├── ATTACK-MAGAZINE-NOTES.md
+│   └── QUICK-REFERENCE.md
+├── examples/ - Code examples & patterns
+│   └── SAMPLES.md
+└── cheatsheet/ - Strudel reference materials
+```
+
 ## About These Guides
 
-### Current Status
+### Production Guides (`production/`)
 
 📝 **ATTACK-MAGAZINE-GUIDE-DRAFT.md** - General dance music production knowledge  
 - **Status:** UNVERIFIED - Contains industry-standard practices but NOT verified against actual Attack Magazine content
@@ -16,6 +30,10 @@
 ✅ **QUICK-REFERENCE.md** - Cheat sheet based on general knowledge  
 - **Use:** Quick parameter reference while coding
 - **Note:** Not book-specific, just common production values
+
+### Examples (`examples/`)
+
+📄 **SAMPLES.md** - Working examples using custom Kit01 samples
 
 ---
 
