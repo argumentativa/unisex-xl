@@ -10,8 +10,8 @@ let size;
 let asciiChar = "█▓▒░@%#*+=:. ";
 
 // REDUCED RESOLUTION for performance (64 vs 100)
-let w = 64;  // Lower = MUCH faster
-let h = 48;
+let w = 24;  // Lower = MUCH faster
+let h = 16;
 
 // ============================================
 // AUDIO VARIABLES
@@ -38,6 +38,12 @@ let imgPixels;
 // Performance settings
 const SHOW_DEBUG = true; // Set to true to show audio levels
 const TARGET_FPS = 60; // Can reduce to 30 for better performance
+const ASCII_PRESETS = {
+  detailed: "█▓▒░@%#*+=:. ",
+  standard: "█▓▒░@*:. ",
+  minimal: "█▒░ ",
+  binary: "█ "
+};
 
 // ============================================
 // PRELOAD
