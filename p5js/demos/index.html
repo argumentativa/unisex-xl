@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNISEX XL - P5.js Demos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 3em;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px #00ff00;
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+
+        .nav-links {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #00ff00;
+        }
+
+        .nav-links a {
+            color: #00ff00;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 10px 20px;
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: #00ff00;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #111;
+            border-radius: 10px;
+            border: 2px solid #00ff00;
+        }
+
+        .section h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .demo-card {
+            background: #1a1a1a;
+            border: 2px solid #00ff00;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: #00ff00;
+            display: block;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 255, 0, 0.3);
+            background: #222;
+        }
+
+        .demo-card h3 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            color: #00ff00;
+        }
+
+        .demo-card p {
+            color: #888;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .demo-card .tag {
+            display: inline-block;
+            background: #00ff00;
+            color: #000;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-top: 10px;
+            margin-right: 5px;
+            font-weight: bold;
+        }
+
+        .tag.featured {
+            background: #ff00ff;
+        }
+
+        .tag.audio {
+            background: #00ffff;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 2px solid #00ff00;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 P5.js Demos</h1>
+        <div class="subtitle">Audio-Reactive ASCII Art Visualizations</div>
+
+        <div class="nav-links">
+            <a href="../../index.html">← Main App</a>
+            <a href="../../demos/index.html">Root Demos</a>
+            <a href="../index.html">P5.js Playground</a>
+        </div>
+
+        <div class="section">
+            <h2>🖼️ Image ASCII Art</h2>
+            <div class="demo-grid">
+                <a href="image-ascii/image-ascii.html" class="demo-card">
+                    <h3>Basic Image ASCII</h3>
+                    <p>Simple ASCII art conversion from image</p>
+                    <span class="tag">BASIC</span>
+                    <span class="tag">IMAGE</span>
+                </a>
+
+                <a href="image-ascii/image-ascii-color.html" class="demo-card">
+                    <h3>Color Image ASCII</h3>
+                    <p>ASCII art with color preservation</p>
+                    <span class="tag">COLOR</span>
+                    <span class="tag">IMAGE</span>
+                </a>
+
+                <a href="image-ascii/image-ascii-color-bold.html" class="demo-card">
+                    <h3>Bold Color ASCII + Audio</h3>
+                    <p>Bold ASCII art with audio reactivity (BlackHole)</p>
+                    <span class="tag featured">FEATURED</span>
+                    <span class="tag audio">AUDIO</span>
+                    <span class="tag">BOLD</span>
+                </a>
+
+                <a href="image-ascii/image-ascii-color-bold-mic.html" class="demo-card">
+                    <h3>ASCII + Microphone</h3>
+                    <p>Audio-reactive ASCII using microphone input</p>
+                    <span class="tag audio">MIC</span>
+                    <span class="tag">BOLD</span>
+                </a>
+
+                <a href="image-ascii/image-ascii-color-bold-OPTIMIZED.html" class="demo-card">
+                    <h3>Optimized ASCII Visualizer</h3>
+                    <p>Performance-optimized version with audio reactivity</p>
+                    <span class="tag featured">OPTIMIZED</span>
+                    <span class="tag audio">AUDIO</span>
+                </a>
+
+                <a href="image-ascii/image-ascii-color-bold-strudel.html" class="demo-card">
+                    <h3>ASCII + Strudel Live Coding</h3>
+                    <p>Split-screen: Strudel editor + ASCII visualizer</p>
+                    <span class="tag featured">STRUDEL</span>
+                    <span class="tag audio">LIVE CODING</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>📹 Video ASCII Art (Webcam)</h2>
+            <div class="demo-grid">
+                <a href="video-ascii/video-ascii.html" class="demo-card">
+                    <h3>Basic Video ASCII</h3>
+                    <p>Real-time webcam to ASCII conversion</p>
+                    <span class="tag">WEBCAM</span>
+                    <span class="tag">BASIC</span>
+                </a>
+
+                <a href="video-ascii/video-ascii-bold.html" class="demo-card">
+                    <h3>Bold Video ASCII</h3>
+                    <p>Enhanced webcam ASCII with bold text</p>
+                    <span class="tag">WEBCAM</span>
+                    <span class="tag">BOLD</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎵 Strudel Integration</h2>
+            <div class="demo-grid">
+                <a href="strudel/demo-with-strudel.html" class="demo-card">
+                    <h3>Strudel + ASCII Visualizer</h3>
+                    <p>Full split-screen interface: Strudel live coding with ASCII visualization</p>
+                    <span class="tag featured">FEATURED</span>
+                    <span class="tag audio">STRUDEL</span>
+                    <span class="tag">157 BPM</span>
+                </a>
+
+                <a href="strudel/test-tonejs.html" class="demo-card">
+                    <h3>Tone.js Test Pattern</h3>
+                    <p>Simple test pattern for audio visualization development</p>
+                    <span class="tag audio">TONE.JS</span>
+                    <span class="tag">TEST</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🧪 Experimental</h2>
+            <div class="demo-grid">
+                <a href="misc/test-animation.html" class="demo-card">
+                    <h3>Animation Test</h3>
+                    <p>Experimental animation tests</p>
+                    <span class="tag">TEST</span>
+                </a>
+            </div>
+        </div>
+
+        <footer>
+            <p>UNISEX XL - P5.js Audio-Reactive Visualizations</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">All demos use p5.js for graphics and various audio libraries for reactivity</p>
+        </footer>
+    </div>
+</body>
+</html>

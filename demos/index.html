@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNISEX XL - Root Demos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #00ff00;
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 3em;
+            text-align: center;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px #00ff00;
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+
+        .nav-links {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #00ff00;
+        }
+
+        .nav-links a {
+            color: #00ff00;
+            text-decoration: none;
+            margin: 0 15px;
+            padding: 10px 20px;
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: #00ff00;
+            color: #000;
+            transform: translateY(-2px);
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #111;
+            border-radius: 10px;
+            border: 2px solid #00ff00;
+        }
+
+        .section h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #00ff00;
+            text-shadow: 0 0 10px #00ff00;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .demo-card {
+            background: #1a1a1a;
+            border: 2px solid #00ff00;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: #00ff00;
+            display: block;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 255, 0, 0.3);
+            background: #222;
+        }
+
+        .demo-card h3 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            color: #00ff00;
+        }
+
+        .demo-card p {
+            color: #888;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        .demo-card .tag {
+            display: inline-block;
+            background: #00ff00;
+            color: #000;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 2px solid #00ff00;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎵 UNISEX XL</h1>
+        <div class="subtitle">Root Level Demos</div>
+
+        <div class="nav-links">
+            <a href="../index.html">← Main App</a>
+            <a href="../p5js/demos/index.html">P5.js Demos →</a>
+        </div>
+
+        <div class="section">
+            <h2>🎨 ASCII Visualizers</h2>
+            <div class="demo-grid">
+                <a href="ascii/ascii-visualizer-test.html" class="demo-card">
+                    <h3>ASCII Visualizer Test</h3>
+                    <p>Test implementation of ASCII art visualization</p>
+                    <span class="tag">ASCII</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🎵 Strudel Live Coding</h2>
+            <div class="demo-grid">
+                <a href="strudel/strudel.html" class="demo-card">
+                    <h3>Strudel Live Coding</h3>
+                    <p>Interactive live coding environment with Strudel</p>
+                    <span class="tag">STRUDEL</span>
+                    <span class="tag">LIVE CODING</span>
+                </a>
+
+                <a href="strudel/strudel-webcam-ascii.html" class="demo-card">
+                    <h3>Strudel + Webcam ASCII</h3>
+                    <p>Strudel live coding combined with webcam ASCII visualization</p>
+                    <span class="tag">STRUDEL</span>
+                    <span class="tag">WEBCAM</span>
+                    <span class="tag">ASCII</span>
+                </a>
+            </div>
+        </div>
+
+        <footer>
+            <p>UNISEX XL - Live Coding Music Web Application</p>
+            <p style="margin-top: 10px; font-size: 0.9em;">Navigate using the links above to explore all demos</p>
+        </footer>
+    </div>
+</body>
+</html>
