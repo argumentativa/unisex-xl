@@ -1,22 +1,18 @@
 /**
- * Code Executor - Safely executes user's Tone.js or Strudel code
+ * Code Executor - Safely executes user's Tone.js code
  */
 
 import * as Tone from 'tone';
 import type { AudioEngine } from './audioEngine';
-import type { StrudelEngine } from './strudelEngine';
-import type { ConsoleMessage, CodeMode } from '../types';
+import type { ConsoleMessage } from '../types';
 
 export class CodeExecutor {
   private audioEngine: AudioEngine;
-  private strudelEngine?: StrudelEngine;
   private consoleMessages: ConsoleMessage[] = [];
   private onConsoleUpdate?: (messages: ConsoleMessage[]) => void;
-  private mode: CodeMode = 'tonejs';
 
-  constructor(audioEngine: AudioEngine, strudelEngine?: StrudelEngine) {
+  constructor(audioEngine: AudioEngine) {
     this.audioEngine = audioEngine;
-    this.strudelEngine = strudelEngine;
   }
 
   /**
@@ -52,35 +48,9 @@ export class CodeExecutor {
   }
 
   /**
-   * Set execution mode
-   */
-  setMode(mode: CodeMode): void {
-    this.mode = mode;
-    this.log('info', `Mode switched to: ${mode}`);
-  }
-
-  /**
-   * Get current mode
-   */
-  getMode(): CodeMode {
-    return this.mode;
-  }
-
-  /**
-   * Execute user code based on current mode
-   */
-  async execute(code: string): Promise<void> {
-    if (this.mode === 'strudel') {
-      await this.executeStrudel(code);
-    } else {
-      await this.executeToneJS(code);
-    }
-  }
-
-  /**
    * Execute Tone.js code
    */
-  private async executeToneJS(code: string): Promise<void> {
+  async execute(code: string): Promise<void> {
     try {
       // Clear previous scheduled events
       this.audioEngine.stop();
@@ -112,36 +82,6 @@ export class CodeExecutor {
       const errorMessage = error instanceof Error ? error.message : String(error);
       this.log('error', `Error: ${errorMessage}`);
       console.error('Tone.js execution error:', error);
-    }
-  }
-
-  /**
-   * Execute Strudel code
-   */
-  private async executeStrudel(code: string): Promise<void> {
-    try {
-      if (!this.strudelEngine) {
-        this.log('error', 'Strudel engine not initialized');
-        return;
-      }
-
-      // Stop Tone.js transport when using Strudel
-      this.audioEngine.stop();
-
-      this.log('info', 'Executing Strudel code...');
-
-      // Evaluate Strudel pattern
-      const result = await this.strudelEngine.evaluate(code);
-
-      if (result.error) {
-        this.log('error', `Strudel error: ${result.error}`);
-      } else {
-        this.log('success', 'Strudel pattern loaded successfully!');
-      }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      this.log('error', `Error: ${errorMessage}`);
-      console.error('Strudel execution error:', error);
     }
   }
 

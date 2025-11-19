@@ -129,10 +129,8 @@ export class AudioEngine {
       wet: 0
     });
 
-    const bitcrusher = new Tone.BitCrusher({
-      bits: 16,
-      wet: 0
-    });
+    const bitcrusher = new Tone.BitCrusher(16);
+    bitcrusher.wet.value = 0;
 
     this.effects.set('reverb', {
       type: 'reverb',
@@ -260,10 +258,8 @@ export class AudioEngine {
         oldCrusher.dispose();
 
         // Create new crusher with updated bits
-        const newCrusher = new Tone.BitCrusher({
-          bits: Math.round(value),
-          wet: value < 16 ? 1 : 0
-        });
+        const newCrusher = new Tone.BitCrusher(Math.round(value));
+        newCrusher.wet.value = value < 16 ? 1 : 0;
 
         // Reconnect in the chain
         if (crusherIndex > 0) {
