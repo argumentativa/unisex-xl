@@ -481,168 +481,88 @@ stack(
     <script src="p5js/libraries/p5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tone@15.0.4/build/Tone.js"></script>
     
-    <!-- Import Map for Strudel dependencies (helps resolve nested deps like soundfont2) -->
-    <script type="importmap">
-    {
-      "imports": {
-        "@strudel/core": "https://esm.sh/@strudel/core@latest",
-        "@strudel/mini": "https://esm.sh/@strudel/mini@latest",
-        "@strudel/webaudio": "https://esm.sh/@strudel/webaudio@latest",
-        "@strudel/transpiler": "https://esm.sh/@strudel/transpiler@latest",
-        "@strudel/soundfonts": "https://esm.sh/@strudel/soundfonts@latest",
-        "soundfont2": "https://unpkg.com/soundfont2@0.4.0/dist/index.js"
-      }
-    }
-    </script>
+    <!-- Strudel - Use @strudel/web package (handles all initialization automatically) -->
+    <!-- See: https://strudel.cc/technical-manual/project-start/ -->
+    <script src="https://unpkg.com/@strudel/web@latest"></script>
     
-    <!-- Strudel - Load using esm.sh with import map support -->
-    <script type="module">
-      // Wait for page to be ready, then load Strudel
-      (async function loadStrudel() {
+    <!-- Initialize Strudel and set up evaluate function -->
+    <script>
+      (async function initStrudelForLiveCoding() {
         try {
-          console.log('Loading Strudel modules via esm.sh...');
+          console.log('🎵 Initializing Strudel via @strudel/web...');
           
-          // Use import map for module resolution (handles nested deps better)
-          // Load core Strudel modules first
-          console.log('Loading Strudel modules...');
-          const [core, mini, webaudio, transpiler] = await Promise.all([
-            import('@strudel/core'),
-            import('@strudel/mini'),
-            import('@strudel/webaudio'),
-            import('@strudel/transpiler')
-          ]);
+          // Initialize Strudel (handles all modules, soundfonts, synths automatically)
+          await initStrudel();
           
-          // Try to load soundfonts (optional - may fail due to dependency issues)
-          let soundfonts = null;
-          try {
-            soundfonts = await import('@strudel/soundfonts');
-            console.log('✅ Soundfonts module loaded');
-          } catch (err) {
-            console.warn('⚠️ Could not load soundfonts module:', err.message);
-            console.warn('⚠️ Drum samples (.bank()) will not be available, but synth sounds will work');
-            // Create a dummy soundfonts object so code doesn't break
-            soundfonts = {
-              registerSoundfonts: async () => {
-                console.warn('⚠️ Soundfonts not available - skipping registration');
+          console.log('✅ Strudel initialized via @strudel/web');
+          
+          // @strudel/web initializes Strudel and makes functions available globally
+          // We need to get evaluate() function for code string evaluation
+          // Check what @strudel/web exposes
+          
+          // @strudel/web might expose evaluate directly, or we need to get it from webaudioRepl
+          let evaluateFn = null;
+          let silenceFn = null;
+          
+          // Check if evaluate is available globally (some Strudel setups expose it)
+          if (typeof window.evaluate === 'function') {
+            evaluateFn = window.evaluate;
+            console.log('✅ Found evaluate function globally');
+          } else if (typeof evaluate === 'function') {
+            evaluateFn = evaluate;
+            console.log('✅ Found evaluate function (without window)');
+          }
+          
+          // Get silence function
+          if (typeof hush === 'function') {
+            silenceFn = hush;
+          } else if (typeof window.hush === 'function') {
+            silenceFn = window.hush;
+          } else {
+            silenceFn = () => {
+              if (Tone && Tone.Transport) {
+                Tone.Transport.stop();
               }
             };
           }
           
-          console.log('✅ All Strudel modules loaded');
-          
-          // Initialize Strudel properly
-          console.log('Initializing Strudel webaudio REPL...');
-          
-          // First, set up evalScope with all modules (needed for functions like stack, setcps, etc.)
-          // IMPORTANT: Include soundfonts in evalScope so .bank() works (if available)
-          const evalScopeFn = core.evalScope || core.default?.evalScope;
-          if (evalScopeFn) {
-            if (soundfonts && soundfonts !== null) {
-              await evalScopeFn(core, mini, soundfonts);
-              console.log('✅ evalScope initialized (with soundfonts)');
+          // If evaluate not found, we need to get it from webaudioRepl
+          if (!evaluateFn) {
+            console.log('⚠️ evaluate not found globally, setting up webaudioRepl...');
+            
+            // Import webaudioRepl to get evaluate function
+            const webaudioModule = await import('https://unpkg.com/@strudel/webaudio@latest');
+            const webaudioReplFn = webaudioModule.webaudioRepl || webaudioModule.default?.webaudioRepl;
+            
+            if (webaudioReplFn) {
+              const transpilerModule = await import('https://unpkg.com/@strudel/transpiler@latest');
+              const transpilerFn = transpilerModule.transpiler || transpilerModule.default?.transpiler || transpilerModule;
+              
+              const repl = webaudioReplFn({
+                transpiler: transpilerFn,
+                onToggle: (playing) => {
+                  console.log(playing ? '▶️ Pattern started' : '⏹️ Pattern stopped');
+                },
+                onError: (error) => {
+                  console.error('Strudel error:', error);
+                }
+              });
+              
+              evaluateFn = repl.evaluate;
+              silenceFn = repl.scheduler?.stop || silenceFn;
+              console.log('✅ Strudel evaluate function obtained from webaudioRepl');
             } else {
-              await evalScopeFn(core, mini);
-              console.log('✅ evalScope initialized (without soundfonts - synth sounds only)');
+              throw new Error('Could not get evaluate function - webaudioRepl not available');
             }
           }
           
-          // Register synth sounds BEFORE webaudioRepl
-          const registerSynthSoundsFn = webaudio.registerSynthSounds || webaudio.default?.registerSynthSounds;
-          const registerZZFXSoundsFn = webaudio.registerZZFXSounds || webaudio.default?.registerZZFXSounds;
+          // Expose Strudel functions globally for our app
+          window.strudel = {
+            evaluate: evaluateFn,
+            silence: silenceFn
+          };
           
-          if (registerSynthSoundsFn) {
-            try {
-              await registerSynthSoundsFn();
-              console.log('✅ Synth sounds registered (sawtooth, sine, square, etc.)');
-            } catch (err) {
-              console.warn('⚠️ Could not register synth sounds:', err);
-            }
-          }
-          
-          if (registerZZFXSoundsFn) {
-            try {
-              await registerZZFXSoundsFn();
-              console.log('✅ ZZFX sounds registered');
-            } catch (err) {
-              console.warn('⚠️ Could not register ZZFX sounds:', err);
-            }
-          }
-          
-          // Register soundfonts for drum samples (RolandTR909, RolandTR808, etc.)
-          // This is CRITICAL for .bank("RolandTR909") to work
-          const registerSoundfontsFn = soundfonts.registerSoundfonts || soundfonts.default?.registerSoundfonts;
-          if (registerSoundfontsFn) {
-            try {
-              await registerSoundfontsFn();
-              console.log('✅ Soundfonts registered (RolandTR909, RolandTR808 samples available)');
-            } catch (err) {
-              console.error('❌ Could not register soundfonts:', err);
-              console.warn('⚠️ Drum samples (.bank("RolandTR909")) will not work without soundfonts!');
-            }
-          } else {
-            console.error('❌ registerSoundfonts function not found in @strudel/soundfonts');
-          }
-          
-          // Get webaudioRepl function
-          const webaudioReplFn = webaudio.webaudioRepl || webaudio.default?.webaudioRepl;
-          
-          if (!webaudioReplFn) {
-            // Fallback: try to use evaluate directly if webaudioRepl not available
-            console.warn('webaudioRepl not found, trying direct evaluate');
-            const evaluateFn = core.evaluate || core.default?.evaluate;
-            const silenceFn = core.silence || core.default?.silence || (() => {
-              if (Tone && Tone.Transport) {
-                Tone.Transport.stop();
-              }
-            });
-            
-            window.strudel = {
-              ...core,
-              ...mini,
-              ...webaudio,
-              ...transpiler,
-              evaluate: evaluateFn,
-              silence: silenceFn
-            };
-          } else {
-            // Initialize Strudel REPL with proper setup
-            const transpilerFn = transpiler.transpiler || transpiler.default?.transpiler || transpiler;
-            
-            const { evaluate, scheduler } = webaudioReplFn({
-              transpiler: transpilerFn,
-              onToggle: (playing) => {
-                console.log(playing ? '▶️ Pattern started' : '⏹️ Pattern stopped');
-              },
-              onError: (error) => {
-                console.error('Strudel error:', error);
-              }
-            });
-            
-            // Get silence function
-            const silenceFn = scheduler?.stop || core.silence || (() => {
-              if (Tone && Tone.Transport) {
-                Tone.Transport.stop();
-              }
-            });
-            
-            // Expose Strudel globally (include soundfonts for .bank() support)
-            window.strudel = {
-              ...core,
-              ...mini,
-              ...webaudio,
-              ...transpiler,
-              ...soundfonts,
-              evaluate: evaluate,
-              silence: silenceFn,
-              scheduler: scheduler
-            };
-          }
-          
-          if (!window.strudel.evaluate) {
-            throw new Error('Could not initialize Strudel evaluate function');
-          }
-          
-          console.log('✅ Strudel webaudio REPL initialized');
+          console.log('✅ Strudel ready for live coding!');
           console.log('✅ evaluate function:', typeof window.strudel.evaluate);
           console.log('✅ silence function:', typeof window.strudel.silence);
           
@@ -658,38 +578,20 @@ stack(
           };
           
         } catch (error) {
-          console.error('❌ Failed to load Strudel:', error);
+          console.error('❌ Failed to initialize Strudel:', error);
           console.error('Error details:', error.stack);
           
           // Show user-friendly error
           const errorDiv = document.createElement('div');
           errorDiv.style.cssText = 'position:fixed;top:0;left:0;right:0;background:red;color:white;padding:20px;z-index:10000;font-family:monospace;';
           errorDiv.innerHTML = `
-            <strong>Failed to load Strudel modules</strong><br>
+            <strong>Failed to initialize Strudel</strong><br>
             Error: ${error.message}<br>
             <small>Check browser console (F12) for details</small>
           `;
           document.body.appendChild(errorDiv);
         }
       })();
-    </script>
-    
-    <!-- Fallback: Load app scripts if import map not supported -->
-    <script>
-      // If import maps aren't supported, try alternative loading
-      if (!HTMLScriptElement.supports || !HTMLScriptElement.supports('importmap')) {
-        console.warn('Import maps not supported, using fallback loading');
-        // Load visualizer and app anyway
-        const visualizerScript = document.createElement('script');
-        visualizerScript.src = 'src/live-coding-visualizer.js';
-        document.body.appendChild(visualizerScript);
-        
-        visualizerScript.onload = () => {
-          const appScript = document.createElement('script');
-          appScript.src = 'src/live-coding-app.js';
-          document.body.appendChild(appScript);
-        };
-      }
     </script>
 </body>
 </html>
