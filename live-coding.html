@@ -506,6 +506,41 @@ stack(
             console.log('✅ evalScope initialized');
           }
           
+          // Register synth sounds BEFORE webaudioRepl
+          const registerSynthSoundsFn = webaudio.registerSynthSounds || webaudio.default?.registerSynthSounds;
+          const registerZZFXSoundsFn = webaudio.registerZZFXSounds || webaudio.default?.registerZZFXSounds;
+          
+          if (registerSynthSoundsFn) {
+            try {
+              await registerSynthSoundsFn();
+              console.log('✅ Synth sounds registered (sawtooth, sine, square, etc.)');
+            } catch (err) {
+              console.warn('⚠️ Could not register synth sounds:', err);
+            }
+          }
+          
+          if (registerZZFXSoundsFn) {
+            try {
+              await registerZZFXSoundsFn();
+              console.log('✅ ZZFX sounds registered');
+            } catch (err) {
+              console.warn('⚠️ Could not register ZZFX sounds:', err);
+            }
+          }
+          
+          // Try to load soundfonts for drum samples (RolandTR909)
+          // Note: This might require additional packages
+          try {
+            const soundfontsModule = await import('https://esm.sh/@strudel/soundfonts@latest');
+            const registerSoundfontsFn = soundfontsModule.registerSoundfonts || soundfontsModule.default?.registerSoundfonts;
+            if (registerSoundfontsFn) {
+              await registerSoundfontsFn();
+              console.log('✅ Soundfonts registered (RolandTR909 samples)');
+            }
+          } catch (err) {
+            console.warn('⚠️ Could not load soundfonts (drum samples may not work):', err.message);
+          }
+          
           // Get webaudioRepl function
           const webaudioReplFn = webaudio.webaudioRepl || webaudio.default?.webaudioRepl;
           

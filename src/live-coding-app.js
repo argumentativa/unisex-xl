@@ -269,8 +269,12 @@ const App = {
     }
     
     try {
-      // Start Tone.js context
-      await Tone.start();
+      // Start Tone.js context (required for audio to play)
+      // This must happen after a user gesture
+      if (Tone.context.state !== 'running') {
+        await Tone.start();
+        this.log('🎵 Tone.js context started', 'success');
+      }
       
       // Start visualizer audio connection
       if (this.visualizer) {
