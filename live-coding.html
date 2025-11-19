@@ -480,16 +480,51 @@ stack(
     <!-- Load Libraries -->
     <script src="p5js/libraries/p5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tone@15.0.4/build/Tone.js"></script>
-    <script src="https://unpkg.com/@strudel/core"></script>
-    <script src="https://unpkg.com/@strudel/mini"></script>
-    <script src="https://unpkg.com/@strudel/webaudio"></script>
-    <script src="https://unpkg.com/@strudel/transpiler"></script>
-
-    <!-- Visualizer Component (must load before app) -->
-    <script src="src/live-coding-visualizer.js"></script>
     
-    <!-- Main Application Script -->
-    <script src="src/live-coding-app.js"></script>
+    <!-- Strudel - Load using dynamic import() which works in regular scripts -->
+    <script>
+      // Wait for page to be ready, then load Strudel
+      (async function loadStrudel() {
+        try {
+          console.log('Loading Strudel modules...');
+          
+          // Use dynamic import() to load ES modules
+          const [core, mini, webaudio, transpiler] = await Promise.all([
+            import('https://unpkg.com/@strudel/core@latest/dist/index.mjs'),
+            import('https://unpkg.com/@strudel/mini@latest/dist/index.mjs'),
+            import('https://unpkg.com/@strudel/webaudio@latest/dist/index.mjs'),
+            import('https://unpkg.com/@strudel/transpiler@latest/dist/index.mjs')
+          ]);
+          
+          // Combine and expose globally
+          window.strudel = {
+            ...core,
+            ...mini,
+            ...webaudio,
+            ...transpiler,
+            evaluate: core.evaluate || (core.default && core.default.evaluate),
+            silence: core.silence || (core.default && core.default.silence)
+          };
+          
+          console.log('✅ Strudel modules loaded');
+          
+          // Now load visualizer and app
+          const visualizerScript = document.createElement('script');
+          visualizerScript.src = 'src/live-coding-visualizer.js';
+          document.body.appendChild(visualizerScript);
+          
+          visualizerScript.onload = () => {
+            const appScript = document.createElement('script');
+            appScript.src = 'src/live-coding-app.js';
+            document.body.appendChild(appScript);
+          };
+          
+        } catch (error) {
+          console.error('❌ Failed to load Strudel:', error);
+          document.body.innerHTML += '<div style="position:fixed;top:0;left:0;right:0;background:red;color:white;padding:20px;z-index:10000;">Failed to load Strudel. Check console for details.</div>';
+        }
+      })();
+    </script>
 </body>
 </html>
 

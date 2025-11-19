@@ -52,12 +52,18 @@ const App = {
       this.getElements();
       
       // Initialize Strudel
-      if (typeof strudel === 'undefined') {
-        throw new Error('Strudel library not loaded');
+      if (typeof window === 'undefined' || !window.strudel || !window.strudel.evaluate) {
+        throw new Error('Strudel library not loaded. Check browser console for loading errors.');
       }
-      const { evaluate, silence } = strudel;
+      const { evaluate, silence } = window.strudel;
       this.evaluate = evaluate;
-      this.silence = silence;
+      this.silence = silence || (() => {
+        console.warn('silence() not available, stopping manually');
+        if (this.strudelPattern) {
+          // Try to stop manually
+          Tone.Transport.stop();
+        }
+      });
       
       // Initialize visualizer
       this.initVisualizer();
@@ -90,19 +96,39 @@ const App = {
   
   async waitForLibraries() {
     let attempts = 0;
-    const maxAttempts = 50;
+    const maxAttempts = 100; // Increased for Strudel loading
     
     while (attempts < maxAttempts) {
-      if (typeof p5 !== 'undefined' && 
-          typeof Tone !== 'undefined' && 
-          typeof strudel !== 'undefined') {
+      const p5Ready = typeof p5 !== 'undefined';
+      const toneReady = typeof Tone !== 'undefined';
+      const strudelReady = typeof window !== 'undefined' && window.strudel && window.strudel.evaluate;
+      
+      if (p5Ready && toneReady && strudelReady) {
+        console.log('✅ All libraries loaded');
         return;
       }
+      
+      // Log what's missing
+      if (attempts % 10 === 0) {
+        const missing = [];
+        if (!p5Ready) missing.push('p5.js');
+        if (!toneReady) missing.push('Tone.js');
+        if (!strudelReady) missing.push('Strudel');
+        if (missing.length > 0) {
+          console.log(`⏳ Waiting for: ${missing.join(', ')}`);
+        }
+      }
+      
       await new Promise(resolve => setTimeout(resolve, 100));
       attempts++;
     }
     
-    throw new Error('Failed to load required libraries');
+    const missing = [];
+    if (typeof p5 === 'undefined') missing.push('p5.js');
+    if (typeof Tone === 'undefined') missing.push('Tone.js');
+    if (!window.strudel || !window.strudel.evaluate) missing.push('Strudel');
+    
+    throw new Error(`Failed to load required libraries: ${missing.join(', ')}`);
   },
   
   getElements() {
@@ -489,10 +515,20 @@ const App = {
   },
   
   showLoading(show) {
-    if (show) {
-      this.loadingOverlay.classList.add('visible');
+    if (!this.loadingOverlay) {
+      // Element not found yet, try to get it
+      this.loadingOverlay = document.getElementById('loadingOverlay');
+    }
+    
+    if (this.loadingOverlay) {
+      if (show) {
+        this.loadingOverlay.classList.add('visible');
+      } else {
+        this.loadingOverlay.classList.remove('visible');
+      }
     } else {
-      this.loadingOverlay.classList.remove('visible');
+      // Fallback: log to console
+      console.log(show ? 'Loading...' : 'Loading complete');
     }
   }
 };
