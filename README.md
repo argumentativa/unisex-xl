@@ -257,9 +257,13 @@ Transport.scheduleRepeat((time) => {
 ## Production Guides
 
 ### Internal Documentation
-- **[Attack Magazine Guide](docs/ATTACK-MAGAZINE-GUIDE.md)** - Comprehensive sound design and mixing techniques
-- **[Quick Reference Card](docs/QUICK-REFERENCE.md)** - Essential parameters and settings for live coding
-- **[Project Analysis](PROJECT-ANALYSIS.md)** - Complete project breakdown and architecture
+- **[Documentation README](docs/README.md)** - Overview of all production guides
+- **[Production Guide (DRAFT)](docs/ATTACK-MAGAZINE-GUIDE-DRAFT.md)** - General dance music techniques (unverified)
+- **[Personal Notes Template](docs/ATTACK-MAGAZINE-NOTES.md)** - Template for your learning notes
+- **[Quick Reference Card](docs/QUICK-REFERENCE.md)** - Essential parameters cheat sheet
+- **[Project Analysis](PROJECT-ANALYSIS.md)** - Complete project breakdown
+
+**Note:** Production guides contain general industry knowledge, not verified book content.
 
 ### External Resources
 - [Tone.js Documentation](https://tonejs.github.io/)
