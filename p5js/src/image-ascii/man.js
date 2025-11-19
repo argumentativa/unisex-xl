@@ -1,18 +1,18 @@
 // ============================================
-// OPTIMIZED PERFORMANCE VERSION (Refactored)
-// Lower resolution, faster rendering, same visual impact
+// HIGH DETAIL VERSION (Refactored)
+// Man portrait with detailed ASCII character set
+// 80x60 resolution for rich visual detail
 // ============================================
 
 let img, size;
 
-// PERFORMANCE SETTINGS
-const OPTIMIZED_RES = { w: 24, h: 16 };  // Reduced resolution
-const ASCII_SET_OPTIMIZED = "█▓▒░@%#*+=:. ";  // Simplified set
+// HIGH DETAIL SETTINGS
+const DETAIL_RES = { w: 80, h: 60 };  // Higher resolution for more detail
 const TARGET_FPS = 60;
 const SHOW_DEBUG = true;
 
-let w = OPTIMIZED_RES.w;
-let h = OPTIMIZED_RES.h;
+let w = DETAIL_RES.w;
+let h = DETAIL_RES.h;
 
 // Audio setup (p5.sound)
 let mic, fft, startButton, audioStarted = false;
@@ -42,7 +42,7 @@ function setup() {
   halfSize = size / 2;
   baseCharSize = size * 1.1;
 
-  console.log('🚀 OPTIMIZED version loaded');
+  console.log('🚀 HIGH DETAIL version loaded');
   console.log(`Resolution: ${w}x${h} | FPS: ${TARGET_FPS}`);
 
   // Audio button
@@ -180,8 +180,8 @@ function draw() {
     return charSize;
   };
 
-  // Render using shared utility with custom modifiers
-  renderAsciiGrid(img, img.width, img.height, size, ASCII_SET_OPTIMIZED, {
+  // Render using shared utility with custom modifiers and detailed character set
+  renderAsciiGrid(img, img.width, img.height, size, ASCII_CONFIG.CHARS.BOLD, {
     useColor: true,
     useBold: true,
     brightMod: brightMod,
