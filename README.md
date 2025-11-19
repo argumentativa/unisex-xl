@@ -254,13 +254,20 @@ Transport.scheduleRepeat((time) => {
 - Lower effect values (reverb, delay can be CPU-intensive)
 - Check CPU usage in browser task manager
 
-## Resources
+## Production Guides
 
+### Internal Documentation
+- **[Attack Magazine Guide](docs/ATTACK-MAGAZINE-GUIDE.md)** - Comprehensive sound design and mixing techniques
+- **[Quick Reference Card](docs/QUICK-REFERENCE.md)** - Essential parameters and settings for live coding
+- **[Project Analysis](PROJECT-ANALYSIS.md)** - Complete project breakdown and architecture
+
+### External Resources
 - [Tone.js Documentation](https://tonejs.github.io/)
 - [Tone.js Examples](https://tonejs.github.io/examples/)
-- [Strudel Documentation](https://strudel.cc/)
+- [Strudel Documentation](https://strudel.cc/learn/)
 - [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
 - [Monaco Editor](https://microsoft.github.io/monaco-editor/)
+- [Attack Magazine](https://www.attackmagazine.com/technique/)
 
 ## License
 
