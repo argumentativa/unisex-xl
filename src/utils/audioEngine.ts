@@ -11,7 +11,6 @@ export class AudioEngine {
   private effectChain: Tone.ToneAudioNode[];
   private masterVolume: Tone.Volume;
   private analyzer: Tone.Analyser;
-  private isInitialized: boolean = false;
 
   constructor() {
     this.instruments = new Map();
@@ -35,8 +34,6 @@ export class AudioEngine {
 
     // Set default BPM
     Tone.Transport.bpm.value = 120;
-
-    this.isInitialized = true;
   }
 
   /**

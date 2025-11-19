@@ -7,6 +7,7 @@ import { AudioEngine } from './utils/audioEngine';
 import { CodeExecutor } from './utils/codeExecutor';
 import { EditorComponent } from './components/editor';
 import { Visualizer } from './components/visualizer';
+import { P5Visualizer } from './components/p5-visualizer';
 import { getExample } from './utils/examples';
 import type { PlaybackState, ConsoleMessage, InstrumentType, EffectType } from './types';
 
@@ -18,6 +19,7 @@ const audioEngine = new AudioEngine();
 const codeExecutor = new CodeExecutor(audioEngine);
 const editorComponent = new EditorComponent();
 let visualizer: Visualizer;
+let p5Visualizer: P5Visualizer;
 
 // DOM Elements
 const editorContainer = document.getElementById('editor') as HTMLElement;
@@ -34,14 +36,24 @@ const statusText = document.getElementById('statusText') as HTMLSpanElement;
 const playbackStatus = document.getElementById('playbackStatus') as HTMLSpanElement;
 const consoleElement = document.getElementById('console') as HTMLDivElement;
 const visualizerCanvas = document.getElementById('visualizer') as HTMLCanvasElement;
+const p5VisualizerContainer = document.getElementById('p5-visualizer') as HTMLDivElement;
+const vizModeSelect = document.getElementById('vizMode') as HTMLSelectElement;
 
 // Initialize editor with default example
 const defaultCode = getExample('basic');
-const editor = editorComponent.init(editorContainer, defaultCode);
+editorComponent.init(editorContainer, defaultCode);
 
-// Initialize visualizer
+// Initialize visualizers
 visualizer = new Visualizer(visualizerCanvas);
 visualizer.setAnalyzer(audioEngine.getAnalyzer());
+
+// Initialize P5 visualizer
+p5Visualizer = new P5Visualizer(p5VisualizerContainer, {
+  width: p5VisualizerContainer.clientWidth,
+  height: 300,
+  mode: 'waveform'
+});
+p5Visualizer.setAnalyzer(audioEngine.getAnalyzer());
 
 // Set console callback
 codeExecutor.setConsoleCallback((messages: ConsoleMessage[]) => {
@@ -218,6 +230,15 @@ document.addEventListener('keydown', (e) => {
     e.preventDefault();
     stopBtn.click();
   }
+});
+
+/**
+ * Visualizer mode change handler
+ */
+vizModeSelect.addEventListener('change', (e) => {
+  const mode = (e.target as HTMLSelectElement).value as 'waveform' | 'frequency' | 'circular' | 'particles' | 'mesh';
+  p5Visualizer.setMode(mode);
+  statusText.textContent = `Visualizer mode: ${mode}`;
 });
 
 // Log initialization

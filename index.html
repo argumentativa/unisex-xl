@@ -147,7 +147,18 @@
                 <!-- Visualizer -->
                 <section class="control-section">
                     <h3>Visualizer</h3>
-                    <canvas id="visualizer" width="300" height="100"></canvas>
+                    <div class="visualizer-controls">
+                        <label for="vizMode">Mode:</label>
+                        <select id="vizMode" class="viz-mode-select">
+                            <option value="waveform">Waveform</option>
+                            <option value="frequency">Frequency Bars</option>
+                            <option value="circular">Circular</option>
+                            <option value="particles">Particles</option>
+                            <option value="mesh">Mesh</option>
+                        </select>
+                    </div>
+                    <div id="p5-visualizer" class="p5-visualizer-container"></div>
+                    <canvas id="visualizer" width="300" height="100" style="display:none;"></canvas>
                 </section>
 
                 <!-- Console -->

@@ -6,19 +6,23 @@ This folder contains musical patterns and compositions for both Tone.js and Stru
 
 ```
 patterns/
-├── strudel/           # Strudel mini-notation patterns
-│   ├── techno/        # Techno and industrial patterns
-│   ├── experimental/  # Experimental compositions
-│   └── der-der/       # Der-der track versions
-└── tonejs/            # Tone.js JavaScript patterns
-    └── track-1/       # Track 1 variations
+├── strudel/              # Strudel mini-notation patterns
+│   ├── techno/           # Techno and industrial patterns
+│   ├── experimental/     # Experimental compositions
+│   ├── der-der/          # Der-der track versions
+│   └── track-1/          # Track 1 strudel patterns
+└── tonejs/               # Tone.js JavaScript patterns
+    ├── techno/           # Techno Tone.js translations ⭐ NEW
+    ├── dnb/              # Drum & Bass patterns
+    └── track-1-archive/  # Legacy track variations
 ```
 
 ## 🎵 Strudel Patterns
 
 ### Techno (`strudel/techno/`)
-- **berlin-techno.strudel** - Berlin-style techno pattern
+- **berlin-techno.strudel** - Berlin-style techno with layered kicks (TR-909 + TR-808)
 - **industrial-157bpm.strudel** - Industrial techno at 157 BPM (0.654 CPS)
+- **industrial-157bpm-advanced.strudel** - Advanced mix with Attack Magazine + Steve Savage principles
 - **techno-roland.strudel** - Roland-inspired techno groove
 - **industrial-pattern.md** - Documentation for industrial patterns
 
@@ -31,13 +35,39 @@ patterns/
 - **v2.strudel** - Enhanced version with custom samples
 - **v1.js** - JavaScript hybrid version
 
+### Track 1 (`strudel/track-1/`)
+- **em-202bpm-dnb.js** - Drum & Bass pattern at 202 BPM
+
 ## 🎹 Tone.js Patterns
 
-### Track 1 (`tonejs/track-1/`)
+### Techno (`tonejs/techno/`) ⭐ NEW
+Professional Tone.js translations of Strudel patterns:
+
+- **berlin-techno-tonejs.js** - Berlin techno with layered kicks (909+808)
+  - 7 instruments with full effect chains
+  - 30+ interactive controls (filters, delays, panning)
+  - Attack Magazine mixing techniques
+  - Real-time parameter adjustment
+
+- **industrial-157bpm-tonejs.js** - Industrial techno at 157 BPM
+  - 9 layered instruments (kick, bass, snare, hats, lead, pad, stabs)
+  - Attack Magazine + Steve Savage mixing principles
+  - Strategic frequency management
+  - Interactive sliders for live control
+
+### Drum & Bass (`tonejs/dnb/`)
+- **em-202bpm-dnb.js** - High-energy DnB at 202 BPM
+
+### Legacy (`tonejs/track-1-archive/`)
+Earlier experimental versions and learning exercises:
 - **basic.js** - Basic Tone.js pattern with sequences
+- **basic-mixed-principles.js** - Early mixing experiments
+- **advanced-mixed-principles-webapp.js** - Web app version
 - **with-sliders.js** - Interactive pattern controlled by UI sliders
 - **hybrid.js** - Combination of Tone.js and Strudel concepts
 - **hybrid-documented.js** - Well-documented hybrid approach
+- **IMPROVEMENTS.md** - Development notes
+- **TRACKS_ANALYSIS.md** - Analysis of track variations
 
 ## 📝 File Naming Conventions
 
@@ -48,8 +78,8 @@ patterns/
 
 ### Tone.js Files
 - **Extension**: `.js` for JavaScript code
-- **Format**: `descriptive-name.js`
-- **Example**: `basic.js`
+- **Format**: `descriptive-name-tonejs.js` (for translations)
+- **Example**: `berlin-techno-tonejs.js`
 
 ### Documentation Files
 - **Extension**: `.md` for Markdown documentation
@@ -59,7 +89,7 @@ patterns/
 ### Version Suffixes
 When creating multiple versions of the same pattern:
 - Use `-v1`, `-v2`, `-v3` etc.
-- Or use semantic names: `-basic`, `-enhanced`, `-final`
+- Or use semantic names: `-basic`, `-advanced`, `-final`
 
 ## 🏷️ Pattern Metadata Format
 
@@ -67,14 +97,14 @@ Each pattern should include header comments with metadata:
 
 ### Strudel Pattern Template
 ```javascript
+// ========================================
 // Title: Industrial Techno
 // BPM: 157
 // CPS: 0.654
 // Key: B minor
 // Genre: Industrial Techno
-// Author: [Your Name]
-// Description: Heavy industrial techno with distorted bass and aggressive drums
-// Created: 2024-11-18
+// Description: Heavy industrial techno with distorted bass
+// ========================================
 
 setcps(0.654)
 
@@ -85,30 +115,28 @@ stack(
 
 ### Tone.js Pattern Template
 ```javascript
-/**
- * Title: Basic Melody
- * BPM: 120
- * Key: C major
- * Genre: Ambient
- * Author: [Your Name]
- * Description: Simple melodic sequence with ambient pads
- * Created: 2024-11-18
- */
+// ========================================
+// Title: Berlin Techno
+// BPM: 157
+// Genre: Techno
+// Description: Berlin-style techno with layered kicks
+// Techniques: Attack Magazine layering (909+808)
+// ========================================
 
-const melody = new Tone.Sequence((time, note) => {
-  synth.triggerAttackRelease(note, '8n', time);
-}, ['C4', 'E4', 'G4', 'B4'], '4n');
+import * as Tone from 'tone';
 
-melody.start(0);
+Tone.Transport.bpm.value = 157;
+
+// Your pattern here
 ```
 
 ## 🔧 How to Use Patterns
 
 ### Loading in Tone.js Mode
 1. Open `index.html` in your browser
-2. Copy pattern code from `tonejs/` folder
-3. Paste into the editor
-4. Press **Run** or `Cmd/Ctrl+Enter`
+2. Import pattern from `tonejs/` folder
+3. Call exported functions like `start()`, `stop()`
+4. Use setter functions for real-time control
 
 ### Loading in Strudel Mode
 1. Open `strudel.html` in your browser
@@ -119,28 +147,71 @@ melody.start(0);
 ## 🎼 Pattern Categories
 
 ### Techno
-Fast-paced electronic music with 4/4 kick drums, typically 120-140 BPM.
+Fast-paced electronic music with 4/4 kick drums, typically 120-157 BPM. Features:
+- Layered kicks (909 for punch, 808 for sub)
+- Aggressive filtering and distortion
+- Minimal reverb on drums
+- Strategic frequency separation
 
 ### Industrial
-Aggressive, distorted sounds with heavy processing, typically 150-170 BPM.
+Aggressive, distorted sounds with heavy processing, typically 150-170 BPM. Features:
+- Heavy saturation and bit crushing
+- High resonance filters
+- Dark, aggressive timbres
+- Berlin techno influence
 
 ### Experimental
 Patterns exploring unusual techniques, generative algorithms, or sound design.
 
-### Hybrid
-Patterns combining both Tone.js and Strudel concepts or syntax.
+### Drum & Bass (DnB)
+High-energy breakbeats at 160-180 BPM with heavy sub-bass.
+
+## 🎛️ Tone.js Interactive Controls
+
+The new Tone.js techno patterns include extensive real-time controls:
+
+```javascript
+// Example: Berlin Techno
+import { 
+  start, 
+  setKick909LPF,
+  setBassLPF,
+  setStabsDelay,
+  setMasterGain 
+} from './tonejs/techno/berlin-techno-tonejs.js';
+
+await start();
+setKick909LPF(150);   // Tighten kick (80-200 Hz)
+setBassLPF(600);      // Open bass filter (250-800 Hz)
+setStabsDelay(0.3);   // Add delay (0-0.4)
+setMasterGain(0.85);  // Master volume (0.6-0.9)
+```
 
 ## 📚 Learning Resources
 
-### Strudel
-- [Strudel Documentation](https://strudel.tidalcycles.org/)
-- [TidalCycles Patterns](https://tidalcycles.org/docs/patternlib/tutorials/pattern)
-- Mini-notation guide in pattern comments
+### Mixing Principles Applied
+Both new Tone.js patterns follow professional mixing techniques:
 
-### Tone.js
+#### Attack Magazine Principles
+- Kick loudest (1.0+ gain)
+- Bass below kick (0.7-0.9 gain)
+- HPF on all non-bass elements
+- Snare emphasis at 2-5 kHz
+- Quiet hi-hats (0.3-0.4 gain)
+- Minimal reverb on drums
+- Master gain at 0.8-0.85 (headroom)
+
+#### Steve Savage Principles
+- "Cut, don't boost" - HPF before adding effects
+- "Bass presence" - 1 kHz for audibility
+- "Stereo interest" - Panning for width
+- "Less is more" - Strategic filtering
+
+### External Resources
+- [Strudel Documentation](https://strudel.tidalcycles.org/)
 - [Tone.js Documentation](https://tonejs.github.io/)
-- [Tone.js Examples](https://tonejs.github.io/examples/)
-- [Web Audio API Guide](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)
+- [Attack Magazine - Mixing Techno](https://www.attackmagazine.com/)
+- [TidalCycles Patterns](https://tidalcycles.org/docs/patternlib/tutorials/pattern)
 
 ## 🤝 Contributing Patterns
 
@@ -148,21 +219,34 @@ When adding new patterns:
 
 1. **Choose the right folder** - `strudel/` or `tonejs/`
 2. **Use proper file extensions** - `.strudel` or `.js`
-3. **Include metadata** - Title, BPM, key, genre, author
+3. **Include metadata** - Title, BPM, key, genre, techniques
 4. **Add comments** - Explain complex sections
 5. **Test thoroughly** - Ensure pattern plays without errors
-6. **Document parameters** - Note any custom sliders or controls
+6. **Document parameters** - Note any custom controls or effects
+7. **Follow naming conventions** - Use descriptive names with hyphens
 
 ## 📊 Pattern Statistics
 
-- **Total Patterns**: 16
-  - Strudel: 8 files
-  - Tone.js: 8 files
-- **Genres**: Techno, Industrial, Experimental, Ambient, Drum & Bass
+- **Total Patterns**: 20+
+  - Strudel: 10+ files
+  - Tone.js: 10+ files
+- **Genres**: Techno, Industrial, Experimental, Drum & Bass
 - **BPM Range**: 120-202 (techno to DnB)
+- **New Tone.js Translations**: 2 professional patterns with 30+ controls each
 
 ## 🔗 Related Files
 
-- `/samples/` - Audio samples used in patterns
-- `/samples.md` - Documentation for available samples
+- `/samples/` - Audio samples used in patterns (TR-909, TR-808, etc.)
 - `/src/utils/examples.ts` - Built-in example patterns
+- `/docs/` - Comprehensive documentation on Strudel and Tone.js
+
+## ✨ Recent Updates
+
+### November 2024
+- ✅ Reorganized folder structure for clarity
+- ✅ Added `tonejs/techno/` folder for professional translations
+- ✅ Created `berlin-techno-tonejs.js` (7 instruments, 30+ controls)
+- ✅ Created `industrial-157bpm-tonejs.js` (9 instruments, full mix principles)
+- ✅ Moved legacy files to `track-1-archive/`
+- ✅ Fixed file extensions (moved Strudel files from .js to .strudel)
+- ✅ Updated README with new structure and usage examples
