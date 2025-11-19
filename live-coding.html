@@ -496,48 +496,77 @@ stack(
             import('https://esm.sh/@strudel/transpiler@latest')
           ]);
           
-          // Extract evaluate and silence functions
-          const evaluateFn = core.evaluate || core.default?.evaluate || (core.default && core.default.default?.evaluate);
-          const silenceFn = core.silence || core.default?.silence || (core.default && core.default.default?.silence);
+          // Initialize Strudel properly
+          console.log('Initializing Strudel webaudio REPL...');
           
-          // Combine and expose globally
-          window.strudel = {
-            ...core,
-            ...mini,
-            ...webaudio,
-            ...transpiler,
-            evaluate: evaluateFn,
-            silence: silenceFn || (() => {
-              console.warn('silence() not available');
+          // First, set up evalScope with all modules (needed for functions like stack, setcps, etc.)
+          const evalScopeFn = core.evalScope || core.default?.evalScope;
+          if (evalScopeFn) {
+            await evalScopeFn(core, mini);
+            console.log('✅ evalScope initialized');
+          }
+          
+          // Get webaudioRepl function
+          const webaudioReplFn = webaudio.webaudioRepl || webaudio.default?.webaudioRepl;
+          
+          if (!webaudioReplFn) {
+            // Fallback: try to use evaluate directly if webaudioRepl not available
+            console.warn('webaudioRepl not found, trying direct evaluate');
+            const evaluateFn = core.evaluate || core.default?.evaluate;
+            const silenceFn = core.silence || core.default?.silence || (() => {
               if (Tone && Tone.Transport) {
                 Tone.Transport.stop();
               }
-            })
-          };
-          
-          // Verify evaluate is available
-          if (!window.strudel.evaluate) {
-            // Try to find it in default exports
-            if (core.default) {
-              window.strudel.evaluate = core.default.evaluate || core.default.default?.evaluate;
-            }
-            if (core.default && !window.strudel.evaluate) {
-              // Last resort: check all properties
-              for (const key in core) {
-                if (typeof core[key] === 'function' && key.toLowerCase().includes('eval')) {
-                  window.strudel.evaluate = core[key];
-                  break;
-                }
+            });
+            
+            window.strudel = {
+              ...core,
+              ...mini,
+              ...webaudio,
+              ...transpiler,
+              evaluate: evaluateFn,
+              silence: silenceFn
+            };
+          } else {
+            // Initialize Strudel REPL with proper setup
+            const transpilerFn = transpiler.transpiler || transpiler.default?.transpiler || transpiler;
+            
+            const { evaluate, scheduler } = webaudioReplFn({
+              transpiler: transpilerFn,
+              onToggle: (playing) => {
+                console.log(playing ? '▶️ Pattern started' : '⏹️ Pattern stopped');
+              },
+              onError: (error) => {
+                console.error('Strudel error:', error);
               }
-            }
+            });
+            
+            // Get silence function
+            const silenceFn = scheduler?.stop || core.silence || (() => {
+              if (Tone && Tone.Transport) {
+                Tone.Transport.stop();
+              }
+            });
+            
+            // Expose Strudel globally
+            window.strudel = {
+              ...core,
+              ...mini,
+              ...webaudio,
+              ...transpiler,
+              evaluate: evaluate,
+              silence: silenceFn,
+              scheduler: scheduler
+            };
           }
           
           if (!window.strudel.evaluate) {
-            throw new Error('Could not find evaluate function in Strudel core module');
+            throw new Error('Could not initialize Strudel evaluate function');
           }
           
-          console.log('✅ Strudel modules loaded');
+          console.log('✅ Strudel webaudio REPL initialized');
           console.log('✅ evaluate function:', typeof window.strudel.evaluate);
+          console.log('✅ silence function:', typeof window.strudel.silence);
           
           // Now load visualizer and app
           const visualizerScript = document.createElement('script');
