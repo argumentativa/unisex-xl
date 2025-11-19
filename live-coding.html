@@ -489,21 +489,27 @@ stack(
           console.log('Loading Strudel modules via esm.sh...');
           
           // Use esm.sh which automatically resolves dependencies
-          const [core, mini, webaudio, transpiler] = await Promise.all([
+          // Load all required Strudel modules including soundfonts
+          console.log('Loading Strudel modules...');
+          const [core, mini, webaudio, transpiler, soundfonts] = await Promise.all([
             import('https://esm.sh/@strudel/core@latest'),
             import('https://esm.sh/@strudel/mini@latest'),
             import('https://esm.sh/@strudel/webaudio@latest'),
-            import('https://esm.sh/@strudel/transpiler@latest')
+            import('https://esm.sh/@strudel/transpiler@latest'),
+            import('https://esm.sh/@strudel/soundfonts@latest')
           ]);
+          
+          console.log('✅ All Strudel modules loaded');
           
           // Initialize Strudel properly
           console.log('Initializing Strudel webaudio REPL...');
           
           // First, set up evalScope with all modules (needed for functions like stack, setcps, etc.)
+          // IMPORTANT: Include soundfonts in evalScope so .bank() works
           const evalScopeFn = core.evalScope || core.default?.evalScope;
           if (evalScopeFn) {
-            await evalScopeFn(core, mini);
-            console.log('✅ evalScope initialized');
+            await evalScopeFn(core, mini, soundfonts);
+            console.log('✅ evalScope initialized (with soundfonts)');
           }
           
           // Register synth sounds BEFORE webaudioRepl
@@ -528,17 +534,19 @@ stack(
             }
           }
           
-          // Try to load soundfonts for drum samples (RolandTR909)
-          // Note: This might require additional packages
-          try {
-            const soundfontsModule = await import('https://esm.sh/@strudel/soundfonts@latest');
-            const registerSoundfontsFn = soundfontsModule.registerSoundfonts || soundfontsModule.default?.registerSoundfonts;
-            if (registerSoundfontsFn) {
+          // Register soundfonts for drum samples (RolandTR909, RolandTR808, etc.)
+          // This is CRITICAL for .bank("RolandTR909") to work
+          const registerSoundfontsFn = soundfonts.registerSoundfonts || soundfonts.default?.registerSoundfonts;
+          if (registerSoundfontsFn) {
+            try {
               await registerSoundfontsFn();
-              console.log('✅ Soundfonts registered (RolandTR909 samples)');
+              console.log('✅ Soundfonts registered (RolandTR909, RolandTR808 samples available)');
+            } catch (err) {
+              console.error('❌ Could not register soundfonts:', err);
+              console.warn('⚠️ Drum samples (.bank("RolandTR909")) will not work without soundfonts!');
             }
-          } catch (err) {
-            console.warn('⚠️ Could not load soundfonts (drum samples may not work):', err.message);
+          } else {
+            console.error('❌ registerSoundfonts function not found in @strudel/soundfonts');
           }
           
           // Get webaudioRepl function
@@ -583,12 +591,13 @@ stack(
               }
             });
             
-            // Expose Strudel globally
+            // Expose Strudel globally (include soundfonts for .bank() support)
             window.strudel = {
               ...core,
               ...mini,
               ...webaudio,
               ...transpiler,
+              ...soundfonts,
               evaluate: evaluate,
               silence: silenceFn,
               scheduler: scheduler
