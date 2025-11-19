@@ -481,22 +481,36 @@ stack(
     <script src="p5js/libraries/p5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tone@15.0.4/build/Tone.js"></script>
     
-    <!-- Strudel - Load using esm.sh which handles module resolution -->
+    <!-- Import Map for Strudel dependencies (helps resolve nested deps like soundfont2) -->
+    <script type="importmap">
+    {
+      "imports": {
+        "@strudel/core": "https://esm.sh/@strudel/core@latest",
+        "@strudel/mini": "https://esm.sh/@strudel/mini@latest",
+        "@strudel/webaudio": "https://esm.sh/@strudel/webaudio@latest",
+        "@strudel/transpiler": "https://esm.sh/@strudel/transpiler@latest",
+        "@strudel/soundfonts": "https://esm.sh/@strudel/soundfonts@latest?deps=soundfont2@0.4.0",
+        "soundfont2": "https://esm.sh/soundfont2@0.4.0"
+      }
+    }
+    </script>
+    
+    <!-- Strudel - Load using esm.sh with import map support -->
     <script type="module">
       // Wait for page to be ready, then load Strudel
       (async function loadStrudel() {
         try {
           console.log('Loading Strudel modules via esm.sh...');
           
-          // Use esm.sh which automatically resolves dependencies
+          // Use import map for module resolution (handles nested deps better)
           // Load all required Strudel modules including soundfonts
           console.log('Loading Strudel modules...');
           const [core, mini, webaudio, transpiler, soundfonts] = await Promise.all([
-            import('https://esm.sh/@strudel/core@latest'),
-            import('https://esm.sh/@strudel/mini@latest'),
-            import('https://esm.sh/@strudel/webaudio@latest'),
-            import('https://esm.sh/@strudel/transpiler@latest'),
-            import('https://esm.sh/@strudel/soundfonts@latest')
+            import('@strudel/core'),
+            import('@strudel/mini'),
+            import('@strudel/webaudio'),
+            import('@strudel/transpiler'),
+            import('@strudel/soundfonts')
           ]);
           
           console.log('✅ All Strudel modules loaded');
