@@ -8,7 +8,7 @@ let w = 100;
 let h = 75;
 
 // Audio setup (microphone)
-let mic, fft, amplitude, startButton, audioStarted = false;
+let mic, fft, startButton, audioStarted = false;
 let bass = 0, mid = 0, treble = 0, volume = 0;
 let bassSmooth = 0, volumeSmooth = 0;
 
@@ -64,9 +64,6 @@ function startAudio() {
     fft = new p5.FFT(0.8, 512);
     fft.setInput(mic);
 
-    amplitude = new p5.Amplitude();
-    amplitude.setInput(mic);
-
     audioStarted = true;
 
     startButton.html('🔊 LISTENING TO MICROPHONE');
@@ -82,11 +79,14 @@ function draw() {
   background(0);
 
   // Audio analysis
-  if (audioStarted && fft && amplitude) {
+  if (audioStarted && fft) {
     bass = fft.getEnergy("bass") * 3.0;
     mid = fft.getEnergy("mid") * 3.0;
     treble = fft.getEnergy("treble") * 3.0;
-    volume = amplitude.getLevel();
+
+    // Calculate volume from FFT energy
+    let totalEnergy = fft.getEnergy(20, 20000);
+    volume = map(totalEnergy, 0, 255, 0, 1.0);
 
     bassSmooth = lerp(bassSmooth, bass, 0.7);
     volumeSmooth = lerp(volumeSmooth, volume, 0.6);

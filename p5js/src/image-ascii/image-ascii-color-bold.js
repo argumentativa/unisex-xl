@@ -8,7 +8,7 @@ let w = 100;  // Higher resolution
 let h = 75;
 
 // Audio setup (p5.sound)
-let mic, fft, amp, startButton, audioStarted = false;
+let mic, fft, startButton, audioStarted = false;
 let bass = 0, mid = 0, treble = 0, volume = 0;
 let bassSmooth = 0, volumeSmooth = 0;
 
@@ -56,16 +56,13 @@ function setup() {
 function startAudio() {
   if (!audioStarted) {
     console.log('🎤 Starting audio input...');
-    console.log('📢 SELECT BLACKHOLE 2CH when browser asks!');
+    console.log('📢 SELECT BLACKHOLE 2CH when browser asks for microphone permission!');
 
     mic = new p5.AudioIn();
     mic.start();
 
     fft = new p5.FFT(0.8, 512);
     fft.setInput(mic);
-
-    amp = new p5.Amplitude();
-    amp.setInput(mic);
 
     audioStarted = true;
 
@@ -74,7 +71,7 @@ function startAudio() {
     startButton.style('box-shadow', '0 4px 15px rgba(255,0,255,0.6)');
 
     console.log('✅ Audio input started!');
-    console.log('🎵 Play audio - it will be captured via BlackHole!');
+    console.log('🎵 Play any audio on your Mac - it will be captured via BlackHole!');
   }
 }
 
@@ -82,11 +79,14 @@ function draw() {
   background(0);
 
   // Audio analysis
-  if (audioStarted && fft && amp) {
+  if (audioStarted && fft) {
     bass = fft.getEnergy("bass") * 3.0;
     mid = fft.getEnergy("mid") * 3.0;
     treble = fft.getEnergy("treble") * 3.0;
-    volume = amp.getLevel();
+
+    // Calculate volume from FFT energy (since amp analyzer doesn't work with BlackHole)
+    let totalEnergy = fft.getEnergy(20, 20000);
+    volume = map(totalEnergy, 0, 255, 0, 1.0);
 
     bassSmooth = lerp(bassSmooth, bass, 0.7);
     volumeSmooth = lerp(volumeSmooth, volume, 0.6);
@@ -222,19 +222,26 @@ function drawAudioDebug() {
   else if (treble > 50) strokeMode = 3;
 
   fill(255, 50, 50);
-  rect(20, height - 115, map(bassSmooth, 0, 255, 0, 230), 20, 3);
+  let bassBarWidth = map(bassSmooth, 0, 255, 0, 230);
+  rect(20, height - 115, bassBarWidth, 20, 3);
   fill(255);
-  text(`BASS: ${Math.floor(bassSmooth)}`, 20, height - 93);
+  text(`BASS: ${Math.floor(bassSmooth)} (raw: ${Math.floor(bass)})`, 20, height - 93);
 
   fill(50, 255, 50);
-  rect(20, height - 75, map(mid, 0, 255, 0, 230), 20, 3);
+  let midBarWidth = map(mid, 0, 255, 0, 230);
+  rect(20, height - 75, midBarWidth, 20, 3);
   fill(255);
   text(`MID: ${Math.floor(mid)}`, 20, height - 53);
 
   fill(50, 50, 255);
-  rect(20, height - 35, map(treble, 0, 255, 0, 230), 20, 3);
+  let trebleBarWidth = map(treble, 0, 255, 0, 230);
+  rect(20, height - 35, trebleBarWidth, 20, 3);
   fill(255);
   text(`TREBLE: ${Math.floor(treble)}`, 20, height - 13);
+
+  // Volume indicator
+  fill(255, 255, 0);
+  text(`VOL: ${volume.toFixed(3)}`, 20, height - 130);
 
   pop();
 }
