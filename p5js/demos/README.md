@@ -32,6 +32,13 @@ p5js/demos/
 - Bold colored ASCII characters
 - Real-time frequency analysis (bass, mid, treble)
 
+### 🎭 Optimized ASCII (Auto-start)
+**[image-ascii/image-ascii-color-bold-OPTIMIZED-autostart.html](image-ascii/image-ascii-color-bold-OPTIMIZED-autostart.html)**
+- Same optimization as above, but auto-starts audio
+- No button - perfect for live performances
+- Clean full-screen visualization
+- Starts immediately on page load
+
 ### 🎤 Microphone ASCII
 **[image-ascii/image-ascii-color-bold-mic.html](image-ascii/image-ascii-color-bold-mic.html)**
 - Uses microphone input for audio reactivity
@@ -40,13 +47,14 @@ p5js/demos/
 
 ## All Demos
 
-### Image ASCII Art (6 demos)
+### Image ASCII Art (7 demos)
 1. **[image-ascii.html](image-ascii/image-ascii.html)** - Basic monochrome
 2. **[image-ascii-color.html](image-ascii/image-ascii-color.html)** - With color
 3. **[image-ascii-color-bold.html](image-ascii/image-ascii-color-bold.html)** - Bold + audio reactive ⭐
 4. **[image-ascii-color-bold-mic.html](image-ascii/image-ascii-color-bold-mic.html)** - Microphone input 🎤
 5. **[image-ascii-color-bold-OPTIMIZED.html](image-ascii/image-ascii-color-bold-OPTIMIZED.html)** - Performance optimized ⭐
-6. **[image-ascii-color-bold-strudel.html](image-ascii/image-ascii-color-bold-strudel.html)** - Strudel integration 🎵
+6. **[image-ascii-color-bold-OPTIMIZED-autostart.html](image-ascii/image-ascii-color-bold-OPTIMIZED-autostart.html)** - Auto-start (live performance) 🎭
+7. **[image-ascii-color-bold-strudel.html](image-ascii/image-ascii-color-bold-strudel.html)** - Strudel integration 🎵
 
 ### Video ASCII Art (2 demos)
 1. **[video-ascii.html](video-ascii/video-ascii.html)** - Basic webcam ASCII
