@@ -481,20 +481,24 @@ stack(
     <script src="p5js/libraries/p5.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/tone@15.0.4/build/Tone.js"></script>
     
-    <!-- Strudel - Load using dynamic import() which works in regular scripts -->
-    <script>
+    <!-- Strudel - Load using esm.sh which handles module resolution -->
+    <script type="module">
       // Wait for page to be ready, then load Strudel
       (async function loadStrudel() {
         try {
-          console.log('Loading Strudel modules...');
+          console.log('Loading Strudel modules via esm.sh...');
           
-          // Use dynamic import() to load ES modules
+          // Use esm.sh which automatically resolves dependencies
           const [core, mini, webaudio, transpiler] = await Promise.all([
-            import('https://unpkg.com/@strudel/core@latest/dist/index.mjs'),
-            import('https://unpkg.com/@strudel/mini@latest/dist/index.mjs'),
-            import('https://unpkg.com/@strudel/webaudio@latest/dist/index.mjs'),
-            import('https://unpkg.com/@strudel/transpiler@latest/dist/index.mjs')
+            import('https://esm.sh/@strudel/core@latest'),
+            import('https://esm.sh/@strudel/mini@latest'),
+            import('https://esm.sh/@strudel/webaudio@latest'),
+            import('https://esm.sh/@strudel/transpiler@latest')
           ]);
+          
+          // Extract evaluate and silence functions
+          const evaluateFn = core.evaluate || core.default?.evaluate || (core.default && core.default.default?.evaluate);
+          const silenceFn = core.silence || core.default?.silence || (core.default && core.default.default?.silence);
           
           // Combine and expose globally
           window.strudel = {
@@ -502,11 +506,38 @@ stack(
             ...mini,
             ...webaudio,
             ...transpiler,
-            evaluate: core.evaluate || (core.default && core.default.evaluate),
-            silence: core.silence || (core.default && core.default.silence)
+            evaluate: evaluateFn,
+            silence: silenceFn || (() => {
+              console.warn('silence() not available');
+              if (Tone && Tone.Transport) {
+                Tone.Transport.stop();
+              }
+            })
           };
           
+          // Verify evaluate is available
+          if (!window.strudel.evaluate) {
+            // Try to find it in default exports
+            if (core.default) {
+              window.strudel.evaluate = core.default.evaluate || core.default.default?.evaluate;
+            }
+            if (core.default && !window.strudel.evaluate) {
+              // Last resort: check all properties
+              for (const key in core) {
+                if (typeof core[key] === 'function' && key.toLowerCase().includes('eval')) {
+                  window.strudel.evaluate = core[key];
+                  break;
+                }
+              }
+            }
+          }
+          
+          if (!window.strudel.evaluate) {
+            throw new Error('Could not find evaluate function in Strudel core module');
+          }
+          
           console.log('✅ Strudel modules loaded');
+          console.log('✅ evaluate function:', typeof window.strudel.evaluate);
           
           // Now load visualizer and app
           const visualizerScript = document.createElement('script');
@@ -521,9 +552,37 @@ stack(
           
         } catch (error) {
           console.error('❌ Failed to load Strudel:', error);
-          document.body.innerHTML += '<div style="position:fixed;top:0;left:0;right:0;background:red;color:white;padding:20px;z-index:10000;">Failed to load Strudel. Check console for details.</div>';
+          console.error('Error details:', error.stack);
+          
+          // Show user-friendly error
+          const errorDiv = document.createElement('div');
+          errorDiv.style.cssText = 'position:fixed;top:0;left:0;right:0;background:red;color:white;padding:20px;z-index:10000;font-family:monospace;';
+          errorDiv.innerHTML = `
+            <strong>Failed to load Strudel modules</strong><br>
+            Error: ${error.message}<br>
+            <small>Check browser console (F12) for details</small>
+          `;
+          document.body.appendChild(errorDiv);
         }
       })();
+    </script>
+    
+    <!-- Fallback: Load app scripts if import map not supported -->
+    <script>
+      // If import maps aren't supported, try alternative loading
+      if (!HTMLScriptElement.supports || !HTMLScriptElement.supports('importmap')) {
+        console.warn('Import maps not supported, using fallback loading');
+        // Load visualizer and app anyway
+        const visualizerScript = document.createElement('script');
+        visualizerScript.src = 'src/live-coding-visualizer.js';
+        document.body.appendChild(visualizerScript);
+        
+        visualizerScript.onload = () => {
+          const appScript = document.createElement('script');
+          appScript.src = 'src/live-coding-app.js';
+          document.body.appendChild(appScript);
+        };
+      }
     </script>
 </body>
 </html>
