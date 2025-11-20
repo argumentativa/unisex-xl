@@ -1,21 +1,68 @@
 # UNISEX XL Patterns
 
-This folder contains musical patterns and compositions for both Tone.js and Strudel live coding modes.
+This folder contains visual patterns, musical patterns, and compositions for P5.js, Tone.js and Strudel live coding modes.
 
 ## 📁 Folder Structure
 
 ```
 patterns/
+├── p5/                   # P5.js visual patterns & demos ⭐ NEW
+│   ├── image-ascii/      # Image-based ASCII art demos (10 variations)
+│   ├── video-ascii/      # Webcam ASCII art demos (3 variations)
+│   ├── strudel-demos/    # Strudel integration demos
+│   ├── audio-reactive/   # Audio-reactive patterns
+│   ├── circles/          # Circles pattern
+│   ├── faces/            # Face detection pattern
+│   ├── snore/            # Video pattern example
+│   ├── misc/             # Experimental demos
+│   └── demos-legacy/     # Legacy demo files
 ├── strudel/              # Strudel mini-notation patterns
 │   ├── techno/           # Techno and industrial patterns
 │   ├── experimental/     # Experimental compositions
 │   ├── der-der/          # Der-der track versions
-│   └── track-1/          # Track 1 strudel patterns
+│   ├── track-1/          # Track 1 strudel patterns
+│   └── demos/            # Strudel demo files
 └── tonejs/               # Tone.js JavaScript patterns
-    ├── techno/           # Techno Tone.js translations ⭐ NEW
+    ├── techno/           # Techno Tone.js translations
     ├── dnb/              # Drum & Bass patterns
     └── track-1-archive/  # Legacy track variations
 ```
+
+## 🎨 P5.js Visual Patterns ⭐ NEW
+
+All P5.js demos and patterns are now consolidated in `patterns/p5/`. Browse all demos at [patterns/p5/index.html](p5/index.html).
+
+### Image ASCII Art (`p5/image-ascii/`)
+10 variations of image-based ASCII art with audio reactivity:
+- **image-ascii.html** - Basic monochrome ASCII
+- **image-ascii-color.html** - Color ASCII
+- **image-ascii-color-bold.html** - Bold + audio reactive ⭐
+- **image-ascii-color-bold-mic.html** - Microphone input 🎤
+- **image-ascii-color-bold-OPTIMIZED.html** - Performance optimized ⭐
+- **image-ascii-color-bold-OPTIMIZED-autostart.html** - Auto-start for live performances 🎭
+- **image-ascii-color-bold-strudel.html** - Strudel integration 🎵
+- **man.html** - Portrait visualization
+- **unai.html** - Portrait visualization
+- **test-audio-devices.html** - Audio device testing
+
+### Video ASCII Art (`p5/video-ascii/`)
+Webcam-based ASCII art patterns:
+- **index.html** - Video ASCII pattern (original)
+- **video-ascii.html** - Basic webcam ASCII
+- **video-ascii-bold.html** - Bold enhanced contrast
+
+### Strudel Integration (`p5/strudel-demos/`)
+Live coding + visualization demos:
+- **demo-with-strudel.html** - Full split-screen: Strudel editor + ASCII visualizer (Industrial Techno 157 BPM) ⭐
+- **test-tonejs.html** - Tone.js integration test
+
+### Pattern Examples
+- **audio-reactive/** - Audio-reactive circles pattern
+- **circles/** - Simple circles pattern
+- **faces/** - Face detection pattern
+- **snore/** - Video playback pattern
+- **misc/** - Experimental demos
+- **demos-legacy/** - Legacy demo files
 
 ## 🎵 Strudel Patterns
 
