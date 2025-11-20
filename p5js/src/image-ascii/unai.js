@@ -21,7 +21,7 @@ let bassSmooth = 0, volumeSmooth = 0;
 // Performance cache
 
 function preload() {
-  img = loadImage("../../assets/unai-outside.jpg");
+  img = loadImage("/p5js/assets/unai-outside.jpg");
 }
 
 function setup() {

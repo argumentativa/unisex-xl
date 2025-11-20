@@ -13,7 +13,7 @@ let bass = 0, mid = 0, treble = 0, volume = 0;
 let bassSmooth = 0, volumeSmooth = 0;
 
 function preload() {
-  img = loadImage("../../assets/dandy.jpg");
+  img = loadImage("/p5js/assets/dandy.jpg");
 }
 
 function setup() {

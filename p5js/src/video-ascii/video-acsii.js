@@ -10,7 +10,7 @@ let w = ASCII_CONFIG.RESOLUTIONS.LOW.w;
 let h = ASCII_CONFIG.RESOLUTIONS.LOW.h;
 
 function preload() {
-  img = loadImage("../../assets/dandy.jpg");
+  img = loadImage("/p5js/assets/dandy.jpg");
 }
 
 function setup() {

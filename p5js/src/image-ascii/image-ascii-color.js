@@ -17,7 +17,7 @@ let h = ASCII_CONFIG.RESOLUTIONS.LOW.h;  // 48
 // ============================================
 
 function preload() {
-  img = loadImage("../../assets/dandy.jpg");
+  img = loadImage("/p5js/assets/dandy.jpg");
 }
 
 // ============================================

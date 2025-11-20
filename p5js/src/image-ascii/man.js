@@ -23,7 +23,7 @@ let bassSmooth = 0, volumeSmooth = 0;
 let halfSize, baseCharSize;
 
 function preload() {
-  img = loadImage("../../assets/man.jpg");
+  img = loadImage("/p5js/assets/man.jpg");
 }
 
 function setup() {
