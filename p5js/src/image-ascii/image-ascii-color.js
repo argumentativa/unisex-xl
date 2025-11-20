@@ -10,6 +10,8 @@ let size;
 let w = ASCII_CONFIG.RESOLUTIONS.LOW.w;  // 64
 let h = ASCII_CONFIG.RESOLUTIONS.LOW.h;  // 48
 
+
+
 // ============================================
 // PRELOAD
 // ============================================

@@ -16,8 +16,15 @@ export default defineConfig({
       '@': '/src'
     }
   },
+  server: {
+    port: 5173,
+    // Allow serving files from project root (needed for p5js demos)
+    fs: {
+      allow: ['..']
+    }
+  },
   build: {
-    target: 'es2022',
+    target: 'es2022', // Support top-level await
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html')

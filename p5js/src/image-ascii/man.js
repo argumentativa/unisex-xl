@@ -7,7 +7,7 @@
 let img, size;
 
 // HIGH DETAIL SETTINGS
-const DETAIL_RES = { w: 80, h: 60 };  // Higher resolution for more detail
+const DETAIL_RES = { w: 80, h: 60 };  // Original resolution
 const TARGET_FPS = 60;
 const SHOW_DEBUG = true;
 
@@ -43,7 +43,12 @@ function setup() {
   baseCharSize = size * 1.1;
 
   console.log('🚀 HIGH DETAIL version loaded');
-  console.log(`Resolution: ${w}x${h} | FPS: ${TARGET_FPS}`);
+  console.log(`Mode: ${PERFORMANCE_MODE ? '⚡ PERFORMANCE' : '🎨 DETAIL'}`);
+  console.log(`Resolution: ${w}x${h} (${w * h} characters) | FPS: ${TARGET_FPS}`);
+  console.log(`Character size multiplier: ${baseCharSize / size}x`);
+  if (PERFORMANCE_MODE) {
+    console.log('⚡ Performance optimizations: Lower res (40x30), simplified ASCII, fewer FFT bins (128)');
+  }
 
   // Audio button
   startButton = createButton('🎤 START AUDIO');
@@ -68,7 +73,7 @@ function startAudio() {
     mic = new p5.AudioIn();
     mic.start();
 
-    fft = new p5.FFT(0.8, 256);  // Reduced bins for performance
+    fft = new p5.FFT(0.8, PERFORMANCE_MODE ? 128 : 256);  // Fewer bins for performance
     fft.setInput(mic);
 
     audioStarted = true;
@@ -102,42 +107,59 @@ function draw() {
   // Pre-calculate effects (OPTIMIZATION: once per frame, not per pixel!)
   const effects = {
     volumeBoost: audioStarted ? map(volumeSmooth, 0, 0.3, 0, 150) : 0,
-    trebleBoost: audioStarted ? map(treble, 0, 255, 0, 100) : 0,
+    trebleBoost: audioStarted ? map(treble, 0, 255, 0, 50) : 0,  // Reduced for lighter look
     bassPulse: audioStarted ? map(bassSmooth, 0, 255, 1.0, 3.0) : 1.0,
     midEffect: audioStarted ? map(mid, 0, 255, 1.0, 2.0) : 1.0,
-    bassBoost: audioStarted ? map(bassSmooth, 0, 255, 0, 200) : 0,
-    midBoost: audioStarted ? map(mid, 0, 255, 0, 180) : 0,
-    trebleColorBoost: audioStarted ? map(treble, 0, 255, 0, 190) : 0,
-    colorShift: audioStarted ? sin(frameCount * 0.05 + bassSmooth * 0.01) * 50 : 0,
-    brightnessFlash: (audioStarted && bassSmooth > 150) ? 1.3 : 1.0
+    bassBoost: audioStarted ? map(bassSmooth, 0, 255, 0, 100) : 0,  // Reduced
+    midBoost: audioStarted ? map(mid, 0, 255, 0, 100) : 0,  // Reduced
+    trebleColorBoost: audioStarted ? map(treble, 0, 255, 0, 100) : 0,  // Reduced
+    colorShift: audioStarted ? sin(frameCount * 0.05 + bassSmooth * 0.01) * 30 : 0,  // Reduced
+    brightnessFlash: (audioStarted && bassSmooth > 150) ? 1.2 : 1.0  // Reduced
   };
 
-  // Custom brightness modifier
+  // Custom brightness modifier - much lighter
   const brightMod = (bright) => {
-    if (!audioStarted) return bright;
+    // Base brightness boost - make everything lighter
+    bright = bright + 80;  // Add significant brightness
+    
+    if (!audioStarted) {
+      return constrain(bright, 0, 255);
+    }
+    
     bright = bright + effects.volumeBoost;
     bright = map(bright, 0, 255, effects.trebleBoost, 255 - effects.trebleBoost);
     bright = bright * effects.brightnessFlash;
     return constrain(bright, 0, 255);
   };
 
-  // Custom color modifier
+  // Custom color modifier - much lighter
   const colorMod = ({ r, g, b }) => {
-    if (!audioStarted) return { r, g, b };
+    // Base lightness boost - make colors lighter
+    r = r + 60;
+    g = g + 60;
+    b = b + 60;
+    
+    if (!audioStarted) {
+      return {
+        r: constrain(r, 0, 255),
+        g: constrain(g, 0, 255),
+        b: constrain(b, 0, 255)
+      };
+    }
 
-    r = r * 1.5 + effects.bassBoost;
-    g = g * 1.5 + effects.midBoost;
-    b = b * 1.5 + effects.trebleColorBoost;
+    r = r * 1.2 + effects.bassBoost;  // Reduced multiplier
+    g = g * 1.2 + effects.midBoost;
+    b = b * 1.2 + effects.trebleColorBoost;
 
     if (mid > 100) {
-      r *= 0.7;
-      b *= 0.7;
+      r *= 0.8;  // Less darkening
+      b *= 0.8;
     }
 
     if (treble > 150) {
-      r += (treble - 150);
-      g += (treble - 150);
-      b += (treble - 150);
+      r += (treble - 150) * 0.5;  // Reduced boost
+      g += (treble - 150) * 0.5;
+      b += (treble - 150) * 0.5;
     }
 
     r = r + effects.colorShift;
@@ -180,10 +202,15 @@ function draw() {
     return charSize;
   };
 
-  // Render using shared utility with custom modifiers and detailed character set
-  renderAsciiGrid(img, img.width, img.height, size, ASCII_CONFIG.CHARS.BOLD, {
+  // Render using shared utility with custom modifiers and lighter character set
+  // Use optimized character set in performance mode
+  const charSet = PERFORMANCE_MODE && PERF_ASCII_SET 
+    ? PERF_ASCII_SET 
+    : ASCII_CONFIG.CHARS.MEDIUM;
+  
+  renderAsciiGrid(img, img.width, img.height, size, charSet, {
     useColor: true,
-    useBold: true,
+    useBold: false,
     brightMod: brightMod,
     colorMod: colorMod,
     sizeMod: sizeMod
