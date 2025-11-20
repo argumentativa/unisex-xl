@@ -1,0 +1,211 @@
+/**
+ * UNISEX XL - Simplified Application Styles
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: #1e1e1e;
+    color: #d4d4d4;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+/* Header */
+.header {
+    padding: 1rem 2rem;
+    background: #252526;
+    border-bottom: 1px solid #3e3e42;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #00d4ff;
+}
+
+.subtitle {
+    color: #858585;
+    font-size: 0.9rem;
+}
+
+/* Main Content */
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    padding: 1rem;
+    flex: 1;
+    overflow: hidden;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem;
+}
+
+.panel-header h2 {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #cccccc;
+}
+
+/* Editor Panel */
+.editor-panel {
+    display: flex;
+    flex-direction: column;
+    background: #1e1e1e;
+    border: 1px solid #3e3e42;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.code-editor {
+    flex: 1;
+    min-height: 0;
+}
+
+/* Visualizer Panel */
+.visualizer-panel {
+    display: flex;
+    flex-direction: column;
+    background: #1e1e1e;
+    border: 1px solid #3e3e42;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.visualizer-container {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#visualizer {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* Controls */
+.controls {
+    padding: 1rem 2rem;
+    background: #252526;
+    border-top: 1px solid #3e3e42;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.transport-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.control-btn {
+    background: #0e639c;
+    border: none;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.2s;
+}
+
+.control-btn:hover {
+    background: #1177bb;
+}
+
+.control-btn.active {
+    background: #007acc;
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.control-group label {
+    color: #cccccc;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.control-group input[type="range"] {
+    width: 200px;
+}
+
+/* Buttons */
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.btn-primary {
+    background: #007acc;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #005a9e;
+}
+
+/* Select */
+.viz-mode-select {
+    background: #3c3c3c;
+    border: 1px solid #3e3e42;
+    color: #cccccc;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* Status Bar */
+.status-bar {
+    padding: 0.5rem 2rem;
+    background: #007acc;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .visualizer-panel {
+        min-height: 200px;
+    }
+}
+
+
+

@@ -1,5 +1,6 @@
 /**
- * Audio Engine - Manages Tone.js instruments, effects, and transport
+ * Audio Engine - Simplified Tone.js audio engine
+ * Manages instruments, effects, transport, and analyzer
  */
 
 import * as Tone from 'tone';
@@ -26,13 +27,8 @@ export class AudioEngine {
    * Initialize all audio components
    */
   private initializeAudio(): void {
-    // Initialize instruments
     this.initializeInstruments();
-
-    // Initialize effects
     this.initializeEffects();
-
-    // Set default BPM
     Tone.Transport.bpm.value = 120;
   }
 
@@ -40,7 +36,6 @@ export class AudioEngine {
    * Initialize all instruments
    */
   private initializeInstruments(): void {
-    // Synth instrument
     const synth = new Tone.PolySynth(Tone.Synth, {
       oscillator: { type: 'triangle' },
       envelope: {
@@ -51,7 +46,6 @@ export class AudioEngine {
       }
     });
 
-    // Bass instrument
     const bass = new Tone.MonoSynth({
       oscillator: { type: 'sawtooth' },
       envelope: {
@@ -70,7 +64,6 @@ export class AudioEngine {
       }
     });
 
-    // Drums instrument
     const drums = new Tone.MembraneSynth({
       pitchDecay: 0.05,
       octaves: 10,
@@ -184,7 +177,6 @@ export class AudioEngine {
    */
   async start(): Promise<void> {
     await Tone.start();
-    console.log('Audio context started');
   }
 
   /**
@@ -243,22 +235,18 @@ export class AudioEngine {
         (effect.instance as Tone.Distortion).wet.value = value;
         break;
       case 'bitcrusher':
-        // BitCrusher: bits property is read-only, need to recreate
         const oldCrusher = effect.instance as Tone.BitCrusher;
         const crusherIndex = this.effectChain.indexOf(oldCrusher);
 
-        // Disconnect old crusher
         if (crusherIndex > 0) {
           this.effectChain[crusherIndex - 1].disconnect(oldCrusher);
         }
         oldCrusher.disconnect();
         oldCrusher.dispose();
 
-        // Create new crusher with updated bits
         const newCrusher = new Tone.BitCrusher(Math.round(value));
         newCrusher.wet.value = value < 16 ? 1 : 0;
 
-        // Reconnect in the chain
         if (crusherIndex > 0) {
           this.effectChain[crusherIndex - 1].connect(newCrusher);
         }
@@ -266,11 +254,9 @@ export class AudioEngine {
           newCrusher.connect(this.effectChain[crusherIndex + 1]);
         }
 
-        // Update references
         this.effectChain[crusherIndex] = newCrusher;
         effect.instance = newCrusher;
 
-        // Reconnect instruments to the chain
         this.instruments.forEach(inst => {
           if (inst.instance && inst.enabled) {
             inst.instance.disconnect();
@@ -346,3 +332,6 @@ export class AudioEngine {
     this.analyzer.dispose();
   }
 }
+
+
+

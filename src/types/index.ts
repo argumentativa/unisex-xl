@@ -19,10 +19,6 @@ export type EffectType = 'reverb' | 'delay' | 'distortion' | 'bitcrusher';
  */
 export type PlaybackState = 'playing' | 'paused' | 'stopped';
 
-/**
- * Code execution mode
- */
-export type CodeMode = 'tonejs' | 'strudel';
 
 /**
  * Configuration for an instrument
@@ -67,14 +63,3 @@ export interface ConsoleMessage {
   timestamp: Date;
 }
 
-/**
- * Application state
- */
-export interface AppState {
-  playbackState: PlaybackState;
-  bpm: number;
-  instruments: Map<InstrumentType, InstrumentConfig>;
-  effects: Map<EffectType, EffectConfig>;
-  currentCode: string;
-  codeMode: CodeMode;
-}
