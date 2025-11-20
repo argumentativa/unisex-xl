@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tone.js Playground</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 2rem;
+            font-family: "Times New Roman", serif;
+            background: white;
+            color: black;
+        }
+        
+        h1 {
+            font-family: "Times New Roman", serif;
+            color: black;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        button {
+            padding: 1rem 2rem;
+            font-size: 1em;
+            border: none;
+            border-radius: 0;
+            background: blue;
+            color: white;
+            cursor: pointer;
+            font-family: "Times New Roman", serif;
+            transition: background 0.2s;
+        }
+        
+        button:hover {
+            background: #0000cc;
+        }
+        
+        button:active {
+            background: #000099;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <button id="startButton">Start Audio</button>
+        <button id="playButton">Play Sound</button>
+        <button id="stopButton">Stop</button>
+    </div>
+    
+    <!-- Load Tone.js from CDN (Content Delivery Network) -->
+    <script src="https://cdn.jsdelivr.net/npm/tone@14.8.49/build/Tone.js"></script>
+    
+    <!-- Load your custom script -->
+    <script src="script.js"></script>
+</body>
+</html>
+

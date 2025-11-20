@@ -1,17 +1,18 @@
 /**
- * Editor Component - Monaco Editor setup and configuration
+ * Editor Component - Monaco Editor wrapper
+ * Uses Monaco Editor (VS Code's editor) for stability and features
  */
 
 import * as monaco from 'monaco-editor';
 
-export class EditorComponent {
+export class Editor {
   private editor: monaco.editor.IStandaloneCodeEditor | null = null;
   private theme: 'vs-dark' | 'vs-light' = 'vs-dark';
 
   /**
    * Initialize Monaco Editor
    */
-  init(container: HTMLElement, initialValue: string): monaco.editor.IStandaloneCodeEditor {
+  init(container: HTMLElement, initialValue: string): void {
     this.editor = monaco.editor.create(container, {
       value: initialValue,
       language: 'javascript',
@@ -29,14 +30,8 @@ export class EditorComponent {
       wordWrap: 'on',
       bracketPairColorization: { enabled: true },
       formatOnPaste: true,
-      formatOnType: true,
-      suggestOnTriggerCharacters: true,
-      acceptSuggestionOnCommitCharacter: true,
-      acceptSuggestionOnEnter: 'on',
-      snippetSuggestions: 'inline'
+      formatOnType: true
     });
-
-    return this.editor;
   }
 
   /**
@@ -75,3 +70,4 @@ export class EditorComponent {
     this.editor?.dispose();
   }
 }
+

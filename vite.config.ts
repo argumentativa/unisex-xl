@@ -9,7 +9,7 @@ export default defineConfig({
     })
   ],
   optimizeDeps: {
-    include: ['monaco-editor', 'tone', '@strudel/core', '@strudel/webaudio', '@strudel/repl']
+    include: ['monaco-editor', 'tone']
   },
   resolve: {
     alias: {
@@ -17,10 +17,10 @@ export default defineConfig({
     }
   },
   build: {
+    target: 'es2022',
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html'),
-        strudel: resolve(__dirname, 'strudel.html')
+        main: resolve(__dirname, 'index.html')
       }
     }
   }

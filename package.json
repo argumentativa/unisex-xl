@@ -19,16 +19,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@strudel/core": "^1.2.5",
-    "@strudel/mini": "^1.2.5",
-    "@strudel/repl": "^1.2.7",
-    "@strudel/soundfonts": "^1.2.6",
-    "@strudel/tonal": "^1.2.5",
-    "@strudel/transpiler": "^1.2.5",
-    "@strudel/webaudio": "^1.2.6",
-    "@types/p5": "^1.7.7",
     "monaco-editor": "^0.45.0",
-    "p5": "^2.1.1",
     "tone": "^15.0.4"
   },
   "devDependencies": {
