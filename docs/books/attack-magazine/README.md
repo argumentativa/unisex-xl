@@ -48,7 +48,7 @@ This documentation represents:
 ### For Production:
 - Use `quick-ref.md` for fast parameter lookups
 - Reference `guide-draft.md` for technique explanations
-- Build on patterns in `/patterns/strudel/techno/`
+- Build on patterns in `/strudel/techno/`
 
 ## Recommended Workflow
 
@@ -67,7 +67,7 @@ This documentation represents:
 ## Related Resources
 
 - Attack Magazine website: https://www.attackmagazine.com
-- UNISEX XL patterns: `/patterns/strudel/techno/`
+- UNISEX XL patterns: `/strudel/techno/`
 - Quick reference: `/docs/reference/`
 
 ---

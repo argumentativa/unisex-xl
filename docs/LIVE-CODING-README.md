@@ -26,7 +26,7 @@ A unified live coding environment combining **Strudel** (Tidal Cycles syntax) wi
 ### 🎹 Strudel Live Coding
 - Full Tidal Cycles syntax support
 - Pattern library integration
-- Load pre-made patterns from `/patterns/strudel/`
+- Load pre-made patterns from `/strudel/`
 - Save patterns locally
 - Syntax highlighting (in code editor)
 
@@ -113,7 +113,7 @@ p5.js Visualizer (ASCII Rendering)
 
 ## Pattern Library
 
-Pre-loaded patterns from `/patterns/strudel/`:
+Pre-loaded patterns from `/strudel/`:
 - Industrial 157 BPM (Advanced) ⭐
 - Industrial 157 BPM
 - Berlin Techno
@@ -122,7 +122,7 @@ Pre-loaded patterns from `/patterns/strudel/`:
 - Der Der v2
 
 To add patterns:
-1. Save `.strudel` files to `/patterns/strudel/`
+1. Save `.strudel` files to `/strudel/`
 2. Update `patterns` object in `live-coding-app.js`
 
 ## Visual Settings

@@ -72,7 +72,7 @@ build: {
 **Added** (clean, simple approach):
 ```html
 <!-- p5.js for visualizer -->
-<script src="p5js/libraries/p5.min.js"></script>
+<script src="p5/libraries/p5.min.js"></script>
 
 <!-- Main entry point using Vite -->
 <script type="module" src="/src/live-coding-main.ts"></script>

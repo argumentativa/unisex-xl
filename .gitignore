@@ -32,3 +32,7 @@ Thumbs.db
 *.swo
 *~
 
+# Ghost pattern references
+patterns/p5/balls/
+patterns/p5/collision-balls/
+

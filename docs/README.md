@@ -312,7 +312,7 @@ Week 2+: Experiment, save patterns, build library
 Day 1: reference/templates.md (techno examples)
 Day 2: books/attack-magazine/guide-draft.md
 Day 3: books/mixing-mastering/tonejs.md (industrial mixing)
-Week 2+: /patterns/strudel/techno/ (study working patterns)
+Week 2+: /strudel/techno/ (study working patterns)
 ```
 
 ---

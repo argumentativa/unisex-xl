@@ -48,7 +48,7 @@ A unified live coding environment that combines Strudel (Tidal Cycles) with aggr
 
 ### Updated Files (2 files)
 7. **`index.html`** - Added prominent link to live-coding app
-8. **`p5js/demos/index.html`** - Added link to live-coding app
+8. **`p5/demos/index.html`** - Added link to live-coding app
 
 ## Key Features Implemented
 
@@ -68,7 +68,7 @@ A unified live coding environment that combines Strudel (Tidal Cycles) with aggr
 - 6 pre-loaded patterns
 - Load from dropdown or side panel
 - Save patterns locally
-- Patterns from `/patterns/strudel/` directory
+- Patterns from `/strudel/` directory
 
 ### ✅ Keyboard Shortcuts
 - `Ctrl+Enter` - Play/Restart
@@ -151,9 +151,9 @@ All components follow the established modular architecture:
 ## Integration Points
 
 ### From Existing Codebase
-- Pattern library from `/patterns/strudel/`
-- Image asset from `/p5js/assets/dandy.jpg`
-- p5.js library from `/p5js/libraries/p5.min.js`
+- Pattern library from `/strudel/`
+- Image asset from `/p5/assets/dandy.jpg`
+- p5.js library from `/p5/libraries/p5.min.js`
 - Effect algorithms from `image-ascii-color-bold-OPTIMIZED-autostart.js`
 
 ### Links Added

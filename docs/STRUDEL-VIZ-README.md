@@ -26,7 +26,7 @@ Or click **"🎵 Strudel + Viz"** from any index page.
 - Real-time audio level indicators
 
 ### 🎹 **Pattern Library**
-- 6 pre-loaded patterns from `/patterns/strudel/`
+- 6 pre-loaded patterns from `/strudel/`
 - Quick load via dropdown
 - Industrial techno, Berlin techno, and more
 
@@ -137,7 +137,7 @@ Press **`Ctrl+Enter`** and watch it react!
 ## 📚 Resources
 
 - **Strudel Docs**: https://strudel.cc/technical-manual/project-start/
-- **Pattern Library**: `/patterns/strudel/`
+- **Pattern Library**: `/strudel/`
 - **Visualizer Code**: `src/live-coding-visualizer.js`
 
 ## 🎊 Result
