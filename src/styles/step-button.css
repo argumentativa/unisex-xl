@@ -5,7 +5,7 @@
 
 /* Base Step Button */
 .step-button {
-  border: 6px solid white;
+  border: 1px solid #D3D3D3;
   border-radius: 25%;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -24,17 +24,17 @@
 /* Inactive state */
 .step-button.inactive {
   background: #FFFFFF;
-  border: 6px solid white;
+  border: 1px solid #D3D3D3;
 }
 
 .step-button.inactive:hover {
   background: #F8F9FA;
-  border-color: #D0D0D0;
+  border: 1px solid #D3D3D3;
 }
 
 /* Active state - background color set via inline style or CSS variable */
 .step-button.active {
-  border: 6px solid transparent;
+  border: 1px solid #D3D3D3;
 }
 
 .step-button.active:hover {
@@ -44,7 +44,7 @@
 /* Current step indicator */
 .step-button.current-step {
   z-index: 10;
-  border: 6px solid var(--color-blue-accent, #4A90E2);
+  border: 1px solid var(--color-blue-accent, #4A90E2);
 }
 
 .step-button.current-step.active {

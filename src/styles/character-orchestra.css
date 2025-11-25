@@ -227,11 +227,11 @@ body {
 
 .step-button.character-mode.inactive {
   background: #FFFFFF;
-  border: none;
+  border: 1px solid #D3D3D3;
 }
 
 .step-button.character-mode.active {
-  border: none;
+  border: 1px solid #D3D3D3;
 }
 
 .step-button.character-mode:hover {
@@ -239,7 +239,7 @@ body {
 }
 
 .step-button.character-mode.current-step {
-  border: none;
+  border: 1px solid #D3D3D3;
   /* No transform scale */
 }
 
