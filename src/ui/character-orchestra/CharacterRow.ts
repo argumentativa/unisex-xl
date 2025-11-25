@@ -20,6 +20,7 @@ export class CharacterRow {
     character: Character,
     pattern: CharacterPattern,
     onStepClick: (stepIndex: number) => void,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isCurrentStep: (stepIndex: number) => boolean
   ) {
     this.character = character;

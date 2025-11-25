@@ -37,7 +37,7 @@ export class CharacterOrchestra {
     this.characterRows = new Map();
 
     // Initialize characters with full state
-    this.characters = CHARACTERS.map((charData, index) => {
+    this.characters = CHARACTERS.map((charData, _index) => {
       const synth = createCharacterSynth(charData);
       synth.toDestination();
       
@@ -258,7 +258,7 @@ export class CharacterOrchestra {
     });
 
     // Ensure all sequences start
-    this.sequences.forEach((sequence, index) => {
+    this.sequences.forEach((sequence, _index) => {
       if (sequence.state === 'stopped') {
         sequence.start(0);
       }

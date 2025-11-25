@@ -17,10 +17,12 @@ export interface Character {
   hasActiveSteps: boolean;
 }
 
+export type CharacterData = Omit<Character, 'synth' | 'emotionalState' | 'hasActiveSteps'>;
+
 /**
  * Create Tone.js synth instance for a character
  */
-export function createCharacterSynth(character: Character): Tone.ToneAudioNode {
+export function createCharacterSynth(character: CharacterData): Tone.ToneAudioNode {
   switch (character.type) {
     case 'membrane':
       return new Tone.MembraneSynth({
@@ -136,7 +138,7 @@ export function createCharacterSynth(character: Character): Tone.ToneAudioNode {
 /**
  * All 8 characters for Character Orchestra
  */
-export const CHARACTERS: Omit<Character, 'synth' | 'emotionalState' | 'hasActiveSteps'>[] = [
+export const CHARACTERS: CharacterData[] = [
   {
     name: 'Boom the Elephant',
     emoji: '🐘',

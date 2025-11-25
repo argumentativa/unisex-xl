@@ -23,6 +23,7 @@ export class InstrumentRow {
     pattern: StepPattern,
     hue: number,
     onStepClick: (stepIndex: number) => void,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     isCurrentStep: (stepIndex: number) => boolean
   ) {
     this.instrumentId = instrumentId;

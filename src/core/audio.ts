@@ -205,7 +205,7 @@ export class AudioEngine {
   setInstrumentVolume(type: InstrumentType, volume: number): void {
     const instrument = this.instruments.get(type);
     if (instrument && instrument.instance) {
-      instrument.instance.volume.value = volume;
+      (instrument.instance as any).volume.value = volume;
       instrument.volume = volume;
     }
   }
@@ -217,7 +217,7 @@ export class AudioEngine {
     const instrument = this.instruments.get(type);
     if (instrument && instrument.instance) {
       instrument.enabled = enabled;
-      instrument.instance.volume.value = enabled ? instrument.volume : -Infinity;
+      (instrument.instance as any).volume.value = enabled ? instrument.volume : -Infinity;
     }
   }
 
