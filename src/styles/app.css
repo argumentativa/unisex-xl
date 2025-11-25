@@ -3,6 +3,8 @@
  * Vibrant orange/yellow palette with white card-based UI
  */
 
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Spectral:wght@300;400;500;600&display=swap');
+
 :root {
   --color-primary-orange: #FF6B35;
   --color-accent-yellow: #FFD700;
@@ -24,7 +26,7 @@
 }
 
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: 'Spectral', Georgia, serif;
     background: linear-gradient(135deg, var(--color-primary-orange) 0%, #FF8C42 50%, #FFA366 100%);
     background-attachment: fixed;
     /* Subtle star-like decorative pattern */
@@ -60,7 +62,12 @@ body {
     gap: 1rem;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
 .logo {
+    font-family: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 1.8rem;
     font-weight: 700;
     color: var(--color-primary-orange);
@@ -93,6 +100,7 @@ body {
 }
 
 .panel-header h2 {
+    font-family: 'Archivo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--color-text-primary);

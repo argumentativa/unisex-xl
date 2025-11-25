@@ -49,6 +49,7 @@
 }
 
 .sequencer-logo {
+  font-family: 'Archivo', sans-serif;
   font-size: 1.8rem;
   font-weight: 700;
   color: var(--color-primary-orange);

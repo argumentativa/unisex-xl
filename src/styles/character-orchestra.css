@@ -43,7 +43,7 @@ body {
       radial-gradient(circle at 60% 20%, rgba(255, 215, 0, 0.1) 1.5px, transparent 1.5px);
   background-size: 200px 200px, 250px 250px, 180px 180px, 220px 220px;
   background-position: 0 0, 100px 100px, 50px 150px, 150px 50px;
-  font-family: 'Comic Sans MS', 'Segoe UI', sans-serif;
+  font-family: 'Spectral', Georgia, serif;
   padding: 1.5rem;
   gap: 1.5rem;
 }
@@ -58,6 +58,7 @@ body {
 }
 
 .character-logo {
+  font-family: 'Archivo', sans-serif;
   font-size: 2.8rem;
   font-weight: 800;
   color: var(--color-primary-orange);
@@ -89,6 +90,7 @@ body {
 }
 
 .helper-text {
+  font-family: 'Archivo', sans-serif;
   color: var(--color-text-primary);
   font-size: 1rem;
   font-weight: 600;
@@ -117,7 +119,7 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   text-shadow: none;
-  font-family: 'Comic Sans MS', 'Segoe UI', sans-serif;
+  font-family: 'Spectral', Georgia, serif;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -152,6 +154,7 @@ body {
 }
 
 .tempo-control label {
+  font-family: 'Archivo', sans-serif;
   font-size: 1.2rem;
   font-weight: 800;
   color: var(--color-text-primary);
