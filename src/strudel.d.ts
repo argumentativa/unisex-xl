@@ -34,6 +34,7 @@ declare module '@strudel/mini' {
 declare module '@strudel/soundfonts' {
   export const soundfonts: any;
   export function loadSoundfont(name: string): Promise<any>;
+  export function registerSoundfonts(): Promise<void>;
 }
 
 declare module '@strudel/tonal' {
