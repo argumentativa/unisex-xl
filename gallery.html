@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+                if (result.substring(0, currentOrigin.length) !== currentOrigin) {
+                  var js = '/*' + label + '*/importScripts("' + result + '");';
+                  var blob = new Blob([js], { type: 'application/javascript' });
+                  return URL.createObjectURL(blob);
+                }
+              }
+              return result;
+            }
+          };
+        })({
+  "editorWorkerService": "/unisex-xl/monacoeditorwork/editor.worker.bundle.js",
+  "typescript": "/unisex-xl/monacoeditorwork/ts.worker.bundle.js",
+  "json": "/unisex-xl/monacoeditorwork/json.worker.bundle.js",
+  "javascript": "/unisex-xl/monacoeditorwork/ts.worker.bundle.js"
+});</script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNISEX XL - Project Gallery</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #000;
+            color: #fff;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        a {
+            color: #4af;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        h1 {
+            color: #fff;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            color: #fff;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .desc {
+            color: #888;
+            margin-left: 20px;
+            font-size: 0.9em;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #333;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>UNISEX XL - Project Gallery</h1>
+    <p>46 projects across audio-visual live coding, ASCII art, and interactive demos</p>
+
+    <p>Quick Links:
+        <a href="./index.html">Main App</a> |
+        <a href="./p5/index.html">P5.js Hub</a> |
+        <!-- Demos Hub (path needs updating) -->
+    </p>
+
+    <hr>
+
+    <h2>Main Applications</h2>
+    <ul>
+        <li><a href="./index.html">UNISEX XL - Live Coding Environment</a>
+            <div class="desc">Main Strudel-based live coding environment with audio visualization</div>
+        </li>
+    </ul>
+
+    <h2>Image ASCII Art (9 variants)</h2>
+    <ul>
+        <li><a href="./p5/image-ascii/image-ascii-color-bold-OPTIMIZED-autostart.html">⭐ Auto-Start ASCII (OPTIMIZED)</a>
+            <div class="desc">Performance-optimized audio-reactive ASCII with auto-start - best for live performances</div>
+        </li>
+        <li><a href="./p5/image-ascii/image-ascii-color-bold-strudel.html">⭐ ASCII + Strudel Split Screen</a>
+            <div class="desc">Split-screen: Strudel editor (left) + ASCII visualizer (right)</div>
+        </li>
+        <li><a href="./p5/image-ascii/image-ascii-color-bold.html">⭐ Color Bold ASCII</a>
+            <div class="desc">Audio-reactive ASCII art with bold characters - most popular variant</div>
+        </li>
+        <li><a href="./p5/image-ascii/image-ascii-color-bold-OPTIMIZED.html">OPTIMIZED Color Bold ASCII</a>
+            <div class="desc">Performance-optimized version with better FPS</div>
+        </li>
+        <li><a href="./p5/image-ascii/image-ascii-color-bold-mic.html">Microphone Input ASCII</a>
+            <div class="desc">Audio-reactive ASCII using microphone input</div>
+        </li>
+        <li><a href="./p5/image-ascii/unai.html">Portrait: Unai (OPTIMIZED)</a>
+            <div class="desc">Performance-optimized ASCII portrait with audio reactivity</div>
+        </li>
+        <li><a href="./p5/image-ascii/man.html">Portrait: Man</a>
+            <div class="desc">High-detail ASCII portrait with audio reactivity</div>
+        </li>
+        <li><a href="./p5/image-ascii/image-ascii-color.html">Basic Color ASCII</a>
+            <div class="desc">Simple ASCII art with color preservation</div>
+        </li>
+        <li><a href="./p5/image-ascii/image-ascii.html">Basic Monochrome ASCII</a>
+            <div class="desc">Simple monochrome ASCII art conversion</div>
+        </li>
+    </ul>
+
+    <h2>Video ASCII Art - Webcam (2 variants)</h2>
+    <ul>
+        <li><a href="./p5/video-ascii/video-ascii-bold.html">Bold Webcam ASCII</a>
+            <div class="desc">Enhanced webcam to ASCII with bold characters</div>
+        </li>
+        <li><a href="./p5/video-ascii/video-ascii.html">Basic Webcam ASCII</a>
+            <div class="desc">Real-time webcam to ASCII conversion</div>
+        </li>
+    </ul>
+
+    <h2>Strudel Live Coding Demos</h2>
+    <ul>
+        <li><a href="./p5/strudel/demo-with-strudel.html">⭐ Professional Strudel + ASCII</a>
+            <div class="desc">Full split-screen professional live coding environment (157 BPM default)</div>
+        </li>
+        <li><a href="./strudel/demos/strudel.html">Strudel REPL</a>
+            <div class="desc">Interactive Strudel live coding environment with full REPL</div>
+        </li>
+        <li><a href="./strudel/demos/strudel-webcam-ascii.html">Strudel + Webcam ASCII</a>
+            <div class="desc">Live coding combined with webcam ASCII visualization</div>
+        </li>
+        <li><a href="./p5/strudel/test-tonejs.html">Tone.js Test Pattern</a>
+            <div class="desc">Simple test pattern for audio visualization</div>
+        </li>
+    </ul>
+
+    <h2>Video Pattern Demos</h2>
+    <ul>
+        <li><a href="./p5/audio-reactive/index.html">Audio-Reactive Video</a>
+            <div class="desc">Video manipulation with audio-reactive effects</div>
+        </li>
+        <li><a href="./p5/video-ascii/index.html">Video ASCII Pattern</a>
+            <div class="desc">Video to ASCII conversion pattern template</div>
+        </li>
+        <li><a href="./p5/circles/index.html">Circle Visualizations</a>
+            <div class="desc">Circle-based visualizations from video input</div>
+        </li>
+        <li><a href="./p5/snore/index.html">Snore Pattern</a>
+            <div class="desc">Specialized video pattern visualization</div>
+        </li>
+    </ul>
+
+    <h2>Utilities & Tests</h2>
+    <ul>
+        <li><a href="./p5js/sketch.html">Basic P5.js Webcam Sketch</a>
+            <div class="desc">Simple 64×48 ASCII conversion from webcam - basic template</div>
+        </li>
+        <li><a href="./p5/image-ascii/test-audio-devices.html">Audio Device Tester</a>
+            <div class="desc">Test and configure audio input devices</div>
+        </li>
+        <li><a href="./p5/demos-legacy/ascii-visualizer-test.html">ASCII Visualizer Test</a>
+            <div class="desc">Test implementation of ASCII art visualization</div>
+        </li>
+        <li><a href="./p5/misc/test-animation.html">Animation Test Ground</a>
+            <div class="desc">Experimental animation testing ground</div>
+        </li>
+    </ul>
+
+    <h2>Navigation Hubs</h2>
+    <ul>
+        <li><a href="./p5/index.html">P5.js Gallery Hub</a>
+            <div class="desc">Main P5.js directory index with all organized demos</div>
+        </li>
+        <li><a href="./p5/index.html">P5.js Demos Index</a>
+            <div class="desc">Organized navigation for all P5.js demos</div>
+        </li>
+        <li><!-- Root Demos Hub (path needs updating) -->
+            <div class="desc">Navigation to all root-level demos</div>
+        </li>
+    </ul>
+
+    <hr>
+    <p style="color: #888; text-align: center;">UNISEX XL - 46 Projects</p>
+</body>
+</html>
