@@ -1,6 +1,6 @@
 /**
  * Character Row Component
- * Row containing character avatar and 16 step buttons
+ * Row containing character avatar and 4 step buttons
  */
 
 import type { Character } from './Character';
@@ -14,16 +14,19 @@ export class CharacterRow {
   private stepButtons: StepButton[];
   private currentStep: number = -1;
   private emotionalState: 'sleepy' | 'awake' | 'performing' = 'sleepy';
+  private onStepStateChange: (stepIndex: number, newState: StepState) => void;
+  private onPlayPreview?: (noteIndex: number) => void;
 
   constructor(
     character: Character,
     pattern: CharacterPattern,
-    onStepClick: (stepIndex: number) => void,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    isCurrentStep: (stepIndex: number) => boolean
+    onStepStateChange: (stepIndex: number, newState: StepState) => void,
+    onPlayPreview?: (noteIndex: number) => void
   ) {
     this.character = character;
     this.pattern = pattern;
+    this.onStepStateChange = onStepStateChange;
+    this.onPlayPreview = onPlayPreview;
     this.stepButtons = [];
 
     // Create row element
@@ -31,13 +34,21 @@ export class CharacterRow {
     this.element.className = 'character-row';
     this.element.setAttribute('data-character', character.name);
 
-    // Create 4 step buttons directly in the row
+    // Create 4 step buttons with callbacks
     for (let i = 0; i < 4; i++) {
       const stepButton = new StepButton(
         i,
         pattern.steps[i],
         { mode: 'character', character },
-        onStepClick
+        {
+          onStateChange: (stepIndex, newState) => {
+            // Update local pattern
+            this.pattern.steps[stepIndex] = newState;
+            // Notify parent
+            this.onStepStateChange(stepIndex, newState);
+          },
+          onPlayPreview: this.onPlayPreview
+        }
       );
       this.stepButtons.push(stepButton);
       this.element.appendChild(stepButton.getElement());

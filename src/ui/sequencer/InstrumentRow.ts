@@ -16,20 +16,21 @@ export class InstrumentRow {
   private currentStep: number = -1;
   private interactionLevel: number = 0;
   private rowActivity: number = 0;
-  private onStepClick: (stepIndex: number) => void;
+  private onStepStateChange: (stepIndex: number, newState: StepState) => void;
+  private onPlayPreview?: (noteIndex: number) => void;
 
   constructor(
     instrumentId: InstrumentType,
     pattern: StepPattern,
     hue: number,
-    onStepClick: (stepIndex: number) => void,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    isCurrentStep: (stepIndex: number) => boolean
+    onStepStateChange: (stepIndex: number, newState: StepState) => void,
+    onPlayPreview?: (noteIndex: number) => void
   ) {
     this.instrumentId = instrumentId;
     this.pattern = pattern;
     this.hue = hue;
-    this.onStepClick = onStepClick;
+    this.onStepStateChange = onStepStateChange;
+    this.onPlayPreview = onPlayPreview;
     this.stepButtons = [];
 
     // Create row element
@@ -47,13 +48,21 @@ export class InstrumentRow {
     const stepsContainer = document.createElement('div');
     stepsContainer.className = 'steps-container';
 
-    // Create 16 step buttons with StepState
+    // Create 16 step buttons with callbacks
     for (let i = 0; i < 16; i++) {
       const stepButton = new StepButton(
         i,
         pattern.steps[i],
         { mode: 'hue', hue },
-        onStepClick
+        {
+          onStateChange: (stepIndex, newState) => {
+            // Update local pattern
+            this.pattern.steps[stepIndex] = newState;
+            // Notify parent
+            this.onStepStateChange(stepIndex, newState);
+          },
+          onPlayPreview: this.onPlayPreview
+        }
       );
       this.stepButtons.push(stepButton);
       stepsContainer.appendChild(stepButton.getElement());

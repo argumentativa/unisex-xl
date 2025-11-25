@@ -234,13 +234,19 @@ export class Sequencer {
     this.instruments.forEach((instrumentId) => {
       const pattern = this.patterns.find(p => p.instrumentId === instrumentId)!;
       const hue = this.instrumentColors.get(instrumentId)!;
-      
+
       const row = new InstrumentRow(
         instrumentId,
         pattern,
         hue,
-        (stepIndex: number) => this.toggleStep(instrumentId, stepIndex),
-        (currentStep: number) => this.currentStep === currentStep
+        // onStepStateChange - called when StepButton cycles through notes
+        (stepIndex: number, newState: StepState) => {
+          this.handleStepStateChange(instrumentId, stepIndex, newState);
+        },
+        // onPlayPreview - called to play preview sound
+        (noteIndex: number) => {
+          this.playPreviewNote(instrumentId, noteIndex);
+        }
       );
 
       this.instrumentRows.set(instrumentId, row);
@@ -249,6 +255,57 @@ export class Sequencer {
 
     // Update colors based on initial state
     this.updateColors();
+  }
+
+  /**
+   * Handle step state change from StepButton
+   * Called when user clicks a step and it cycles to next note
+   */
+  private handleStepStateChange(instrumentId: InstrumentType, stepIndex: number, newState: StepState): void {
+    const pattern = this.patterns.find(p => p.instrumentId === instrumentId);
+    if (!pattern) return;
+
+    // Update pattern state
+    pattern.steps[stepIndex] = newState;
+
+    // Update sequence for playback
+    this.updateSequence(instrumentId);
+
+    // Update colors
+    this.updateColors();
+  }
+
+  /**
+   * Play a preview note immediately (for click feedback)
+   */
+  private playPreviewNote(instrumentId: InstrumentType, noteIndex: number): void {
+    const instrumentInstance = this.getInstrumentInstance(instrumentId);
+    if (!instrumentInstance) return;
+
+    // Chromatic note names
+    const CHROMATIC_NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+    // Determine base octave for instrument type
+    let baseOctave = 4;
+    if (instrumentId === 'membraneSynth' || instrumentId === 'drums') {
+      baseOctave = 1;
+    } else if (instrumentId === 'monoSynth' || instrumentId === 'bass') {
+      baseOctave = 2;
+    }
+
+    const noteName = CHROMATIC_NOTES[noteIndex];
+    const note = `${noteName}${baseOctave}`;
+
+    try {
+      // Handle different instrument types
+      if (instrumentId === 'noiseSynth' || instrumentId === 'snare') {
+        (instrumentInstance as any).triggerAttackRelease('16n');
+      } else {
+        (instrumentInstance as any).triggerAttackRelease(note, '16n');
+      }
+    } catch (error) {
+      console.error(`Error playing preview for ${instrumentId}:`, error);
+    }
   }
 
   /**

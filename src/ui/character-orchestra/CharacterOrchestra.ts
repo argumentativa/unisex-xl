@@ -69,10 +69,16 @@ export class CharacterOrchestra {
       const row = new CharacterRow(
         character,
         pattern,
-        (stepIndex: number) => this.toggleStep(index, stepIndex),
-        (currentStep: number) => this.currentStep === currentStep
+        // onStepStateChange - called when StepButton cycles through notes
+        (stepIndex: number, newState: StepState) => {
+          this.handleStepStateChange(index, stepIndex, newState);
+        },
+        // onPlayPreview - called to play preview sound
+        (noteIndex: number) => {
+          this.playPreviewNote(index, noteIndex);
+        }
       );
-      
+
       this.characterRows.set(index, row);
       this.container.appendChild(row.getElement());
     });
@@ -81,76 +87,39 @@ export class CharacterOrchestra {
   }
 
   /**
-   * Toggle a step - different behavior for drums vs melody
+   * Handle step state change from StepButton
+   * Called when user clicks a step and it cycles to next note
    */
-  toggleStep(characterIndex: number, stepIndex: number): void {
-    const character = this.characters[characterIndex];
+  private handleStepStateChange(characterIndex: number, stepIndex: number, newState: StepState): void {
     const pattern = this.patterns[characterIndex];
-    const stepState = pattern.steps[stepIndex];
+    if (!pattern) return;
 
-    // Play preview sound immediately
-    this.playPreviewSound(character, stepState.noteIndex);
+    // Update pattern state
+    pattern.steps[stepIndex] = newState;
 
-    if (character.canPitch) {
-      // Melody/Bass: Chromatic cycling
-      if (!stepState.isActive) {
-        // First click: activate at C
-        stepState.noteIndex = 0;
-        stepState.isActive = true;
-        stepState.pressCount = 1;
-      } else {
-        // Cycle through chromatic scale
-        stepState.noteIndex = (stepState.noteIndex + 1) % 12;
-        stepState.pressCount++;
-        
-        // After full cycle (12 clicks), turn off
-        if (stepState.noteIndex === 0 && stepState.pressCount >= 12) {
-          stepState.noteIndex = -1;
-          stepState.isActive = false;
-          stepState.pressCount = 0;
-        }
-      }
-    } else {
-      // Drums: Binary ON/OFF
-      if (!stepState.isActive) {
-        stepState.isActive = true;
-        stepState.noteIndex = 0; // Fixed note for drums
-        stepState.pressCount = 1;
-      } else {
-        stepState.isActive = false;
-        stepState.noteIndex = -1;
-        stepState.pressCount = 0;
-      }
-    }
-
-    // Update UI
-    const row = this.characterRows.get(characterIndex);
-    if (row) {
-      row.updateStep(stepIndex, stepState);
-    }
-
-    // Always update sequence
+    // Update sequence for playback
     this.updateSequence(characterIndex);
     this.updateCharacterStates();
-    
+
     // Notify state change
     this.notifyStateChange();
   }
 
   /**
-   * Play preview sound when clicking a step
+   * Play a preview note immediately (for click feedback)
    */
-  private playPreviewSound(character: Character, noteIndex: number): void {
-    if (!character.synth || noteIndex === -1) return;
+  private playPreviewNote(characterIndex: number, noteIndex: number): void {
+    const character = this.characters[characterIndex];
+    if (!character.synth) return;
+
+    const CHROMATIC_NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
     try {
-      const CHROMATIC_NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
-      
       if (character.canPitch && noteIndex >= 0) {
         const noteName = CHROMATIC_NOTES[noteIndex];
         const note = `${noteName}${character.octave}`;
         (character.synth as any).triggerAttackRelease(note, '16n');
-      } else if (!character.canPitch && character.synth) {
+      } else if (!character.canPitch) {
         // Drums: just trigger without note
         if (character.type === 'membrane') {
           (character.synth as any).triggerAttackRelease('C1', '16n');

@@ -1,6 +1,7 @@
 /**
  * Unified Step Button Component
  * Works for both Sequencer (hue-based) and Character Orchestra (character-based) modes
+ * Handles note cycling (OFF → C → C# → ... → B → OFF) and preview sound on click
  */
 
 import type { Character } from '../character-orchestra/Character';
@@ -11,17 +12,25 @@ export interface StepState {
   pressCount: number;
 }
 
-const CHROMATIC_NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+export const CHROMATIC_NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
-type ColorConfig = 
+type ColorConfig =
   | { mode: 'hue'; hue: number }
   | { mode: 'character'; character: Character };
+
+export interface StepButtonCallbacks {
+  /** Called when step state changes (for parent to track pattern state) */
+  onStateChange: (stepIndex: number, newState: StepState) => void;
+  /** Called to play preview sound (parent provides the instrument) */
+  onPlayPreview?: (noteIndex: number) => void;
+}
 
 export class StepButton {
   private element: HTMLButtonElement;
   private stepIndex: number;
   private stepState: StepState;
   private colorConfig: ColorConfig;
+  private callbacks: StepButtonCallbacks;
   private interactionLevel: number = 0;
   private rowActivity: number = 0;
   private hue: number; // Computed hue for both modes
@@ -30,11 +39,12 @@ export class StepButton {
     stepIndex: number,
     stepState: StepState,
     colorConfig: ColorConfig,
-    onClick: (stepIndex: number) => void
+    callbacks: StepButtonCallbacks
   ) {
     this.stepIndex = stepIndex;
     this.stepState = { ...stepState };
     this.colorConfig = colorConfig;
+    this.callbacks = callbacks;
 
     // Compute hue based on mode
     if (colorConfig.mode === 'hue') {
@@ -49,14 +59,53 @@ export class StepButton {
     this.element.className = this.getButtonClassName();
     this.element.setAttribute('data-step', stepIndex.toString());
     this.element.setAttribute('aria-label', `Step ${stepIndex + 1}`);
-    
-    // Add click handler
+
+    // Add click handler - handles note cycling internally
     this.element.addEventListener('click', () => {
-      onClick(stepIndex);
+      this.handleClick();
     });
 
     // Update initial state
     this.updateState();
+  }
+
+  /**
+   * Handle click - cycle through notes and play preview
+   * OFF → C (0) → C# (1) → D (2) → ... → B (11) → OFF
+   */
+  private handleClick(): void {
+    // Cycle to next note
+    let newNoteIndex = this.stepState.noteIndex + 1;
+
+    // If we exceed 11 (B), wrap back to -1 (OFF)
+    if (newNoteIndex > 11) {
+      newNoteIndex = -1;
+    }
+
+    const isActive = newNoteIndex >= 0;
+
+    // Update state
+    this.stepState = {
+      isActive,
+      noteIndex: newNoteIndex,
+      pressCount: this.stepState.pressCount + 1
+    };
+
+    // Update hue based on note (for hue mode)
+    if (this.colorConfig.mode === 'hue' && isActive) {
+      this.hue = newNoteIndex * 30; // 360° / 12 = 30° per note
+    }
+
+    // Update visuals
+    this.updateState();
+
+    // Notify parent of state change
+    this.callbacks.onStateChange(this.stepIndex, { ...this.stepState });
+
+    // Play preview sound if active and callback provided
+    if (isActive && this.callbacks.onPlayPreview) {
+      this.callbacks.onPlayPreview(newNoteIndex);
+    }
   }
 
   /**
