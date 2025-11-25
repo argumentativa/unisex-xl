@@ -5,23 +5,7 @@
  */
 
 import * as Tone from 'tone';
-import { StepButton, StepState, CHROMATIC_NOTES } from './StepButton';
-
-// Custom color palette for the 12 chromatic steps
-const COLOR_PALETTE = [
-  '#FFCBA4', // C - Peach
-  '#E2725B', // C# - Terracotta
-  '#FBCEB1', // D - Apricot
-  '#F4D03F', // D# - Golden Hour
-  '#7FCDCD', // E - Aqua Dream
-  '#93E9BE', // F - Seafoam
-  '#4A9B9B', // F# - Teal
-  '#63B3B3', // G - Lagoon
-  '#DCAE96', // G# - Dusty Rose
-  '#B2C9AB', // A - Sage
-  '#C5B4E3', // A# - Lavender Haze
-  '#F8EDD3'  // B - Warm Cream
-];
+import { StepButton, StepState, CHROMATIC_NOTES, COLOR_PALETTE } from './StepButton';
 
 class StepButtonDemo {
   private button: StepButton | null = null;

@@ -14,6 +14,22 @@ export interface StepState {
 
 export const CHROMATIC_NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
+// Unified color palette for the 12 chromatic steps
+export const COLOR_PALETTE = [
+  '#FFCBA4', // C - Peach
+  '#E2725B', // C# - Terracotta
+  '#FBCEB1', // D - Apricot
+  '#F4D03F', // D# - Golden Hour
+  '#7FCDCD', // E - Aqua Dream
+  '#93E9BE', // F - Seafoam
+  '#4A9B9B', // F# - Teal
+  '#63B3B3', // G - Lagoon
+  '#DCAE96', // G# - Dusty Rose
+  '#B2C9AB', // A - Sage
+  '#C5B4E3', // A# - Lavender Haze
+  '#F8EDD3'  // B - Warm Cream
+];
+
 type ColorConfig =
   | { mode: 'hue'; hue: number }
   | { mode: 'character'; character: Character };
@@ -239,11 +255,10 @@ export class StepButton {
 
   /**
    * Apply color for character mode (Character Orchestra)
+   * Uses unified COLOR_PALETTE for consistent colors across all modes
    */
   private applyCharacterColor(): void {
     if (this.colorConfig.mode !== 'character') return;
-
-    const character = this.colorConfig.character;
 
     if (!this.stepState.isActive || this.stepState.noteIndex === -1) {
       // OFF state: let CSS handle it (white background)
@@ -252,16 +267,10 @@ export class StepButton {
       return;
     }
 
-    // Active state: apply character color
-    if (character.canPitch) {
-      // Melody/Bass: lightness increases with pitch
-      const lightness = 35 + (this.stepState.noteIndex / 11) * 40;
-      this.element.style.backgroundColor = `hsl(${this.hue}, 70%, ${lightness}%)`;
-    } else {
-      // Drums: fixed medium lightness
-      this.element.style.backgroundColor = `hsl(${this.hue}, 70%, 50%)`;
-    }
-    this.element.style.color = '#ffffff';
+    // Active state: use unified color palette
+    const color = COLOR_PALETTE[this.stepState.noteIndex];
+    this.element.style.backgroundColor = color;
+    this.element.style.color = '#333333';
   }
 
   /**

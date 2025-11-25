@@ -217,18 +217,11 @@ body {
 .character-row {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 0;
+  gap: 16px;
   padding: 0;
-  background: var(--color-card-white);
-  border-radius: var(--border-radius-card);
-  box-shadow: var(--shadow-card);
-  transition: all 0.3s ease;
+  background: transparent;
   position: relative;
   z-index: 1;
-}
-
-.character-row:hover {
-  box-shadow: var(--shadow-card-hover);
 }
 
 /* Character info removed - not displayed in rows */
