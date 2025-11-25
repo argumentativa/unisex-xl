@@ -210,11 +210,13 @@
   display: flex;
   align-items: center;
   padding: 0; /* Edge-to-edge layout */
-  background: var(--color-card-white);
+  background: transparent; /* Remove white background */
   border-radius: 0; /* Remove border radius for edge-to-edge */
   box-shadow: none; /* Remove shadow for edge-to-edge */
   height: 25vw; /* Exactly 25% of viewport height */
   min-height: 100px;
+  margin-top: 5vh; /* 5% margin top */
+  margin-bottom: 5vh; /* 5% margin bottom */
   transition: box-shadow 0.3s ease;
   width: 100%; /* Full width */
 }
@@ -270,16 +272,16 @@
   }
 }
 
-/* Step Button - Exactly 25% width, edge-to-edge */
+/* Step Button - Exactly 25% width, edge-to-edge - Figma design */
 .character-step-button {
   width: 25%; /* Exactly one quarter of viewport */
   height: 25vw; /* Match width for square aspect ratio */
   /* Responsive constraints for very small screens */
-  min-width: 50px;
-  min-height: 50px;
+  min-width: 44px; /* Match Figma size */
+  min-height: 44px;
   aspect-ratio: 1;
-  border-radius: 50%;
-  border: 5px solid;
+  border-radius: 50%; /* Circular shape */
+  border: 1px solid #e9e9ea; /* Light gray border from Figma */
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
@@ -287,19 +289,29 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  background: #ffffff; /* White background from Figma */
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(0, 0, 0, 0.02) inset; /* Subtle shadows from Figma */
   font-family: 'Comic Sans MS', 'Segoe UI', sans-serif;
   flex-shrink: 0;
 }
 
 .character-step-button.inactive {
-  background: rgba(42, 42, 46, 0.3);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: #ffffff; /* White background from Figma */
+  border-color: #e9e9ea; /* Light gray border from Figma */
+  box-shadow: 
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(0, 0, 0, 0.02) inset; /* Subtle shadows */
 }
 
 .character-step-button.active {
-  border-color: #ffffff;
-  box-shadow: 0 0 30px currentColor, 0 4px 12px rgba(0, 0, 0, 0.4);
+  background: #ffffff; /* White background from Figma */
+  border-color: #e9e9ea; /* Light gray border from Figma */
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.15),
+    0 0 0 1px rgba(0, 0, 0, 0.05) inset,
+    0 0 12px hsla(var(--step-hue, 180), var(--step-saturation, 50%), var(--step-lightness, 50%), 0.3); /* Color glow */
   animation: step-glow 2s ease-in-out infinite;
 }
 
@@ -310,8 +322,13 @@
 .character-step-button.current-step {
   animation: step-pulse 0.3s ease-in-out infinite;
   z-index: 10;
-  border-width: 6px;
-  box-shadow: 0 0 40px rgba(0, 212, 255, 0.4), 0 0 60px rgba(0, 212, 255, 0.3);
+  border-width: 2px;
+  border-color: #4A90E2; /* Blue accent for current step */
+  box-shadow: 
+    0 0 0 2px rgba(74, 144, 226, 0.4),
+    0 0 0 4px rgba(74, 144, 226, 0.2),
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(0, 0, 0, 0.02) inset;
 }
 
 @keyframes step-glow {
