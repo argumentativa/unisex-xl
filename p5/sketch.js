@@ -1,99 +1,79 @@
-// ============================================
-// VIDEO ASCII - BOLD VERSION (Refactored)
-// ============================================
-// This sketch captures video from the webcam and renders it as ASCII art
-// using bold characters for high contrast. It uses shared utility functions
-// from ascii-utils.js for consistent rendering across all ASCII visualizations.
-
-// --- GLOBAL VARIABLES ---
-
-// `vid` - p5.js video capture object
-// Stores the webcam video feed for ASCII conversion
-let vid;
-
-// `size` - Character size in pixels
-// Calculated by createAsciiCanvas() based on canvas and grid dimensions
-// Determines how large each ASCII character will be rendered
 let size;
+let asciiChar = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,^`'. ";
 
-// `w` - Grid width in characters (64)
-// Number of ASCII characters horizontally across the canvas
-// Lower resolution for better performance
+let video;
 let w = 64;
-
-// `h` - Grid height in characters (48)
-// Number of ASCII characters vertically down the canvas
-// Lower resolution for better performance
 let h = 48;
 
-// --- SETUP FUNCTION ---
-// Runs once when the sketch starts
-
 function setup() {
-  // `createAsciiCanvas(w, h)` - Creates canvas optimized for ASCII rendering
-  // Returns object with { canvasWidth, canvasHeight, size }
-  // Ensures canvas fits window while maintaining grid aspect ratio
-  const dims = createAsciiCanvas(w, h);
+  // Create canvas that fills browser window (responsive)
+  let canvasWidth = windowWidth;
+  let canvasHeight = (canvasWidth * h) / w;  // Maintain aspect ratio
   
-  // `size` - Extract character size from returned dimensions
-  // Pixel size each ASCII character will occupy
-  size = dims.size;
-
-  // `createCapture(VIDEO)` - Starts webcam capture
-  // Creates a video object that captures from the user's webcam
-  vid = createCapture(VIDEO);
+  createCanvas(canvasWidth, canvasHeight);
   
-  // `vid.size(w, h)` - Sets video capture resolution
-  // Resizes video to match ASCII grid dimensions (64x48)
-  vid.size(w, h);
+  console.log("Setup running..."); // Debug log
   
-  // `vid.hide()` - Hides the default video element
-  // Video feed still captured but not displayed as separate element
-  vid.hide();
+  video = createCapture(VIDEO);
+  video.size(w, h);
+  video.hide(); // Hide the video element (we'll draw ASCII instead)
+  
+  size = width / w; // Calculate character size (adapts to window)
+  
+  console.log("Canvas created:", width, "x", height); // Debug log
+  console.log("Video capture initialized"); // Debug log
 }
-
-// --- DRAW FUNCTION ---
-// Runs continuously (typically 60 times per second)
 
 function draw() {
-  // `background(0)` - Sets canvas background to black
-  // Black background provides maximum contrast for white ASCII characters
-  background(20);
+  background(220);
+  
+  // Check if video is ready by verifying it has valid dimensions
+  // p5.Capture objects don't have a loadedmetadata property
+  // Instead, check if width > 0 which indicates the stream is initialized
+  if (!video || video.width === 0) {
+    fill(0);
+    textSize(16);
+    textAlign(CENTER, CENTER);
+    text("Waiting for webcam...", width/2, height/2);
+    return;
+  }
+  
+  video.loadPixels(); // Load video pixels
 
-  // `brightnessMod` - Custom function to enhance contrast
-  // Modifies pixel brightness before converting to ASCII
-  // `map(bright, 0, 255, 0, 255)` - Maps brightness range
-  // `constrain(bright, 0, 255)` - Ensures value stays within valid range
-  const brightnessMod = (bright) => {
-    bright = map(bright, 0, 255, 0, 255);
-    return constrain(bright, 0, 255);
-  };
-
-  // `renderAsciiGrid()` - Main rendering function from ascii-utils.js
-  // Converts video pixels into ASCII characters and draws them on canvas
-  // Parameters:
-  //   - `vid`: Source video object (webcam feed)
-  //   - `w`: Grid width (64 characters)
-  //   - `h`: Grid height (48 characters)
-  //   - `size * 1.2`: Character size multiplier (20% larger for smoother appearance)
-  //   - `ASCII_CONFIG.CHARS.BOLD`: Character set ordered from darkest to lightest
-  //   - Options: `useColor: true` (color), `useBold: false`, `brightMod` function
-  renderAsciiGrid(vid, w, h, size * 1.2, ASCII_CONFIG.CHARS.BOLD, {
-    useColor: true,
-    useBold: false,
-    brightMod: brightnessMod
-  });
+  for (let i = 0; i < w; i++) {           // Changed from img.width to w
+    for (let j = 0; j < h; j++) {         // Changed from img.height to h
+      let pixelVal = video.get(i, j);     // Changed from img.get to video.get
+      
+      let bright = brightness(pixelVal);
+      let tIndex = floor(map(bright, 0, 255, asciiChar.length - 1, 0));
+      
+      let x = i * size + size / 2;        // Center the character
+      let y = j * size + size / 2;
+      let t = asciiChar.charAt(tIndex);
+      
+      textSize(size);
+      textAlign(CENTER, CENTER);
+      
+      // Color options (uncomment one):
+      fill(0);              // Black text (monochrome)
+      // fill(pixelVal);    // Full color from webcam
+      
+      text(t, x, y);
+    }
+  }
 }
 
-// --- WINDOW RESIZE FUNCTION ---
-// Automatically called by p5.js when the browser window is resized
+// ============================================
+// WINDOW RESIZED - Handle window resizing
+// ============================================
 
 function windowResized() {
-  // `resizeAsciiCanvas(w, h)` - Resizes canvas to fit new window size
-  // Recalculates canvas dimensions and maintains aspect ratio
-  const dims = resizeAsciiCanvas(w, h);
+  // Recalculate canvas size when window is resized
+  let canvasWidth = windowWidth;
+  let canvasHeight = (canvasWidth * h) / w;
   
-  // `size` - Update character size for new canvas dimensions
-  // Ensures ASCII characters scale proportionally when window is resized
-  size = dims.size;
+  resizeCanvas(canvasWidth, canvasHeight);
+  
+  // Recalculate character size
+  size = width / w;
 }
