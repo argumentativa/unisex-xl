@@ -349,10 +349,12 @@ export class CharacterOrchestra {
     this.currentStep = 0;
 
     // Use Tone.Transport to sync step indicator with audio (4 steps)
+    // Update visual FIRST at current step, then increment for next iteration
     this.stepIndicatorEventId = Tone.Transport.scheduleRepeat(() => {
-      this.currentStep = (this.currentStep + 1) % 4;
       this.updateStepIndicator();
-      this.updateCharacterStates(); // Update emotional states based on current step
+      this.updateCharacterStates();
+      // Increment AFTER updating visual so indicator matches playing audio
+      this.currentStep = (this.currentStep + 1) % 4;
     }, '4n', 0); // 4th note resolution for 4 steps
 
     // Initial update

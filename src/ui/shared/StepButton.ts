@@ -320,7 +320,7 @@ export class StepButton {
   }
 
   /**
-   * Render character mode content (emoji + note)
+   * Render character mode content (note only, no emoji)
    */
   private renderCharacterContent(): void {
     if (this.colorConfig.mode !== 'character') return;
@@ -333,12 +333,7 @@ export class StepButton {
       return;
     }
 
-    // Character emoji
-    const emoji = document.createElement('div');
-    emoji.className = 'step-emoji';
-    emoji.textContent = character.emoji;
-
-    // Note label
+    // Note label only (no emoji)
     const noteLabel = document.createElement('div');
     noteLabel.className = 'step-note-label';
     
@@ -349,7 +344,6 @@ export class StepButton {
     }
 
     this.element.innerHTML = '';
-    this.element.appendChild(emoji);
     this.element.appendChild(noteLabel);
 
     const noteText = character.canPitch 

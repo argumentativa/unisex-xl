@@ -242,11 +242,11 @@ body {
 
 .step-button.character-mode.inactive {
   background: #FFFFFF;
-  border: 1px solid #E9E9EA;
+  border: none;
 }
 
 .step-button.character-mode.active {
-  border: 2px solid #4A90E2;
+  border: none;
 }
 
 .step-button.character-mode:hover {
@@ -254,18 +254,17 @@ body {
 }
 
 .step-button.character-mode.current-step {
-  border: 3px solid #4A90E2;
+  border: none;
   /* No transform scale */
 }
 
+/* Emoji removed - no longer displayed */
 .step-emoji {
-  font-size: clamp(3rem, 8vw, 6rem);
-  line-height: 1;
-  margin-bottom: 0.5rem;
+  display: none;
 }
 
 .step-note-label {
-  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  font-size: clamp(2rem, 5vw, 4rem);
   font-weight: 700;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   line-height: 1;
@@ -369,11 +368,11 @@ body {
   }
 
   .step-emoji {
-    font-size: 1.5rem;
+    display: none;
   }
 
   .step-note-label {
-    font-size: 0.6rem;
+    font-size: 1.5rem;
   }
 
   .character-logo {
