@@ -223,7 +223,7 @@ export class StepButton {
    */
   private calculateSaturation(): number {
     if (!this.stepState.isActive) return 0;
-    return 100; // Always 100% when active
+    return 100; // Always 100% when active - maximum saturation for vibrant colors
   }
 
   /**
@@ -232,15 +232,16 @@ export class StepButton {
   private calculateLightness(): number {
     if (!this.stepState.isActive) return 20;
 
-    let baseLightness = 40;
+    // Brighter base lightness values for more vibrant colors
+    let baseLightness = 55;
     switch (this.interactionLevel) {
-      case 0: return 30;
-      case 1: baseLightness = 40; break;
-      case 2: baseLightness = 55; break;
-      case 3: baseLightness = 65; break;
-      case 4: baseLightness = 75; break;
-      case 5: baseLightness = 85; break;
-      default: baseLightness = 40;
+      case 0: return 55; // Much brighter default
+      case 1: baseLightness = 58; break;
+      case 2: baseLightness = 62; break;
+      case 3: baseLightness = 66; break;
+      case 4: baseLightness = 70; break;
+      case 5: baseLightness = 75; break;
+      default: baseLightness = 55;
     }
 
     const rowBoost = this.rowActivity * 15;

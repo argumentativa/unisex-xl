@@ -149,7 +149,7 @@ class StepButtonDemo {
       const noteName = CHROMATIC_NOTES[this.currentNoteIndex];
       const hue = this.currentNoteIndex * 30;
       stateValue.textContent = noteName;
-      stateValue.style.color = `hsl(${hue}, 80%, 40%)`;
+      stateValue.style.color = `hsl(${hue}, 100%, 50%)`; // Brighter, more saturated text
     }
   }
 }
