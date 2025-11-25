@@ -43,14 +43,40 @@ Visualizer (Canvas2D)
 
 ---
 
+## Quick Reference
+
+### Development Commands
+- `npm run dev` - Start dev server (http://localhost:5173)
+- `npm run build` - Build for production (outputs to `dist/`)
+- `npm run preview` - Preview production build locally
+- `npm run type-check` - TypeScript type checking without building
+
+### Git Commands
+- `git checkout -b feature/[name]` - Create feature branch
+- `git add . && git commit -m "[Type] Description"` - Stage and commit changes
+- `git push -u origin feature/[name]` - Push branch to remote (first time)
+- `git push` - Push subsequent commits (after `-u` is set)
+
+### Common Commit Types
+- `[Feat]` - New feature
+- `[Fix]` - Bug fix
+- `[Docs]` - Documentation changes
+- `[Style]` - Code style/formatting
+- `[Refactor]` - Code refactoring
+- `[Test]` - Tests
+- `[Chore]` - Build/config changes
+
+---
+
 ## MANDATORY Git Workflow - DO NOT SKIP
 
 Before writing ANY code, you MUST:
 
 1. **Create a feature branch:**
    ```bash
-   git checkout -b argumentativa/unisex-md/[name]
+   git checkout -b feature/[name]
    ```
+   Or use your preferred naming convention (e.g., `username/[name]`)
 
 2. **Commit changes FREQUENTLY** (every file/component)
    - After completing each major step
@@ -89,6 +115,32 @@ Before writing ANY code, you MUST:
 - Show multiple solution approaches (simple → advanced)
 
 **Note:** This project uses TypeScript, so apply these principles within TypeScript's type system.
+
+---
+
+## Deployment
+
+### GitHub Pages
+
+**Setup:**
+1. Install: `npm install --save-dev gh-pages`
+2. Add to `package.json` scripts: `"deploy": "npm run build && gh-pages -d dist"`
+3. Configure `vite.config.ts` base path if deploying to subdirectory:
+   ```typescript
+   base: '/unisex-xl/',  // Only if repo is not at root
+   ```
+4. Enable GitHub Pages in repo Settings → Pages → Deploy from `gh-pages` branch
+
+**Deploy:**
+```bash
+npm run deploy
+```
+
+**Site URL:**
+- Root repo: `https://argumentativa.github.io/`
+- Subdirectory: `https://argumentativa.github.io/unisex-xl/`
+
+**Note:** After first deploy, just run `npm run deploy` to update the live site.
 
 ---
 
