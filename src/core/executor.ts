@@ -20,6 +20,9 @@ export class CodeExecutor {
       // Stop any existing scheduled events
       this.audioEngine.stop();
 
+      // Get analyzer for routing audio through visualization
+      const analyzer = this.audioEngine.getAnalyzer();
+
       // Create execution context with Tone.js and audio engine access
       const context = {
         Tone,
@@ -27,6 +30,7 @@ export class CodeExecutor {
         synth: this.audioEngine.getInstrument('synth')?.instance,
         bass: this.audioEngine.getInstrument('bass')?.instance,
         drums: this.audioEngine.getInstrument('drums')?.instance,
+        analyzer, // Expose analyzer so user code can connect to it
         console: {
           log: (...args: any[]) => console.log(...args),
           error: (...args: any[]) => console.error(...args),

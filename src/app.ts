@@ -70,6 +70,8 @@ function updatePlaybackState(state: PlaybackState): void {
 runCodeBtn.addEventListener('click', async () => {
   try {
     await audioEngine.start();
+    // Update visualizer with analyzer after audio initialization
+    visualizer.setAnalyzer(audioEngine.getAnalyzer());
     const code = editor.getValue();
     await codeExecutor.execute(code);
     statusText.textContent = 'Code executed';
@@ -84,6 +86,8 @@ runCodeBtn.addEventListener('click', async () => {
  */
 playBtn.addEventListener('click', async () => {
   await audioEngine.start();
+  // Update visualizer with analyzer after audio initialization
+  visualizer.setAnalyzer(audioEngine.getAnalyzer());
   audioEngine.play();
   updatePlaybackState('playing');
   statusText.textContent = 'Playing';

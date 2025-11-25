@@ -85,7 +85,6 @@ let closedHatHPF, closedHatCrusher, closedHatPanner, closedHatVolume;
 let openHatHPF, openHatDelay, openHatPanner, openHatVolume;
 let bassHPF, bassLPF, bassSaturation, bassCrusher, bassReverb, bassVolume;
 let stabsHPF, stabsLPF, stabsDistortion, stabsDelay, stabsReverb, stabsPanner, stabsVolume;
-let masterHPF, masterLPF, masterDelay, masterReverb, masterVolume;
 let kickPattern, clapPattern, closedHatPattern, openHatPattern, bassSequence, stabsSequence;
 let bassTransposeIndex = 0;
 let stabsChordIndex = 0;
@@ -102,7 +101,7 @@ kick909 = new Tone.MembraneSynth({
     release: 1.4,
     attackCurve: 'exponential'
   }
-}).toDestination();
+});
 
 kick808 = new Tone.MembraneSynth({
   pitchDecay: 0.05,
@@ -115,7 +114,7 @@ kick808 = new Tone.MembraneSynth({
     release: 1.8,
     attackCurve: 'exponential'
   }
-}).toDestination();
+});
 
 clap = new Tone.NoiseSynth({
   noise: { type: 'white' },
@@ -125,7 +124,7 @@ clap = new Tone.NoiseSynth({
     sustain: 0,
     release: 0.1
   }
-}).toDestination();
+});
 
 closedHat = new Tone.NoiseSynth({
   noise: { type: 'white' },
@@ -135,7 +134,7 @@ closedHat = new Tone.NoiseSynth({
     sustain: 0,
     release: 0.05
   }
-}).toDestination();
+});
 
 openHat = new Tone.NoiseSynth({
   noise: { type: 'white' },
@@ -145,7 +144,15 @@ openHat = new Tone.NoiseSynth({
     sustain: 0,
     release: 0.2
   }
-}).toDestination();
+});
+
+// Create master bus for routing through analyzer
+const masterBus = new Tone.Volume(0);
+if (analyzer) {
+  masterBus.connect(analyzer);
+} else {
+  masterBus.toDestination();
+}
 
 // EFFECTS CHAINS
 kick909HPF = new Tone.Filter(50, 'highpass');
@@ -156,8 +163,7 @@ kick909Volume = new Tone.Volume(Tone.gainToDb(0.7));
 kick909HPF.connect(kick909LPF);
 kick909LPF.connect(kick909Distortion);
 kick909Distortion.connect(kick909Volume);
-kick909Volume.toDestination();
-kick909.disconnect();
+kick909Volume.connect(masterBus);
 kick909.connect(kick909HPF);
 
 kick808HPF = new Tone.Filter(35, 'highpass');
@@ -166,8 +172,7 @@ kick808Volume = new Tone.Volume(Tone.gainToDb(0.4));
 
 kick808HPF.connect(kick808LPF);
 kick808LPF.connect(kick808Volume);
-kick808Volume.toDestination();
-kick808.disconnect();
+kick808Volume.connect(masterBus);
 kick808.connect(kick808HPF);
 
 clapHPF = new Tone.Filter(200, 'highpass');
@@ -182,8 +187,7 @@ clapLPF.connect(clapDistortion);
 clapDistortion.connect(clapDelay);
 clapDelay.connect(clapReverb);
 clapReverb.connect(clapVolume);
-clapVolume.toDestination();
-clap.disconnect();
+clapVolume.connect(masterBus);
 clap.connect(clapHPF);
 
 closedHatHPF = new Tone.Filter(8000, 'highpass');
@@ -194,8 +198,7 @@ closedHatVolume = new Tone.Volume(Tone.gainToDb(0.3));
 closedHatHPF.connect(closedHatCrusher);
 closedHatCrusher.connect(closedHatPanner);
 closedHatPanner.connect(closedHatVolume);
-closedHatVolume.toDestination();
-closedHat.disconnect();
+closedHatVolume.connect(masterBus);
 closedHat.connect(closedHatHPF);
 
 openHatHPF = new Tone.Filter(4000, 'highpass');
@@ -206,12 +209,11 @@ openHatVolume = new Tone.Volume(Tone.gainToDb(0.4));
 openHatHPF.connect(openHatDelay);
 openHatDelay.connect(openHatPanner);
 openHatPanner.connect(openHatVolume);
-openHatVolume.toDestination();
-openHat.disconnect();
+openHatVolume.connect(masterBus);
 openHat.connect(openHatHPF);
 
 bassHPF = new Tone.Filter(35, 'highpass');
-bassLPF = new Tone.Filter(400, 'lowpass', 15);
+bassLPF = new Tone.Filter(400, 'lowpass', -12);
 bassSaturation = new Tone.Distortion(0.5);
 bassCrusher = new Tone.BitCrusher(8);
 bassReverb = new Tone.Reverb(0.05);
@@ -222,7 +224,7 @@ bassLPF.connect(bassSaturation);
 bassSaturation.connect(bassCrusher);
 bassCrusher.connect(bassReverb);
 bassReverb.connect(bassVolume);
-bassVolume.toDestination();
+bassVolume.connect(masterBus);
 
 technoBass = new Tone.MonoSynth({
   oscillator: { type: 'sawtooth' },
@@ -238,7 +240,7 @@ technoBass = new Tone.MonoSynth({
 }).connect(bassHPF);
 
 stabsHPF = new Tone.Filter(400, 'highpass');
-stabsLPF = new Tone.Filter(3000, 'lowpass', 5);
+stabsLPF = new Tone.Filter(3000, 'lowpass', -12);
 stabsDistortion = new Tone.Distortion(0.3);
 stabsDelay = new Tone.FeedbackDelay('8n', 0.25);
 stabsReverb = new Tone.Reverb(0.3);
@@ -251,24 +253,12 @@ stabsDistortion.connect(stabsDelay);
 stabsDelay.connect(stabsReverb);
 stabsReverb.connect(stabsPanner);
 stabsPanner.connect(stabsVolume);
-stabsVolume.toDestination();
+stabsVolume.connect(masterBus);
 
 stabs = new Tone.PolySynth(Tone.Synth, {
   oscillator: { type: 'sawtooth', count: 7, spread: 40 },
   envelope: { attack: 0.01, decay: 0.2, sustain: 0.1, release: 0.2 }
 }).connect(stabsHPF);
-
-masterHPF = new Tone.Filter(35, 'highpass');
-masterLPF = new Tone.Filter(15000, 'lowpass');
-masterDelay = new Tone.FeedbackDelay('8n', 0.25);
-masterReverb = new Tone.Reverb({ decay: 0.5, wet: 0.1 });
-masterVolume = new Tone.Volume(Tone.gainToDb(0.8));
-
-masterHPF.connect(masterLPF);
-masterLPF.connect(masterDelay);
-masterDelay.connect(masterReverb);
-masterReverb.connect(masterVolume);
-masterVolume.toDestination();
 
 // PATTERNS
 kickPattern = new Tone.Loop((time) => {

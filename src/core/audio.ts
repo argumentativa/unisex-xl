@@ -10,26 +10,30 @@ export class AudioEngine {
   private instruments: Map<InstrumentType, InstrumentConfig>;
   private effects: Map<EffectType, EffectConfig>;
   private effectChain: Tone.ToneAudioNode[];
-  private masterVolume: Tone.Volume;
-  private analyzer: Tone.Analyser;
+  private masterVolume: Tone.Volume | null = null;
+  private analyzer: Tone.Analyser | null = null;
+  private initialized = false;
 
   constructor() {
     this.instruments = new Map();
     this.effects = new Map();
     this.effectChain = [];
-    this.masterVolume = new Tone.Volume(-10);
-    this.analyzer = new Tone.Analyser('waveform', 256);
-
-    this.initializeAudio();
+    // Don't initialize audio here - wait for user gesture
   }
 
   /**
-   * Initialize all audio components
+   * Initialize all audio components (called after user gesture)
    */
   private initializeAudio(): void {
+    if (this.initialized) return;
+
+    this.masterVolume = new Tone.Volume(-10);
+    this.analyzer = new Tone.Analyser('waveform', 256);
+
     this.initializeInstruments();
     this.initializeEffects();
     Tone.Transport.bpm.value = 120;
+    this.initialized = true;
   }
 
   /**
@@ -152,8 +156,8 @@ export class AudioEngine {
       bitcrusher,
       delay,
       reverb,
-      this.masterVolume,
-      this.analyzer
+      this.masterVolume!,
+      this.analyzer!
     ];
 
     // Connect effects in series
@@ -162,7 +166,7 @@ export class AudioEngine {
     }
 
     // Connect analyzer to destination
-    this.analyzer.toDestination();
+    this.analyzer!.toDestination();
 
     // Connect all instruments to the first effect in chain
     this.instruments.forEach((config) => {
@@ -174,9 +178,11 @@ export class AudioEngine {
 
   /**
    * Start audio context (required by browsers)
+   * Also initializes audio components on first call
    */
   async start(): Promise<void> {
     await Tone.start();
+    this.initializeAudio();
   }
 
   /**
@@ -306,7 +312,7 @@ export class AudioEngine {
   /**
    * Get analyzer for visualization
    */
-  getAnalyzer(): Tone.Analyser {
+  getAnalyzer(): Tone.Analyser | null {
     return this.analyzer;
   }
 
@@ -328,8 +334,8 @@ export class AudioEngine {
     this.effects.forEach((config) => {
       config.instance?.dispose();
     });
-    this.masterVolume.dispose();
-    this.analyzer.dispose();
+    this.masterVolume?.dispose();
+    this.analyzer?.dispose();
   }
 }
 

@@ -26,9 +26,11 @@ export class Visualizer {
   /**
    * Set analyzer for visualization
    */
-  setAnalyzer(analyzer: Tone.Analyser): void {
+  setAnalyzer(analyzer: Tone.Analyser | null): void {
     this.analyzer = analyzer;
-    this.startVisualization();
+    if (analyzer) {
+      this.startVisualization();
+    }
   }
 
   /**
