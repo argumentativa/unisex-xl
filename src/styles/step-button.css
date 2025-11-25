@@ -36,12 +36,11 @@
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.08),
     0 0 0 1px rgba(0, 0, 0, 0.03) inset;
-  transform: translateY(-1px);
 }
 
 /* Active state - background color set via inline style or CSS variable */
 .step-button.active {
-  border: 6px solid white;
+  border: 6px solid transparent;
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.15),
     0 0 0 1px rgba(0, 0, 0, 0.05) inset;
@@ -49,7 +48,6 @@
 
 .step-button.active:hover {
   filter: brightness(1.1) saturate(1.1);
-  transform: translateY(-2px) scale(1.05);
   box-shadow:
     0 4px 12px rgba(0, 0, 0, 0.2),
     0 0 0 1px rgba(0, 0, 0, 0.05) inset;
@@ -62,7 +60,6 @@
   box-shadow:
     0 0 0 2px rgba(74, 144, 226, 0.4),
     0 2px 8px rgba(74, 144, 226, 0.2);
-  transform: scale(1.05);
 }
 
 .step-button.current-step.active {

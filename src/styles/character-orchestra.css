@@ -250,12 +250,12 @@ body {
 }
 
 .step-button.character-mode:hover {
-  transform: scale(1.05);
+  /* No transform on hover */
 }
 
 .step-button.character-mode.current-step {
   border: 3px solid #4A90E2;
-  transform: scale(1.08);
+  /* No transform scale */
 }
 
 .step-emoji {

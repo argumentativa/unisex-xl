@@ -103,6 +103,11 @@ export class CharacterOrchestra {
 
     // Notify state change
     this.notifyStateChange();
+
+    // Auto-play: start playback if not already playing
+    if (!this.isPlaying) {
+      this.play();
+    }
   }
 
   /**

@@ -273,6 +273,11 @@ export class Sequencer {
 
     // Update colors
     this.updateColors();
+
+    // Auto-play: start playback if not already playing
+    if (!this.isPlaying) {
+      this.play();
+    }
   }
 
   /**
