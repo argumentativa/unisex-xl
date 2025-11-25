@@ -115,20 +115,31 @@ class StepButtonDemo {
   }
 
   /**
-   * Update the state display text
+   * Update the state display text and background color
    */
   private updateStateDisplay(noteIndex: number): void {
     const stateValue = document.getElementById('state-value');
     if (!stateValue) return;
 
     if (noteIndex === -1) {
+      // OFF state: white background, gray text
       stateValue.textContent = 'OFF';
       stateValue.style.color = '#999';
+      document.body.style.backgroundColor = 'white';
     } else {
+      // Active state: complementary background color
       const noteName = CHROMATIC_NOTES[noteIndex];
       const color = COLOR_PALETTE[noteIndex];
       stateValue.textContent = noteName;
       stateValue.style.color = color;
+
+      // Calculate complementary hue for background
+      const hsl = hexToHSL(color);
+      const complementaryHue = (hsl.h + 180) % 360;
+      
+      // Apply to body with reduced saturation/lightness for subtlety
+      document.body.style.backgroundColor = 
+        `hsl(${complementaryHue}, 30%, 95%)`;
     }
   }
 }
