@@ -118,6 +118,37 @@ Before writing ANY code, you MUST:
 
 ---
 
+## Build Configuration
+
+### Adding New HTML Pages
+
+**Important:** Vite only includes files specified in the build configuration. New HTML pages must be added to `vite.config.ts` to be included in the build output.
+
+**Example:** To add a new HTML file to the build:
+
+1. **Edit `vite.config.ts`:**
+   ```typescript
+   build: {
+     rollupOptions: {
+       input: {
+         main: resolve(__dirname, 'index.html'),
+         gallery: resolve(__dirname, 'gallery.html'),
+         newPage: resolve(__dirname, 'new-page.html')  // Add here
+       }
+     }
+   }
+   ```
+
+2. **Test the build:**
+   ```bash
+   npm run build
+   ls dist/*.html  # Verify your new file is included
+   ```
+
+**Without this step:** Your HTML file won't be deployed to GitHub Pages and will return 404 errors.
+
+---
+
 ## Deployment
 
 ### GitHub Pages
