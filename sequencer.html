@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Step Sequencer - UNISEX XL</title>
+    <link rel="stylesheet" href="./src/styles/app.css">
+    <link rel="stylesheet" href="./src/styles/sequencer.css">
+</head>
+<body>
+    <div class="sequencer-app">
+        <!-- Header -->
+        <header class="sequencer-header">
+            <div>
+                <h1 class="sequencer-logo">STEP SEQUENCER</h1>
+                <span class="sequencer-subtitle">16 Steps • 16th Note Resolution • All Tone.js Instruments</span>
+            </div>
+        </header>
+
+        <!-- Controls -->
+        <div class="sequencer-controls">
+            <div class="transport-controls">
+                <button id="playBtn" class="control-btn play-btn">▶</button>
+                <button id="pauseBtn" class="control-btn">⏸</button>
+                <button id="stopBtn" class="control-btn">⏹</button>
+            </div>
+            <div class="control-group">
+                <label for="bpm">BPM: <span id="bpmValue">120</span></label>
+                <input type="range" id="bpm" min="60" max="200" value="120" step="1">
+            </div>
+        </div>
+
+        <!-- Sequencer Grid -->
+        <div class="sequencer-grid-container">
+            <div id="sequencerGrid" class="sequencer-grid">
+                <!-- Instrument rows will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <footer class="sequencer-status-bar">
+            <span id="statusText">Ready - Click steps to create patterns</span>
+            <span id="playbackStatus">Stopped</span>
+        </footer>
+    </div>
+
+    <script type="module" src="./src/sequencer-main.ts"></script>
+</body>
+</html>
+

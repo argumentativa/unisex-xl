@@ -66,7 +66,9 @@ export default defineConfig({
     target: 'es2022', // Support top-level await
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html')
+        main: resolve(__dirname, 'index.html'),
+        sequencer: resolve(__dirname, 'sequencer.html'),
+        characterOrchestra: resolve(__dirname, 'character-orchestra.html')
       }
     }
   }

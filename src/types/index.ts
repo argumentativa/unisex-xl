@@ -6,8 +6,23 @@ import * as Tone from 'tone';
 
 /**
  * Instrument types available in the application
+ * All Tone.js instrument types for the sequencer
  */
-export type InstrumentType = 'synth' | 'bass' | 'drums';
+export type InstrumentType = 
+  | 'synth' 
+  | 'bass' 
+  | 'drums'
+  | 'snare'
+  | 'polySynth'
+  | 'monoSynth'
+  | 'fmSynth'
+  | 'amSynth'
+  | 'membraneSynth'
+  | 'noiseSynth'
+  | 'pluckSynth'
+  | 'metalSynth'
+  | 'duoSynth'
+  | 'monophonic';
 
 /**
  * Effect types available in the application
@@ -27,7 +42,7 @@ export interface InstrumentConfig {
   type: InstrumentType;
   enabled: boolean;
   volume: number;
-  instance: Tone.Synth | Tone.MonoSynth | Tone.MembraneSynth | null;
+  instance: Tone.ToneAudioNode | null;
 }
 
 /**
