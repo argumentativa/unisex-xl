@@ -28,7 +28,8 @@ export default defineConfig({
     target: 'es2022', // Support top-level await
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'index.html')
+        main: resolve(__dirname, 'index.html'),
+        gallery: resolve(__dirname, 'gallery.html')
       }
     }
   }
