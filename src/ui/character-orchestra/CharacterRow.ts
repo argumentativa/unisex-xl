@@ -32,32 +32,6 @@ export class CharacterRow {
     this.element.className = 'character-row';
     this.element.setAttribute('data-character', character.name);
 
-    // Create character info section
-    const characterInfo = document.createElement('div');
-    characterInfo.className = 'character-info';
-
-    // Character avatar
-    const avatar = document.createElement('div');
-    avatar.className = 'character-avatar';
-    avatar.setAttribute('data-emotional-state', this.emotionalState);
-    avatar.style.borderColor = character.baseColor;
-    avatar.textContent = character.emoji;
-    characterInfo.appendChild(avatar);
-
-    // Character name
-    const name = document.createElement('div');
-    name.className = 'character-name';
-    name.textContent = character.name;
-    characterInfo.appendChild(name);
-
-    // Character status emoji
-    const status = document.createElement('div');
-    status.className = 'character-status';
-    status.textContent = this.getStatusEmoji();
-    characterInfo.appendChild(status);
-
-    this.element.appendChild(characterInfo);
-
     // Create scrolling container for infinite scroll
     const scrollWrapper = document.createElement('div');
     scrollWrapper.className = 'steps-scroll-wrapper';
@@ -143,20 +117,11 @@ export class CharacterRow {
 
   /**
    * Update character emotional state
+   * (State is tracked internally but not displayed)
    */
   updateCharacterState(state: 'sleepy' | 'awake' | 'performing'): void {
     this.emotionalState = state;
-    
-    const avatar = this.element.querySelector('.character-avatar') as HTMLElement;
-    const status = this.element.querySelector('.character-status') as HTMLElement;
-    
-    if (avatar) {
-      avatar.setAttribute('data-emotional-state', state);
-    }
-    
-    if (status) {
-      status.textContent = this.getStatusEmoji();
-    }
+    // State is tracked internally for audio/state management but not displayed
   }
 
   /**
