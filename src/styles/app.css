@@ -40,17 +40,23 @@ body {
 }
 
 /* Typography System - Headings (Viaoda Libre) */
-h1, h2, h3, h4, h5, h6 {
+/* h1 uses Viaoda for large decorative typography */
+h1 {
     font-family: var(--ff-heading);
     color: var(--text-color-primary);
     text-align: left;
     font-weight: var(--fw-thin);
     letter-spacing: var(--ls-sm);
-}
-
-h1 {
     font-size: var(--fs-h1);
     line-height: var(--lh-lg);
+}
+
+/* h2-h6 use Inter for readability and accessibility */
+h2, h3, h4, h5, h6 {
+    font-family: var(--ff-body);
+    color: var(--text-color-primary);
+    text-align: left;
+    font-weight: var(--fw-thin);
     letter-spacing: var(--ls-sm);
 }
 

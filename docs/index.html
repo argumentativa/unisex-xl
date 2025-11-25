@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNISEX XL - Documentation</title>
+    <link rel="stylesheet" href="../src/styles/app.css">
+    <!-- Marked.js for markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+    <style>
+        :root {
+            --color-primary-orange: #FF6B35;
+            --color-accent-yellow: #FFD700;
+            --color-card-white: #FFFFFF;
+            --color-blue-accent: #4A90E2;
+            --color-blue-hover: #357ABD;
+            --border-radius-card: 16px;
+            --border-radius-button: 8px;
+            --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: var(--ff-body);
+            background: var(--color-background);
+            color: var(--text-color-primary);
+            padding: var(--spacing-xl);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .docs-wrapper {
+            display: flex;
+            gap: var(--spacing-xl);
+            max-width: 1600px;
+            margin: 0 auto;
+            height: calc(100vh - 120px);
+        }
+
+        .docs-sidebar {
+            width: 400px;
+            flex-shrink: 0;
+            overflow-y: auto;
+            padding-right: var(--spacing-md);
+        }
+
+        .docs-content {
+            flex: 1;
+            overflow-y: auto;
+            background: var(--color-card-white);
+            border-radius: var(--border-radius-card);
+            padding: var(--spacing-xl);
+            box-shadow: var(--shadow-card);
+        }
+
+        .docs-content.empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-style: italic;
+        }
+
+        h1 {
+            font-size: var(--fs-hero);
+            margin-bottom: var(--spacing-md);
+            font-weight: var(--fw-bold);
+        }
+
+        .section {
+            margin-bottom: var(--spacing-3xl);
+        }
+
+        .section-title {
+            font-family: var(--ff-body);
+            font-size: var(--fs-body-large);
+            font-weight: var(--fw-bold);
+            margin-bottom: var(--spacing-lg);
+            border-bottom: 2px solid var(--text-color-primary);
+            padding-bottom: var(--spacing-xs);
+        }
+
+        .section h3 {
+            font-size: var(--fs-heading-md);
+            margin-top: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            font-weight: var(--fw-semibold);
+        }
+
+        .doc-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .doc-item {
+            margin-bottom: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--color-card-white);
+            border-radius: var(--border-radius-card);
+            box-shadow: var(--shadow-card);
+            transition: box-shadow 0.2s ease, background-color 0.2s ease;
+            cursor: pointer;
+        }
+
+        .doc-item:hover {
+            box-shadow: var(--shadow-card-hover);
+            background-color: #f8f8f8;
+        }
+
+        .doc-item.active {
+            background-color: #e8f4f8;
+            border-left: 4px solid var(--color-blue-accent);
+        }
+
+        .doc-item a {
+            color: var(--text-color-primary);
+            text-decoration: none;
+            font-weight: var(--fw-semibold);
+            font-size: var(--fs-body-default);
+            display: block;
+        }
+
+        .doc-item a:hover {
+            color: var(--color-blue-accent);
+        }
+
+        .doc-path {
+            color: #666;
+            font-size: var(--fs-label-md);
+            font-family: monospace;
+            margin-top: var(--spacing-xs);
+        }
+
+        .doc-description {
+            color: #666;
+            font-size: var(--fs-body-default);
+            margin-top: var(--spacing-xs);
+        }
+
+        /* Markdown content styling */
+        .docs-content h1,
+        .docs-content h2,
+        .docs-content h3,
+        .docs-content h4 {
+            margin-top: var(--spacing-xl);
+            margin-bottom: var(--spacing-md);
+            font-weight: var(--fw-bold);
+        }
+
+        .docs-content h1 {
+            font-family: var(--ff-body);
+            font-size: var(--fs-heading-xl);
+            border-bottom: 2px solid var(--text-color-primary);
+            padding-bottom: var(--spacing-xs);
+        }
+
+        /* h2-h4 use body-large token for consistent sizing in docs */
+        .docs-content h2,
+        .docs-content h3,
+        .docs-content h4 {
+            font-size: var(--fs-body-large);
+        }
+
+        .docs-content code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+
+        .docs-content pre {
+            background: #f4f4f4;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-button);
+            overflow-x: auto;
+            margin: var(--spacing-md) 0;
+        }
+
+        .docs-content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .docs-content ul,
+        .docs-content ol {
+            margin: var(--spacing-md) 0;
+            padding-left: var(--spacing-xl);
+        }
+
+        .docs-content blockquote {
+            border-left: 4px solid var(--color-blue-accent);
+            padding-left: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+            color: #666;
+        }
+
+        .loading {
+            text-align: center;
+            color: #999;
+            padding: var(--spacing-xl);
+        }
+
+        @media (max-width: 1024px) {
+            .docs-wrapper {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .docs-sidebar {
+                width: 100%;
+                max-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div style="margin-bottom: var(--spacing-lg);">
+        <h1>UNISEX XL Documentation</h1>
+        <div id="quickLinksContainer"></div>
+    </div>
+
+    <div class="docs-wrapper">
+        <div class="docs-sidebar">
+            <div class="section">
+                <div class="section-title">Getting Started</div>
+                <ul class="doc-list">
+                    <li class="doc-item" data-href="README.md">
+                        <a href="README.md">README.md</a>
+                        <div class="doc-path">docs/README.md</div>
+                        <div class="doc-description">Main documentation index - Start here!</div>
+                    </li>
+                    <li class="doc-item" data-href="LIVE-CODING-QUICKSTART.md">
+                        <a href="LIVE-CODING-QUICKSTART.md">LIVE-CODING-QUICKSTART.md</a>
+                        <div class="doc-path">docs/LIVE-CODING-QUICKSTART.md</div>
+                        <div class="doc-description">Quick start guide for live coding</div>
+                    </li>
+                    <li class="doc-item" data-href="LIVE-CODING-README.md">
+                        <a href="LIVE-CODING-README.md">LIVE-CODING-README.md</a>
+                        <div class="doc-path">docs/LIVE-CODING-README.md</div>
+                        <div class="doc-description">Complete live coding guide</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Cheatsheets</div>
+                <ul class="doc-list">
+                    <li class="doc-item" data-href="cheatsheets/README.md">
+                        <a href="cheatsheets/README.md">Cheatsheets Overview</a>
+                        <div class="doc-path">docs/cheatsheets/README.md</div>
+                    </li>
+                    <li class="doc-item" data-href="cheatsheets/beginner.md">
+                        <a href="cheatsheets/beginner.md">Beginner Cheatsheet</a>
+                        <div class="doc-path">docs/cheatsheets/beginner.md</div>
+                        <div class="doc-description">Copy-paste learning (800+ lines) - PRINT THIS!</div>
+                    </li>
+                    <li class="doc-item" data-href="cheatsheets/mixing.md">
+                        <a href="cheatsheets/mixing.md">Mixing Cheatsheet</a>
+                        <div class="doc-path">docs/cheatsheets/mixing.md</div>
+                        <div class="doc-description">Frequencies, levels, effects - PRINT THIS!</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Reference Guides</div>
+                <ul class="doc-list">
+                    <li class="doc-item" data-href="reference/README.md">
+                        <a href="reference/README.md">Reference Overview</a>
+                        <div class="doc-path">docs/reference/README.md</div>
+                    </li>
+                    <li class="doc-item" data-href="reference/templates.md">
+                        <a href="reference/templates.md">Templates</a>
+                        <div class="doc-path">docs/reference/templates.md</div>
+                        <div class="doc-description">Copy-paste code templates</div>
+                    </li>
+                    <li class="doc-item" data-href="reference/tonejs-quickstart.md">
+                        <a href="reference/tonejs-quickstart.md">Tone.js Quickstart</a>
+                        <div class="doc-path">docs/reference/tonejs-quickstart.md</div>
+                    </li>
+                    <li class="doc-item" data-href="reference/tonejs-effects.md">
+                        <a href="reference/tonejs-effects.md">Tone.js Effects</a>
+                        <div class="doc-path">docs/reference/tonejs-effects.md</div>
+                    </li>
+                    <li class="doc-item" data-href="reference/strudel-quickstart.md">
+                        <a href="reference/strudel-quickstart.md">Strudel Quickstart</a>
+                        <div class="doc-path">docs/reference/strudel-quickstart.md</div>
+                    </li>
+                    <li class="doc-item" data-href="reference/strudel-advanced.md">
+                        <a href="reference/strudel-advanced.md">Strudel Advanced</a>
+                        <div class="doc-path">docs/reference/strudel-advanced.md</div>
+                    </li>
+                    <li class="doc-item" data-href="reference/timing.md">
+                        <a href="reference/timing.md">Timing</a>
+                        <div class="doc-path">docs/reference/timing.md</div>
+                    </li>
+                    <li class="doc-item" data-href="reference/troubleshooting.md">
+                        <a href="reference/troubleshooting.md">Troubleshooting</a>
+                        <div class="doc-path">docs/reference/troubleshooting.md</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Book-Based Learning</div>
+                
+                <h3>Attack Magazine</h3>
+                <ul class="doc-list">
+                    <li class="doc-item" data-href="books/attack-magazine/README.md">
+                        <a href="books/attack-magazine/README.md">README</a>
+                        <div class="doc-path">docs/books/attack-magazine/README.md</div>
+                    </li>
+                    <li class="doc-item" data-href="books/attack-magazine/quick-ref.md">
+                        <a href="books/attack-magazine/quick-ref.md">Quick Reference</a>
+                        <div class="doc-path">docs/books/attack-magazine/quick-ref.md</div>
+                    </li>
+                    <li class="doc-item" data-href="books/attack-magazine/guide-draft.md">
+                        <a href="books/attack-magazine/guide-draft.md">Guide Draft</a>
+                        <div class="doc-path">docs/books/attack-magazine/guide-draft.md</div>
+                    </li>
+                    <li class="doc-item" data-href="books/attack-magazine/notes.md">
+                        <a href="books/attack-magazine/notes.md">Notes</a>
+                        <div class="doc-path">docs/books/attack-magazine/notes.md</div>
+                    </li>
+                </ul>
+
+                <h3>Dance Music Manual</h3>
+                <ul class="doc-list">
+                    <li class="doc-item" data-href="books/dance-music-manual/README.md">
+                        <a href="books/dance-music-manual/README.md">README</a>
+                        <div class="doc-path">docs/books/dance-music-manual/README.md</div>
+                    </li>
+                    <li class="doc-item" data-href="books/dance-music-manual/tonejs.md">
+                        <a href="books/dance-music-manual/tonejs.md">Tone.js Implementation</a>
+                        <div class="doc-path">docs/books/dance-music-manual/tonejs.md</div>
+                    </li>
+                    <li class="doc-item" data-href="books/dance-music-manual/strudel.md">
+                        <a href="books/dance-music-manual/strudel.md">Strudel Implementation</a>
+                        <div class="doc-path">docs/books/dance-music-manual/strudel.md</div>
+                    </li>
+                    <li class="doc-item" data-href="books/dance-music-manual/quick-ref.md">
+                        <a href="books/dance-music-manual/quick-ref.md">Quick Reference</a>
+                        <div class="doc-path">docs/books/dance-music-manual/quick-ref.md</div>
+                    </li>
+                </ul>
+
+                <h3>Mixing & Mastering</h3>
+                <ul class="doc-list">
+                    <li class="doc-item" data-href="books/mixing-mastering/README.md">
+                        <a href="books/mixing-mastering/README.md">README</a>
+                        <div class="doc-path">docs/books/mixing-mastering/README.md</div>
+                    </li>
+                    <li class="doc-item" data-href="books/mixing-mastering/tonejs.md">
+                        <a href="books/mixing-mastering/tonejs.md">Tone.js Implementation</a>
+                        <div class="doc-path">docs/books/mixing-mastering/tonejs.md</div>
+                    </li>
+                    <li class="doc-item" data-href="books/mixing-mastering/strudel.md">
+                        <a href="books/mixing-mastering/strudel.md">Strudel Implementation</a>
+                        <div class="doc-path">docs/books/mixing-mastering/strudel.md</div>
+                    </li>
+                    <li class="doc-item" data-href="books/mixing-mastering/quick-ref.md">
+                        <a href="books/mixing-mastering/quick-ref.md">Quick Reference</a>
+                        <div class="doc-path">docs/books/mixing-mastering/quick-ref.md</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Examples</div>
+                <ul class="doc-list">
+                    <li class="doc-item" data-href="examples/SAMPLES.md">
+                        <a href="examples/SAMPLES.md">Samples</a>
+                        <div class="doc-path">docs/examples/SAMPLES.md</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Implementation & Technical</div>
+                <ul class="doc-list">
+                    <li class="doc-item" data-href="IMPLEMENTATION-SUMMARY.md">
+                        <a href="IMPLEMENTATION-SUMMARY.md">Implementation Summary</a>
+                        <div class="doc-path">docs/IMPLEMENTATION-SUMMARY.md</div>
+                    </li>
+                    <li class="doc-item" data-href="STRUDEL-VIZ-README.md">
+                        <a href="STRUDEL-VIZ-README.md">Strudel Visualizer README</a>
+                        <div class="doc-path">docs/STRUDEL-VIZ-README.md</div>
+                    </li>
+                    <li class="doc-item" data-href="STRUDEL-IMPLEMENTATION-FIX.md">
+                        <a href="STRUDEL-IMPLEMENTATION-FIX.md">Strudel Implementation Fix</a>
+                        <div class="doc-path">docs/STRUDEL-IMPLEMENTATION-FIX.md</div>
+                    </li>
+                    <li class="doc-item" data-href="PRD.md">
+                        <a href="PRD.md">Product Requirements Document</a>
+                        <div class="doc-path">docs/PRD.md</div>
+                    </li>
+                    <li class="doc-item" data-href="cursor-guidance.md">
+                        <a href="cursor-guidance.md">Cursor Guidance</a>
+                        <div class="doc-path">docs/cursor-guidance.md</div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Archive</div>
+                <ul class="doc-list">
+                    <li class="doc-item" data-href="archive/CLEANUP-LOG.md">
+                        <a href="archive/CLEANUP-LOG.md">Cleanup Log</a>
+                        <div class="doc-path">docs/archive/CLEANUP-LOG.md</div>
+                    </li>
+                    <li class="doc-item" data-href="archive/COMPREHENSIVE-ANALYSIS.md">
+                        <a href="archive/COMPREHENSIVE-ANALYSIS.md">Comprehensive Analysis</a>
+                        <div class="doc-path">docs/archive/COMPREHENSIVE-ANALYSIS.md</div>
+                    </li>
+                    <li class="doc-item" data-href="archive/PROJECT-ANALYSIS-OLD.md">
+                        <a href="archive/PROJECT-ANALYSIS-OLD.md">Project Analysis (Old)</a>
+                        <div class="doc-path">docs/archive/PROJECT-ANALYSIS-OLD.md</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="docs-content empty" id="docsContent">
+            <div>Select a document from the left to view its content</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { QuickLinks } from '../src/ui/shared/QuickLinks.ts';
+        QuickLinks.init('quickLinksContainer');
+
+        // Markdown loading functionality
+        const contentArea = document.getElementById('docsContent');
+        const docItems = document.querySelectorAll('.doc-item');
+
+        async function loadMarkdown(href) {
+            try {
+                contentArea.classList.remove('empty');
+                contentArea.innerHTML = '<div class="loading">Loading...</div>';
+
+                const response = await fetch(href);
+                if (!response.ok) {
+                    throw new Error(`Failed to load: ${response.statusText}`);
+                }
+
+                const markdown = await response.text();
+                const html = marked.parse(markdown);
+                contentArea.innerHTML = html;
+
+                // Update active state
+                docItems.forEach(item => item.classList.remove('active'));
+                const activeItem = document.querySelector(`[data-href="${href}"]`);
+                if (activeItem) {
+                    activeItem.classList.add('active');
+                }
+            } catch (error) {
+                contentArea.innerHTML = `<div style="color: red; padding: var(--spacing-xl);">Error loading document: ${error.message}</div>`;
+            }
+        }
+
+        // Add click handlers to all doc items
+        docItems.forEach(item => {
+            const link = item.querySelector('a');
+            const href = item.getAttribute('data-href');
+
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                loadMarkdown(href);
+            });
+        });
+
+        // Load README.md by default
+        loadMarkdown('README.md');
+    </script>
+</body>
+</html>

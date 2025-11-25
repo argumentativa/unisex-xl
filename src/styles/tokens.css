@@ -22,6 +22,8 @@
   --fs-h5: clamp(12px, 1.5vw, 14px);
   --fs-h6: clamp(11px, 1.2vw, 12px);
   --fs-body-default: clamp(14px, 1.5vw, 15px);
+  --fs-body-lg: clamp(16px, 2vw, 18px);
+  --fs-body-large: 18px;
   --fs-label-lg: clamp(13px, 1.4vw, 14px);
   --fs-label-md: clamp(11px, 1.2vw, 12px);
   --fs-label-sm: clamp(10px, 1vw, 10px);

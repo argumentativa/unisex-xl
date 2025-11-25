@@ -14,6 +14,7 @@
                 <h1 class="logo">UNISEX XL</h1>
                 <span class="subtitle">Live Coding Music</span>
             </div>
+            <div id="quickLinksContainer"></div>
             <a href="./gallery.html" class="gallery-link">📁 View All Projects (46)</a>
         </header>
 
@@ -73,5 +74,9 @@
     </div>
 
     <script type="module" src="./src/app.ts"></script>
+    <script type="module">
+        import { QuickLinks } from './src/ui/shared/QuickLinks.ts';
+        QuickLinks.init('quickLinksContainer');
+    </script>
 </body>
 </html>

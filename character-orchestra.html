@@ -9,6 +9,9 @@
 </head>
 <body>
     <div class="character-orchestra-app">
+        <!-- Quick Links Navigation -->
+        <div id="quickLinksContainer"></div>
+        
         <!-- Play/Stop Controls -->
         <div class="play-controls">
             <span id="playBtn" class="control-btn play-btn" role="button" tabindex="0">▶ Play</span>
@@ -49,6 +52,10 @@
     </div>
 
     <script type="module" src="./src/character-orchestra-main.ts"></script>
+    <script type="module">
+        import { QuickLinks } from './src/ui/shared/QuickLinks.ts';
+        QuickLinks.init('quickLinksContainer');
+    </script>
 </body>
 </html>
 

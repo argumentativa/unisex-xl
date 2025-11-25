@@ -15,6 +15,7 @@
                 <h1 class="sequencer-logo">STEP SEQUENCER</h1>
                 <span class="sequencer-subtitle">16 Steps • 16th Note Resolution • All Tone.js Instruments</span>
             </div>
+            <div id="quickLinksContainer"></div>
         </header>
 
         <!-- Controls -->
@@ -45,6 +46,10 @@
     </div>
 
     <script type="module" src="./src/sequencer-main.ts"></script>
+    <script type="module">
+        import { QuickLinks } from './src/ui/shared/QuickLinks.ts';
+        QuickLinks.init('quickLinksContainer');
+    </script>
 </body>
 </html>
 
