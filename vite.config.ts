@@ -3,6 +3,7 @@ import monacoEditorPlugin from 'vite-plugin-monaco-editor';
 import { resolve } from 'path';
 
 export default defineConfig({
+  base: '/unisex-xl/', // GitHub Pages base path
   plugins: [
     (monacoEditorPlugin as any).default({
       languageWorkers: ['editorWorkerService', 'typescript', 'json']
