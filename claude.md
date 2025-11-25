@@ -118,34 +118,108 @@ Before writing ANY code, you MUST:
 
 ---
 
-## Build Configuration
+## Build Configuration & Static Assets
 
-### Adding New HTML Pages
+### Understanding Vite Build System
 
-**Important:** Vite only includes files specified in the build configuration. New HTML pages must be added to `vite.config.ts` to be included in the build output.
+**CRITICAL:** Vite has TWO ways to include files in the production build:
 
-**Example:** To add a new HTML file to the build:
+#### 1. **Processed HTML Files** (Main App Pages)
+Files that Vite should process, bundle, and optimize:
+- `index.html` (main app)
+- `gallery.html` (project gallery)
 
-1. **Edit `vite.config.ts`:**
-   ```typescript
-   build: {
-     rollupOptions: {
-       input: {
-         main: resolve(__dirname, 'index.html'),
-         gallery: resolve(__dirname, 'gallery.html'),
-         newPage: resolve(__dirname, 'new-page.html')  // Add here
-       }
-     }
-   }
-   ```
+**Add these to `vite.config.ts` → `build.rollupOptions.input`:**
+```typescript
+build: {
+  rollupOptions: {
+    input: {
+      main: resolve(__dirname, 'index.html'),
+      gallery: resolve(__dirname, 'gallery.html'),
+      newPage: resolve(__dirname, 'new-page.html')  // Add new processed pages here
+    }
+  }
+}
+```
 
-2. **Test the build:**
-   ```bash
-   npm run build
-   ls dist/*.html  # Verify your new file is included
-   ```
+#### 2. **Static Assets** (Demos & Standalone Pages)
+Files that should be COPIED AS-IS without processing:
+- `p5/**/*` - All p5.js demos and visualizations
+- `strudel/**/*` - Strudel live coding demos
+- `tonejs/**/*` - Tone.js demos
+- Any standalone HTML/JS/CSS that uses external libraries
 
-**Without this step:** Your HTML file won't be deployed to GitHub Pages and will return 404 errors.
+**These are copied via `vite-plugin-static-copy` in the plugins section:**
+```typescript
+import { viteStaticCopy } from 'vite-plugin-static-copy';
+
+plugins: [
+  viteStaticCopy({
+    targets: [
+      { src: 'p5/**/*', dest: 'p5' },
+      { src: 'strudel/**/*', dest: 'strudel' },
+      { src: 'tonejs/**/*', dest: 'tonejs' }
+    ]
+  })
+]
+```
+
+### When to Use Each Approach
+
+**Use processed HTML** (rollupOptions.input) when:
+- File imports TypeScript/bundled assets
+- File needs Vite's build optimization
+- File is part of the main app
+
+**Use static copy** (vite-plugin-static-copy) when:
+- File uses external CDN libraries (p5.js, Strudel, etc.)
+- File has non-module scripts (`<script src="...">` without `type="module"`)
+- Entire directory should be copied as-is
+- File contains special characters that break Vite's HTML parser (e.g., `<` in code blocks)
+
+### Testing Your Build
+
+**After adding new files, ALWAYS test the build:**
+
+```bash
+# Build and check output
+npm run build
+
+# Verify HTML files
+find dist -name "*.html" | wc -l  # Should show all expected HTML files
+
+# Check specific directories
+ls -la dist/p5/          # Should show all p5 demos
+ls -la dist/strudel/     # Should show strudel demos
+
+# Verify .nojekyll file exists
+ls -la dist/.nojekyll    # MUST exist for GitHub Pages
+```
+
+### Common Build Issues
+
+**Problem:** New HTML page returns 404 on GitHub Pages
+**Solution:** Add to static copy targets in `vite.config.ts`
+
+**Problem:** Page loads but scripts/assets return 404
+**Solution:** Ensure the entire directory is in static copy targets
+
+**Problem:** Build fails with "can't be bundled without type='module'"
+**Solution:** Use static copy instead of rollupOptions.input
+
+**Problem:** GitHub Pages ignores files starting with `_`
+**Solution:** `.nojekyll` file is automatically created by custom plugin in `vite.config.ts`
+
+### Deployment Checklist
+
+Before deploying to GitHub Pages:
+
+- [ ] All new HTML files added to `vite.config.ts` (either input or static copy)
+- [ ] Run `npm run build` successfully
+- [ ] Verify all files in `dist/` directory
+- [ ] Check `.nojekyll` file exists in `dist/`
+- [ ] Test paths are relative (not absolute `/path`)
+- [ ] Run `npm run deploy`
 
 ---
 
