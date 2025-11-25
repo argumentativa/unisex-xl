@@ -182,9 +182,9 @@ export class StepButton {
     this.element.style.setProperty('--step-lightness', `${lightness}%`);
     this.element.style.setProperty('--row-activity', this.rowActivity.toString());
 
-    // Clear inline styles used by character mode
+    // Clear inline styles used by character mode (let CSS take over)
     this.element.style.backgroundColor = '';
-    this.element.style.borderColor = '';
+    this.element.style.border = '';
     this.element.style.color = '';
   }
 
@@ -199,7 +199,7 @@ export class StepButton {
     if (!this.stepState.isActive || this.stepState.noteIndex === -1) {
       // OFF state: dark gray
       this.element.style.backgroundColor = 'rgba(42, 42, 46, 0.3)';
-      this.element.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+      this.element.style.border = '1px solid rgba(255, 255, 255, 0.3)';
       this.element.style.color = 'rgba(255, 255, 255, 0.3)';
       return;
     }
@@ -208,12 +208,12 @@ export class StepButton {
       // Melody/Bass: lightness increases with pitch
       const lightness = 25 + (this.stepState.noteIndex / 11) * 50;
       this.element.style.backgroundColor = `hsl(${this.hue}, 70%, ${lightness}%)`;
-      this.element.style.borderColor = '#ffffff';
+      this.element.style.border = '2px solid #ffffff';
       this.element.style.color = '#ffffff';
     } else {
       // Drums: fixed medium lightness
       this.element.style.backgroundColor = `hsl(${this.hue}, 70%, 50%)`;
-      this.element.style.borderColor = '#ffffff';
+      this.element.style.border = '2px solid #ffffff';
       this.element.style.color = '#ffffff';
     }
   }
