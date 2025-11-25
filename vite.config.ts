@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import monacoEditorPlugin from 'vite-plugin-monaco-editor';
+import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { resolve } from 'path';
 
 export default defineConfig({
@@ -7,6 +8,30 @@ export default defineConfig({
   plugins: [
     (monacoEditorPlugin as any).default({
       languageWorkers: ['editorWorkerService', 'typescript', 'json']
+    }),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'p5/**/*',
+          dest: 'p5'
+        },
+        {
+          src: 'strudel/**/*',
+          dest: 'strudel'
+        },
+        {
+          src: 'tonejs/**/*',
+          dest: 'tonejs'
+        },
+        {
+          src: 'tonejs-template/**/*',
+          dest: 'tonejs-template'
+        },
+        {
+          src: 'projects.html',
+          dest: ''
+        }
+      ]
     })
   ],
   optimizeDeps: {
