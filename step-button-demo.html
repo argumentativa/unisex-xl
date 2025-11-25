@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>StepButton Component Demo</title>
+  <link rel="stylesheet" href="./src/styles/step-button.css">
   <style>
     * {
       margin: 0;
@@ -42,27 +43,14 @@
       gap: 2rem;
     }
 
-    /* Step Button Styles */
+    /* Demo-specific step button sizing */
     .step-button {
       width: 80px;
       height: 80px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      background-color: hsl(
-        var(--step-hue, 0),
-        var(--step-saturation, 0%),
-        var(--step-lightness, 20%)
-      );
     }
 
     .step-button:hover {
       transform: scale(1.1);
-    }
-
-    .step-button.glow-active {
-      /* No glow effect */
     }
 
     .state-display {

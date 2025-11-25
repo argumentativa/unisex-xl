@@ -6,6 +6,7 @@
 import * as Tone from 'tone';
 import { CHARACTERS, createCharacterSynth, type Character } from './Character';
 import { CharacterRow } from './CharacterRow';
+import type { StepState } from '../shared/StepButton';
 export type { StepState } from '../shared/StepButton';
 
 export interface CharacterPattern {

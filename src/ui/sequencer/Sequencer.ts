@@ -7,6 +7,7 @@ import * as Tone from 'tone';
 import type { AudioEngine } from '../../core/audio';
 import type { InstrumentType } from '../../types';
 import { InstrumentRow } from './InstrumentRow';
+import type { StepState } from '../shared/StepButton';
 export type { StepState } from '../shared/StepButton';
 
 export interface StepPattern {
