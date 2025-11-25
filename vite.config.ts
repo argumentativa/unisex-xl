@@ -2,6 +2,7 @@ import { defineConfig } from 'vite';
 import monacoEditorPlugin from 'vite-plugin-monaco-editor';
 import { viteStaticCopy } from 'vite-plugin-static-copy';
 import { resolve } from 'path';
+import { writeFileSync } from 'fs';
 
 export default defineConfig({
   base: '/unisex-xl/', // GitHub Pages base path
@@ -32,7 +33,15 @@ export default defineConfig({
           dest: ''
         }
       ]
-    })
+    }),
+    {
+      name: 'create-nojekyll',
+      closeBundle() {
+        const nojekyllPath = resolve(__dirname, 'dist/.nojekyll');
+        writeFileSync(nojekyllPath, '');
+        console.log('✓ Created .nojekyll file for GitHub Pages');
+      }
+    }
   ],
   optimizeDeps: {
     include: ['monaco-editor', 'tone']
