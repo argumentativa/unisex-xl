@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Unified StepButton Component Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Times New Roman', serif;
+      background: white;
+      color: black;
+      padding: 2rem;
+      line-height: 1.6;
+    }
+
+    h1 {
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 2rem;
+    }
+
+    .section {
+      margin-bottom: 3rem;
+      padding: 1.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .section h2 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .section p {
+      margin-bottom: 1rem;
+      color: #666;
+    }
+
+    .controls {
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+    }
+
+    button.control-btn {
+      font-family: 'Times New Roman', serif;
+      padding: 0.5rem 1rem;
+      background: white;
+      border: 1px solid black;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    button.control-btn:hover {
+      background: #f0f0f0;
+    }
+
+    button.control-btn:active {
+      background: #e0e0e0;
+    }
+
+    .step-row {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 1rem;
+    }
+
+    .character-row-container {
+      margin-bottom: 1.5rem;
+    }
+
+    .character-label {
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      font-weight: bold;
+    }
+
+    /* Sequencer Mode Styles */
+    .step-button {
+      width: 40px;
+      height: 40px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      background-color: hsl(
+        var(--step-hue, 0),
+        var(--step-saturation, 0%),
+        var(--step-lightness, 20%)
+      );
+      position: relative;
+    }
+
+    .step-button:hover {
+      transform: scale(1.05);
+      border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .step-button.current-step {
+      border-color: #ffffff;
+      border-width: 3px;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+    }
+
+    .step-button.glow-active {
+      box-shadow: 0 0 10px hsla(
+        var(--step-hue, 0),
+        var(--step-saturation, 0%),
+        calc(var(--step-lightness, 20%) + 20%),
+        0.6
+      );
+    }
+
+    /* Character Mode Styles */
+    .step-button.character-mode {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .step-emoji {
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .step-note-label {
+      font-size: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .info-box {
+      background: #f9f9f9;
+      padding: 1rem;
+      border-left: 4px solid #0066cc;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .info-box strong {
+      color: #0066cc;
+    }
+
+    code {
+      background: #f0f0f0;
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>Unified StepButton Component Demo</h1>
+  <p class="subtitle">Testing both Sequencer and Character Orchestra modes with a single component</p>
+
+  <div class="controls">
+    <button id="play-btn" class="control-btn">▶ Play</button>
+    <button id="stop-btn" class="control-btn">⏹ Stop</button>
+    <button id="randomize-btn" class="control-btn">🎲 Randomize</button>
+  </div>
+
+  <div class="section">
+    <h2>Sequencer Mode (Hue-Based)</h2>
+    <p>Square buttons with color intensity and saturation feedback. Click to toggle steps and cycle notes.</p>
+    <div id="sequencer-demo"></div>
+    <div class="info-box">
+      <strong>Features:</strong>
+      <ul>
+        <li>Click to toggle on/off and cycle through chromatic notes</li>
+        <li>Saturation increases with interaction level (press count)</li>
+        <li>Lightness indicates activity level</li>
+        <li>Active steps have a subtle glow effect</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Character Orchestra Mode (Character-Based)</h2>
+    <p>Circular buttons with emoji and note labels. Colors extracted from character's base color.</p>
+    <div id="character-demo"></div>
+    <div class="info-box">
+      <strong>Features:</strong>
+      <ul>
+        <li>Click to toggle on/off</li>
+        <li>Melodic instruments (Bass 🎸, Melody 🎹): lightness increases with pitch, notes cycle on click</li>
+        <li>Percussive instruments (Kick 🥁, Snare 🎯): fixed lightness, show ♪ symbol</li>
+        <li>Off state: dark gray with low opacity</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Technical Details</h2>
+    <p><strong>Component Location:</strong> <code>src/ui/shared/StepButton.ts</code></p>
+    <p><strong>Configuration:</strong> Use <code>ColorConfig</code> to switch between modes:</p>
+    <ul>
+      <li><code>{ mode: 'hue', hue: 220 }</code> - Sequencer mode</li>
+      <li><code>{ mode: 'character', character: Character }</code> - Character Orchestra mode</li>
+    </ul>
+    <p><strong>Next Steps:</strong> If this looks good, we can refactor the existing components to use this unified version.</p>
+  </div>
+
+  <script type="module" src="/src/ui/shared/step-button-demo.ts"></script>
+</body>
+</html>
+
