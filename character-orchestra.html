@@ -28,7 +28,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Character Orchestra - UNISEX XL</title>
-  <script type="module" crossorigin src="/unisex-xl/assets/characterOrchestra-CdjA1axv.js"></script>
+  <script type="module" crossorigin src="/unisex-xl/assets/characterOrchestra-CMS88ECC.js"></script>
   <link rel="modulepreload" crossorigin href="/unisex-xl/assets/index-cqQ3Oiz6.js">
   <link rel="modulepreload" crossorigin href="/unisex-xl/assets/StepButton-D8ib-1fl.js">
   <link rel="stylesheet" crossorigin href="/unisex-xl/assets/index-C97YlBZ8.css">
@@ -40,6 +40,10 @@
         <div class="play-controls">
             <button id="playBtn" class="control-btn play-btn">▶ Play</button>
             <button id="stopBtn" class="control-btn stop-btn">⏹ Stop</button>
+            <div class="tempo-control">
+                <label for="bpm">BPM: <span id="bpmValue">120</span></label>
+                <input type="range" id="bpm" min="60" max="200" value="120" step="1">
+            </div>
         </div>
 
         <!-- Usage Instructions -->
