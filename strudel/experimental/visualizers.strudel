@@ -1,0 +1,182 @@
+// VISUAL OVERLOAD - Berlin Techno Edition
+// Fixed and working!
+
+setcps(0.7)
+
+stack(
+  // ═══════════════════════════════════════
+  // SPIRAL KICK - Rotating madness
+  // ═══════════════════════════════════════
+  s("kick ~ kick [kick kick]")
+    .bank("RolandTR909")
+    .gain(1.5)
+    .color("<red green blue yellow>")
+    ._spiral({
+      stretch: 9,
+      size: 500,
+      thickness: 9,
+      steady: 0.85,
+      activeColor: "#FF0000",
+      inactiveColor: "#330000",
+      fade: 10,
+      logSpiral: 7
+    }),
+
+  // ═══════════════════════════════════════
+  // VERTICAL PUNCHCARD BASS - Matrix style
+  // ═══════════════════════════════════════
+  note("a1 [e2 a2] d2 [g2 a1]")
+    .s("sawtooth")
+    .lpf(sine.range(300, 1200).slow(8))
+    .gain(1.2)
+    .color("<cyan magenta yellow white>")
+    ._punchcard({
+      labels: 1,
+      cycles: 8,
+      vertical: 1,
+      flipTime: 1,
+      flipValues: 1,
+      active: "#00FFFF",
+      inactive: "#003333",
+      fillActive: 1,
+      strokeActive: 1,
+      smear: 1,
+      playheadColor: "#FF00FF",
+      background: "#000000"
+    }),
+
+  // ═══════════════════════════════════════
+  // ARPEGGIO - Piano roll with auto-range
+  // ═══════════════════════════════════════
+  note("0 2 4 7 9 11 14 16")
+    .scale("<a:minor b:phrygian d:dorian>")
+    .struct("x(7,16)")
+    .s("triangle")
+    .lpf(4000)
+    .gain(0.6)
+    .color("<violet blue cyan green yellow orange red>")
+    ._pianoroll({
+      labels: 1,
+      cycles: 4,
+      autorange: 1,
+      active: "#AA00FF",
+      inactive: "#330066",
+      fillActive: 1,
+      fill: 1,
+      colorizeInactive: 1,
+      fold: 1,
+      playheadColor: "#FFFF00"
+    }),
+
+  // ═══════════════════════════════════════
+  // MELODY - Horizontal scrolling
+  // ═══════════════════════════════════════
+  note("<[c5 e5 g5 b5] [d5 f5 a5 c6] [e5 g5 b5 d6]>")
+    .s("square")
+    .lpf(3000)
+    .gain(0.5)
+    .room(0.5)
+    .color("<red orange yellow green blue indigo violet>")
+    ._punchcard({
+      labels: 1,
+      cycles: 6,
+      vertical: 0,
+      playhead: 0.5,
+      active: "#00FF00",
+      inactive: "#003300",
+      fillActive: 1,
+      strokeActive: 1,
+      overscan: 2,
+      background: "#141428"
+    }),
+
+  // ═══════════════════════════════════════
+  // CHORDS - Pitchwheel circular
+  // ═══════════════════════════════════════
+  note("<a3 d4 e4 g4>")
+    .chord("<m M7 m7 M>")
+    .voicing()
+    .s("sawtooth")
+    .lpf(1500)
+    .gain(0.8)
+    .room(0.7)
+    .color("magenta")
+    ._pitchwheel({
+      edo: 12,
+      root: "A",
+      thickness: 4,
+      margin: 10
+    }),
+
+  // ═══════════════════════════════════════
+  // PERCUSSION - Euclidean rhythms
+  // ═══════════════════════════════════════
+  s("hh cp hh cp")
+    .euclid("<3 5 7>", 8)
+    .bank("RolandTR909")
+    .gain(0.8)
+    .speed(sine.range(0.8, 1.5).slow(16))
+    .color("<white yellow cyan>")
+    ._punchcard({
+      labels: 1,
+      cycles: 2,
+      active: "#FFFF00",
+      fillActive: 1,
+      strokeActive: 1,
+      hideInactive: 1,
+      playheadColor: "#FF0000"
+    }),
+
+  // ═══════════════════════════════════════
+  // SNARE with extreme visualization
+  // ═══════════════════════════════════════
+  s("~ sd ~ sd")
+    .bank("RolandTR909")
+    .gain(1.0)
+    .speed("<1 0.9 1.1>")
+    .color("orange")
+    ._punchcard({
+      labels: 1,
+      cycles: 2,
+      active: "#FF6600",
+      fillActive: 1,
+      strokeActive: 1
+    }),
+
+  // ═══════════════════════════════════════
+  // SUB BASS - Deep foundation
+  // ═══════════════════════════════════════
+  note("<a0 e0 d0 g0>")
+    .s("sine")
+    .gain(0.6)
+    .color("red")
+    ._punchcard({
+      labels: 1,
+      cycles: 8,
+      active: "#990000",
+      inactive: "#330000",
+      fillActive: 1,
+      minMidi: 20,
+      maxMidi: 40,
+      background: "#280000"
+    })
+)
+  // ═══════════════════════════════════════
+  // GLOBAL VISUALIZATIONS
+  // ═══════════════════════════════════════
+  ._scope({
+    align: 1,
+    color: "#00FFFF",
+    thickness: 3,
+    scale: 0.3,
+    pos: 0.1
+  })
+  ._spectrum({
+    thickness: 4,
+    speed: 2,
+    min: -90,
+    max: 0
+  })
+  .room(0.3)
+  .delay(0.2)
+  .gain(0.85)

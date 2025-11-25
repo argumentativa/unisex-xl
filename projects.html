@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNISEX XL - All Projects</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Times New Roman', serif;
+            background: #ffffff;
+            color: #000000;
+            padding: 40px 20px;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            font-weight: normal;
+        }
+
+        .subtitle {
+            color: #000000;
+            margin-bottom: 30px;
+            font-size: 1em;
+        }
+
+        .nav-links {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #000000;
+        }
+
+        .nav-links a {
+            color: #0000ff;
+            text-decoration: underline;
+            margin-right: 20px;
+        }
+
+        .nav-links a:hover {
+            text-decoration: none;
+        }
+
+        .toc {
+            background: #f9f9f9;
+            border: 1px solid #000000;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+
+        .toc h3 {
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: normal;
+        }
+
+        .toc-columns {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .toc-section {
+            margin-bottom: 10px;
+        }
+
+        .toc-section strong {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: normal;
+        }
+
+        .toc-section a {
+            display: block;
+            color: #0000ff;
+            text-decoration: underline;
+            font-size: 0.9em;
+            margin-left: 15px;
+            margin-bottom: 3px;
+        }
+
+        .toc-section a:hover {
+            text-decoration: none;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            scroll-margin-top: 20px;
+        }
+
+        .section h2 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            font-weight: normal;
+        }
+
+        .demo-grid {
+            display: block;
+            margin-top: 10px;
+        }
+
+        .demo-card {
+            text-decoration: none;
+            color: #000000;
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .demo-card h3 {
+            font-size: 1em;
+            margin-bottom: 5px;
+            font-weight: normal;
+        }
+
+        .demo-card p {
+            color: #000000;
+            font-size: 0.9em;
+            line-height: 1.4;
+            margin-bottom: 5px;
+        }
+
+        .demo-card a {
+            color: #0000ff;
+            text-decoration: underline;
+        }
+
+        footer {
+            margin-top: 60px;
+            padding-top: 20px;
+            border-top: 1px solid #000000;
+            color: #000000;
+            font-size: 0.9em;
+        }
+
+        footer a {
+            color: #0000ff;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>UNISEX XL - All Projects</h1>
+        <div class="subtitle">Complete index of all projects, demos, and patterns</div>
+
+        <div class="nav-links">
+            <a href="index.html">Main App</a>
+            <a href="README.md">Documentation</a>
+            <a href="patterns/README.md">Patterns Docs</a>
+        </div>
+
+        <!-- Table of Contents -->
+        <div class="toc">
+            <h3>Navigation</h3>
+            <div class="toc-columns">
+                <div class="toc-section">
+                    <strong>Projects</strong>
+                    <a href="#p5js-image-ascii">P5.js Image ASCII</a>
+                    <a href="#p5js-video-ascii">P5.js Video ASCII</a>
+                    <a href="#p5js-video-circles">P5.js Video Circles</a>
+                    <a href="#p5js-strudel">P5.js Strudel</a>
+                    <a href="#p5js-experimental">P5.js Experimental</a>
+                    <a href="#patterns-image-ascii">Patterns Image ASCII</a>
+                    <a href="#patterns-video-ascii">Patterns Video ASCII</a>
+                    <a href="#patterns-strudel">Patterns Strudel</a>
+                    <a href="#patterns-visual">Patterns Visual</a>
+                    <a href="#patterns-experimental">Patterns Experimental</a>
+                    <a href="#strudel-patterns">Strudel Patterns</a>
+                    <a href="#tonejs-patterns">Tone.js Patterns</a>
+                    <a href="#video-patterns">Video Patterns</a>
+                </div>
+                <div class="toc-section">
+                    <strong>Documentation</strong>
+                    <a href="#docs-cheatsheets">Cheatsheets</a>
+                    <a href="#docs-reference">Reference Library</a>
+                    <a href="#docs-books">Books</a>
+                    <a href="#docs-examples">Examples</a>
+                    <a href="#docs-main">Main Docs</a>
+                </div>
+                <div class="toc-section">
+                    <strong>Reference</strong>
+                    <a href="#reference-indexes">Reference Indexes</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- P5.js Demos (from p5/) -->
+        <div class="section" id="p5js-image-ascii">
+            <h2>P5.js Image ASCII Art</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><a href="p5/image-ascii/image-ascii.html">Basic Image ASCII</a></h3>
+                    <p>Simple ASCII art conversion from image</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/image-ascii/image-ascii-color.html">Color Image ASCII</a></h3>
+                    <p>ASCII art with color preservation</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/image-ascii/image-ascii-color-bold.html">Bold Color ASCII + Audio</a></h3>
+                    <p>Bold ASCII art with audio reactivity (BlackHole)</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/image-ascii/image-ascii-color-bold-mic.html">ASCII + Microphone</a></h3>
+                    <p>Audio-reactive ASCII using microphone input</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/image-ascii/image-ascii-color-bold-OPTIMIZED.html">Optimized ASCII Visualizer</a></h3>
+                    <p>Performance-optimized version with audio reactivity</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/image-ascii/image-ascii-color-bold-OPTIMIZED-autostart.html">Optimized ASCII (Auto-start)</a></h3>
+                    <p>Performance-optimized, auto-starts audio - perfect for live performances</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/image-ascii/image-ascii-color-bold-strudel.html">ASCII + Strudel Live Coding</a></h3>
+                    <p>Split-screen: Strudel editor + ASCII visualizer</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/image-ascii/man.html">Man Portrait (High Detail)</a></h3>
+                    <p>High detail ASCII portrait with audio reactivity</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/image-ascii/unai.html">Unai Portrait (Optimized)</a></h3>
+                    <p>Performance-optimized ASCII portrait with audio reactivity</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="p5js-video-ascii">
+            <h2>P5.js Video ASCII Art (Webcam)</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><a href="p5/video-ascii/video-ascii.html">Basic Video ASCII</a></h3>
+                    <p>Real-time webcam to ASCII conversion</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/video-ascii/video-ascii-bold.html">Bold Video ASCII</a></h3>
+                    <p>Enhanced webcam ASCII with bold text</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="p5js-video-circles">
+            <h2>P5.js Video Circles</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><a href="p5/circles/index.html">Circles Video</a></h3>
+                    <p>Webcam video rendered as colored circles based on pixel brightness</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/audio-reactive/index.html">Audio-Reactive Circles</a></h3>
+                    <p>Video circles with audio-reactive size and movement</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="p5js-strudel">
+            <h2>P5.js Strudel Integration</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><a href="p5/strudel-demos/demo-with-strudel.html">Strudel + ASCII Visualizer</a></h3>
+                    <p>Full split-screen interface: Strudel live coding with ASCII visualization</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/strudel-demos/test-tonejs.html">Tone.js Test Pattern</a></h3>
+                    <p>Simple test pattern for audio visualization development</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="p5js-experimental">
+            <h2>P5.js Experimental</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><a href="p5/misc/test-animation.html">Animation Test</a></h3>
+                    <p>Experimental animation tests</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/sketch.html">Basic Webcam Sketch</a></h3>
+                    <p>Live webcam to ASCII (64×48 basic)</p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="section" id="patterns-visual">
+            <h2>Patterns - Visual Patterns</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><a href="p5/audio-reactive/index.html">Audio-Reactive Circles</a></h3>
+                    <p>Video circles with audio-reactive size and movement</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/circles/index.html">Circles Pattern</a></h3>
+                    <p>Webcam video rendered as colored circles based on pixel brightness</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/collision-balls/index.html">Collision Balls</a></h3>
+                    <p>Physics simulation with collision detection (no physics engine)</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/balls/index.html">Balls Pattern</a></h3>
+                    <p>Simple balls visual pattern</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/faces/index.html">Face Detection</a></h3>
+                    <p>Face detection and visualization pattern</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/snore/index.html">Snore Video</a></h3>
+                    <p>Video playback pattern example</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="patterns-experimental">
+            <h2>Patterns - Experimental & Misc</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><a href="p5/misc/test-animation.html">Animation Tests</a></h3>
+                    <p>Experimental animation testing</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="p5/demos-legacy/ascii-visualizer-test.html">ASCII Visualizer Test (Legacy)</a></h3>
+                    <p>Original ASCII visualizer test implementation</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Documentation Section -->
+        <div class="section" id="docs-cheatsheets">
+            <h2>Documentation - Cheatsheets</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><a href="docs/cheatsheets/README.md">Cheatsheets Overview</a></h3>
+                    <p>Start here - overview of all cheatsheets</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/cheatsheets/beginner.md">Beginner Cheatsheet</a></h3>
+                    <p>Copy-paste learning guide (800+ lines) - print this!</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/cheatsheets/mixing.md">Mixing Cheatsheet</a></h3>
+                    <p>Frequencies, levels, effects - print this!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="docs-reference">
+            <h2>Documentation - Reference Library</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><a href="docs/reference/README.md">Reference Overview</a></h3>
+                    <p>Quick lookups and getting-started guides</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/reference/tonejs-quickstart.md">Tone.js Quickstart</a></h3>
+                    <p>Synths, notes, basic patterns</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/reference/tonejs-effects.md">Tone.js Effects</a></h3>
+                    <p>Reverb, delay, filters, chains</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/reference/strudel-quickstart.md">Strudel Quickstart</a></h3>
+                    <p>Mini-notation, patterns, samples</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/reference/strudel-advanced.md">Strudel Advanced</a></h3>
+                    <p>Euclidean rhythms, transformations</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/reference/templates.md">Templates</a></h3>
+                    <p>Complete copy-paste examples</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/reference/timing.md">Timing</a></h3>
+                    <p>BPM, note durations, Transport</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/reference/troubleshooting.md">Troubleshooting</a></h3>
+                    <p>Common issues & fixes</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="docs-books">
+            <h2>Documentation - Books</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><a href="docs/books/attack-magazine/README.md">Attack Magazine Techno Secrets</a></h3>
+                    <p>Production techniques & approaches</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/books/attack-magazine/guide-draft.md">Attack Magazine - Production Guide</a></h3>
+                    <p>Techniques & approaches</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/books/attack-magazine/quick-ref.md">Attack Magazine - Quick Reference</a></h3>
+                    <p>Parameter tables</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/books/dance-music-manual/README.md">Dance Music Manual (Rick Snoman)</a></h3>
+                    <p>Overview and learning guide</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/books/dance-music-manual/tonejs.md">Dance Music Manual - Tone.js</a></h3>
+                    <p>Tone.js implementation (741 lines)</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/books/dance-music-manual/strudel.md">Dance Music Manual - Strudel</a></h3>
+                    <p>Strudel implementation (706 lines)</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/books/dance-music-manual/quick-ref.md">Dance Music Manual - Quick Reference</a></h3>
+                    <p>Quick parameter lookup</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/books/mixing-mastering/README.md">Mixing & Mastering In the Box</a></h3>
+                    <p>Overview and learning guide</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/books/mixing-mastering/tonejs.md">Mixing & Mastering - Tone.js</a></h3>
+                    <p>Tone.js mixing guide (945 lines)</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/books/mixing-mastering/strudel.md">Mixing & Mastering - Strudel</a></h3>
+                    <p>Strudel mixing guide (853 lines)</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="docs/books/mixing-mastering/quick-ref.md">Mixing & Mastering - Quick Reference</a></h3>
+                    <p>Quick parameter lookup</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="docs-examples">
+            <h2>Documentation - Examples</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><a href="docs/examples/SAMPLES.md">Sample Documentation</a></h3>
+                    <p>Using Kit01 samples</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="docs-main">
+            <h2>Documentation - Main Docs</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><a href="docs/README.md">Documentation Overview</a></h3>
+                    <p>Complete documentation index and learning paths</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="README.md">Project README</a></h3>
+                    <p>Main project documentation</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strudel Patterns -->
+        <div class="section" id="strudel-patterns">
+            <h2>Strudel Patterns</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><a href="strudel/techno/berlin-techno.strudel">Berlin Techno</a></h3>
+                    <p>Berlin-style techno with layered kicks (TR-909 + TR-808)</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="strudel/techno/industrial-157bpm.strudel">Industrial Techno (157 BPM)</a></h3>
+                    <p>Industrial techno at 157 BPM (0.654 CPS)</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="strudel/techno/industrial-157bpm-advanced.strudel">Industrial Techno (Advanced)</a></h3>
+                    <p>Advanced mix with Attack Magazine + Steve Savage principles</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="strudel/techno/techno-roland.strudel">Techno Roland</a></h3>
+                    <p>Roland-inspired techno groove</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="strudel/experimental/chord-layer-progression.strudel">Chord Layer Progression</a></h3>
+                    <p>Chord progressions and layering experiments</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="strudel/experimental/visualizers.strudel">Visualizers</a></h3>
+                    <p>Visual programming experiments</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="strudel/der-der/v1.strudel">Der-der v1</a></h3>
+                    <p>First version using Strudel syntax</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="strudel/der-der/v2.strudel">Der-der v2</a></h3>
+                    <p>Enhanced version with custom samples</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="strudel/demos/strudel.html">Strudel Demo</a></h3>
+                    <p>Basic Strudel live coding demo</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="strudel/demos/strudel-webcam-ascii.html">Strudel + Webcam ASCII</a></h3>
+                    <p>Strudel with webcam ASCII visualization</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tone.js Patterns -->
+        <div class="section" id="tonejs-patterns">
+            <h2>Tone.js Patterns</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><a href="tonejs/techno/berlin-techno-tonejs.js">Berlin Techno (Tone.js)</a></h3>
+                    <p>Berlin techno with layered kicks (909+808) - 7 instruments, 30+ controls</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="tonejs/techno/industrial-157bpm-tonejs.js">Industrial Techno (Tone.js)</a></h3>
+                    <p>Industrial techno at 157 BPM - 9 instruments, full mix principles</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="tonejs/techno/README.md">Techno Patterns Documentation</a></h3>
+                    <p>Detailed documentation for Tone.js techno patterns</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="tonejs/dnb/em-202bpm-dnb.js">Drum & Bass (202 BPM)</a></h3>
+                    <p>High-energy DnB at 202 BPM</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="tonejs/app.html">Tone.js App</a></h3>
+                    <p>Main Tone.js application</p>
+                </div>
+
+                <div class="demo-card">
+                    <h3><a href="tonejs/preview.html">Tone.js Preview</a></h3>
+                    <p>Tone.js pattern preview interface</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Video Patterns -->
+        <div class="section" id="video-patterns">
+            <h2>Video Patterns</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><a href="video/snore/index.html">Snore Video</a></h3>
+                    <p>Video playback pattern example</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reference Links -->
+        <div class="section" id="reference-indexes">
+            <h2>Reference Indexes</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3><a href="p5/index.html">P5.js Patterns Index</a></h3>
+                    <p>Complete P5.js patterns and demos gallery</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>UNISEX XL - All Projects</p>
+            <p>
+                <a href="index.html">Main App</a> |
+                <a href="README.md">Documentation</a> |
+                <a href="patterns/README.md">Patterns Docs</a>
+            </p>
+        </footer>
+    </div>
+</body>
+</html>
+
+

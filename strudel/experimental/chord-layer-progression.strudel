@@ -1,0 +1,17 @@
+   // ========================================
+  // NEW CHORD LAYER (from your screenshot)
+  // ========================================
+  
+  // Chord progression with piano sound
+  n(run(slider(1.594, 1, 12).round()))         // Note range slider (1-12 semitones)
+    .chord("<Cm D>/8")                         // Alternates: Cm chord, then D chord, every 8th
+    .jux(rev)                                  // Reverses pattern in right channel (stereo width)
+    .offset(slider(0.344).range(-10, 4).round()) // Transpose offset slider
+    .voicing()                                 // Spread chord notes across octaves
+    .add(note(slider(5.7, 0, 12)))            // Add extra transposition (0-12 semitones)
+    .lpf(slider(0.88).range(200, 2000))        // Filter slider (200-2000 Hz)
+    .clip(slider(0.02).range(0.01, 4))         // Clipping/distortion amount
+    .room(slider(1.00).range(0, 4))            // Reverb slider (0-4)
+    .delay(slider(0.58).range(0, 1))           // Delay slider (0-1)
+    .sometimesBy(slider(0.45), add(note(12))) // Sometimes add octave up (probability slider)
+    .piano(),                                  // Use piano samples
