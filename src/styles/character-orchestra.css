@@ -26,7 +26,6 @@ body {
   --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
   --accent-gold: #ffd700;
   --accent-yellow: #ffeb3b;
-  --text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .character-orchestra-app {
@@ -54,7 +53,6 @@ body {
   text-align: center;
   background: var(--color-card-white);
   border-radius: var(--border-radius-card);
-  box-shadow: var(--shadow-card);
 }
 
 .character-logo {
@@ -63,7 +61,6 @@ body {
   font-weight: 800;
   color: var(--color-primary-orange);
   margin: 0;
-  text-shadow: none;
   letter-spacing: 2px;
 }
 
@@ -71,7 +68,6 @@ body {
   font-size: 1.2rem;
   color: var(--color-text-secondary);
   margin: 0.5rem 0 0 0;
-  text-shadow: none;
   font-weight: 500;
 }
 
@@ -80,7 +76,6 @@ body {
   padding: 1rem 2rem;
   background: var(--color-card-white);
   border-radius: var(--border-radius-card);
-  box-shadow: var(--shadow-card);
   text-align: center;
 }
 
@@ -94,7 +89,6 @@ body {
   color: var(--color-text-primary);
   font-size: 1rem;
   font-weight: 600;
-  text-shadow: none;
 }
 
 /* Controls */
@@ -102,7 +96,6 @@ body {
   padding: 1.5rem 2rem;
   background: var(--color-card-white);
   border-radius: var(--border-radius-card);
-  box-shadow: var(--shadow-card);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -118,9 +111,7 @@ body {
   border-radius: var(--border-radius-button);
   cursor: pointer;
   transition: all 0.2s ease;
-  text-shadow: none;
   font-family: 'Spectral', Georgia, serif;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .play-btn {
@@ -131,7 +122,6 @@ body {
 
 .play-btn:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 4px 8px rgba(74, 144, 226, 0.4);
   background: var(--color-blue-hover);
 }
 
@@ -143,7 +133,6 @@ body {
 
 .stop-btn:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 4px 8px rgba(244, 67, 54, 0.4);
   background: #d32f2f;
 }
 
@@ -158,7 +147,6 @@ body {
   font-size: 1.2rem;
   font-weight: 800;
   color: var(--color-text-primary);
-  text-shadow: none;
 }
 
 .tempo-control input[type="range"] {
@@ -178,7 +166,6 @@ body {
   border-radius: 50%;
   background: var(--color-blue-accent);
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .tempo-control input[type="range"]::-moz-range-thumb {
@@ -188,7 +175,6 @@ body {
   background: var(--color-blue-accent);
   cursor: pointer;
   border: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .bpm-value {
@@ -197,7 +183,6 @@ body {
   color: var(--color-blue-accent);
   min-width: 60px;
   text-align: center;
-  text-shadow: none;
 }
 
 /* Character Grid */
@@ -266,7 +251,6 @@ body {
 .step-note-label {
   font-size: clamp(2rem, 5vw, 4rem);
   font-weight: 700;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
   line-height: 1;
 }
 
@@ -276,7 +260,6 @@ body {
   padding: 1rem 2rem;
   background: var(--color-accent-yellow);
   border-radius: var(--border-radius-card);
-  box-shadow: var(--shadow-card);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -310,7 +293,6 @@ body {
   border-radius: 24px;
   border: 6px solid white;
   text-align: center;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   animation: celebration-bounce 0.5s ease;
 }
 
@@ -319,7 +301,6 @@ body {
   font-weight: 800;
   color: white;
   margin: 0 0 1rem 0;
-  text-shadow: var(--text-shadow);
 }
 
 .celebration-body {
@@ -327,7 +308,6 @@ body {
   font-weight: 700;
   color: white;
   margin: 0;
-  text-shadow: var(--text-shadow);
 }
 
 @keyframes modal-fade-in {
