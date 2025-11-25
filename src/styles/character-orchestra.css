@@ -91,6 +91,19 @@ body {
   font-weight: 600;
 }
 
+/* Play Controls */
+.play-controls {
+  padding: 1.5rem 2rem;
+  background: var(--color-card-white);
+  border-radius: var(--border-radius-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
 /* Controls */
 .character-controls {
   padding: 1.5rem 2rem;
@@ -134,6 +147,17 @@ body {
 .stop-btn:hover {
   transform: translateY(-2px) scale(1.02);
   background: #d32f2f;
+}
+
+.control-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.control-btn:disabled:hover {
+  transform: none !important;
+  background: inherit;
 }
 
 .tempo-control {
@@ -192,6 +216,8 @@ body {
   margin-right: calc(-1.5rem + 16px); /* Break out of parent padding (1.5rem) + add 16px margin */
   position: relative;
   z-index: 1;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  max-width: 100%; /* Ensure it doesn't exceed viewport */
 }
 
 .character-grid {
@@ -204,23 +230,27 @@ body {
 /* Character Row */
 .character-row {
   display: grid;
-  grid-template-columns: repeat(16, 1fr);
-  gap: 8px;
+  grid-template-columns: repeat(8, minmax(0, 1fr)); /* 8 columns for better tap targets */
+  gap: clamp(4px, 0.5vw, 8px); /* Responsive gap that scales with viewport */
   padding: 0;
   background: transparent;
   position: relative;
   z-index: 1;
+  width: 100%; /* Ensure row fits container */
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 /* Character info removed - not displayed in rows */
 
 /* Steps are directly in the row - no container needed */
 
-/* Step Button - Character Mode - 25% width in 4-column grid */
+/* Step Button - Character Mode - Responsive sizing */
 .step-button.character-mode {
   width: 100%;
   aspect-ratio: 1;
   flex-direction: column;
+  min-width: 0; /* Allow buttons to shrink below their content size */
+  max-width: 100%; /* Prevent buttons from exceeding grid cell */
   /* Inherits border-radius: 25% from base .step-button */
   /* Inherits font-family: 'Spectral' from body */
 }
@@ -252,6 +282,54 @@ body {
   font-size: clamp(2rem, 5vw, 4rem);
   font-weight: 700;
   line-height: 1;
+}
+
+/* Usage Instructions */
+.usage-instructions {
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.instructions-content {
+  padding: 1.5rem 2rem;
+  background: var(--color-card-white);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--shadow-card);
+}
+
+.instructions-title {
+  font-family: 'Archivo', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-primary-orange);
+  margin: 0 0 1rem 0;
+  text-align: center;
+}
+
+.instructions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.instruction-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: 'Spectral', Georgia, serif;
+  font-size: 1rem;
+  color: var(--color-text-primary);
+  line-height: 1.5;
+}
+
+.instruction-icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.instruction-item strong {
+  color: var(--color-primary-orange);
+  font-weight: 700;
 }
 
 /* Status Bar */
@@ -341,9 +419,17 @@ body {
 }
 
 @media (max-width: 768px) {
-  .character-step-button {
-    width: 44px;
-    height: 44px;
+  .character-row {
+    gap: clamp(2px, 0.5vw, 4px); /* Smaller gap on mobile */
+  }
+
+  .step-button.character-mode {
+    width: 100% !important; /* Fill grid cell */
+    height: auto !important; /* Let aspect-ratio handle height */
+    min-width: 0 !important; /* Allow shrinking */
+    min-height: 0 !important; /* Allow shrinking */
+    max-width: 100% !important;
+    max-height: 100% !important;
     border-width: 1px;
   }
 
@@ -352,7 +438,7 @@ body {
   }
 
   .step-note-label {
-    font-size: 1.5rem;
+    font-size: clamp(0.7rem, 2vw, 1.2rem); /* Responsive font size that scales down */
   }
 
   .character-logo {
@@ -362,6 +448,22 @@ body {
   .character-controls {
     flex-direction: column;
     gap: 1rem;
+  }
+
+  .instructions-content {
+    padding: 1rem 1.5rem;
+  }
+
+  .instructions-title {
+    font-size: 1.2rem;
+  }
+
+  .instruction-item {
+    font-size: 0.9rem;
+  }
+
+  .instruction-icon {
+    font-size: 1.2rem;
   }
 }
 

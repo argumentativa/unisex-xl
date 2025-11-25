@@ -11,7 +11,7 @@ export type { StepState } from '../shared/StepButton';
 
 export interface CharacterPattern {
   characterIndex: number;
-  steps: StepState[]; // 4 step states
+  steps: StepState[]; // 8 step states
 }
 
 export class CharacterOrchestra {
@@ -45,11 +45,11 @@ export class CharacterOrchestra {
       };
     });
 
-    // Initialize patterns for each character (4 steps)
+    // Initialize patterns for each character (8 steps)
     this.characters.forEach((_, index) => {
       this.patterns.push({
         characterIndex: index,
-        steps: new Array(16).fill(null).map(() => ({
+        steps: new Array(8).fill(null).map(() => ({
           noteIndex: -1,
           pressCount: 0,
           isActive: false
@@ -104,9 +104,12 @@ export class CharacterOrchestra {
     // Notify state change
     this.notifyStateChange();
 
-    // Auto-play: start playback if not already playing
-    if (!this.isPlaying) {
-      this.play();
+    // If already playing, update the sequence
+    if (this.isPlaying) {
+      const sequence = this.sequences.get(characterIndex);
+      if (sequence && sequence.state === 'stopped') {
+        sequence.start(0);
+      }
     }
   }
 
@@ -123,13 +126,13 @@ export class CharacterOrchestra {
       if (character.canPitch && noteIndex >= 0) {
         const noteName = CHROMATIC_NOTES[noteIndex];
         const note = `${noteName}${character.octave}`;
-        (character.synth as any).triggerAttackRelease(note, '16n');
+        (character.synth as any).triggerAttackRelease(note, '8n');
       } else if (!character.canPitch) {
         // Drums: just trigger without note
         if (character.type === 'membrane') {
-          (character.synth as any).triggerAttackRelease('C1', '16n');
-        } else {
-          (character.synth as any).triggerAttackRelease('16n');
+              (character.synth as any).triggerAttackRelease('C1', '8n');
+            } else {
+              (character.synth as any).triggerAttackRelease('8n');
         }
       }
     } catch (error) {
@@ -199,7 +202,7 @@ export class CharacterOrchestra {
         }
       },
       notes,
-      '16n' // 16th note resolution for 16 steps
+      '8n' // 8th note resolution for 8 steps
     );
 
     this.sequences.set(characterIndex, sequence);
@@ -348,14 +351,14 @@ export class CharacterOrchestra {
     // Reset current step
     this.currentStep = 0;
 
-    // Use Tone.Transport to sync step indicator with audio (4 steps)
+    // Use Tone.Transport to sync step indicator with audio (8 steps)
     // Update visual FIRST at current step, then increment for next iteration
     this.stepIndicatorEventId = Tone.Transport.scheduleRepeat(() => {
       this.updateStepIndicator();
       this.updateCharacterStates();
       // Increment AFTER updating visual so indicator matches playing audio
-      this.currentStep = (this.currentStep + 1) % 16;
-    }, '16n', 0); // 16th note resolution for 16 steps
+      this.currentStep = (this.currentStep + 1) % 8;
+    }, '8n', 0); // 8th note resolution for 8 steps
 
     // Initial update
     this.updateStepIndicator();

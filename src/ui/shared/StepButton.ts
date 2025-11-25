@@ -50,6 +50,10 @@ export class StepButton {
   private interactionLevel: number = 0;
   private rowActivity: number = 0;
   private hue: number; // Computed hue for both modes
+  private longPressTimer: number | null = null;
+  private longPressDuration: number = 500; // milliseconds
+  private isLongPress: boolean = false;
+  private touchHandled: boolean = false; // Flag to prevent double-triggering
 
   constructor(
     stepIndex: number,
@@ -77,8 +81,40 @@ export class StepButton {
     this.element.setAttribute('aria-label', `Step ${stepIndex + 1}`);
 
     // Add click handler - handles note cycling internally
-    this.element.addEventListener('click', () => {
-      this.handleClick();
+    // Note: On mobile, touch events may fire before click, so we handle taps in touchend
+    this.element.addEventListener('click', (e) => {
+      // Skip click if we already handled it via touch
+      if (!this.touchHandled) {
+        this.handleClick();
+      }
+      this.touchHandled = false; // Reset flag
+    });
+
+    // Add touch event handlers for mobile long press
+    this.element.addEventListener('touchstart', (e) => {
+      this.handleLongPressStart(e);
+    });
+    this.element.addEventListener('touchend', (e) => {
+      this.handleLongPressEnd(e);
+    });
+    this.element.addEventListener('touchcancel', () => {
+      this.clearLongPressTimer();
+    });
+
+    // Add mouse event handlers for desktop long press
+    this.element.addEventListener('mousedown', (e) => {
+      this.handleLongPressStart(e);
+    });
+    this.element.addEventListener('mouseup', (e) => {
+      this.handleLongPressEnd(e);
+    });
+    this.element.addEventListener('mouseleave', () => {
+      this.clearLongPressTimer();
+    });
+
+    // Prevent context menu on long press
+    this.element.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
     });
 
     // Update initial state
@@ -90,6 +126,12 @@ export class StepButton {
    * OFF → C (0) → C# (1) → D (2) → ... → B (11) → OFF
    */
   private handleClick(): void {
+    // If this was a long press, skip normal click behavior
+    if (this.isLongPress) {
+      this.isLongPress = false;
+      return;
+    }
+
     // Cycle to next note
     let newNoteIndex = this.stepState.noteIndex + 1;
 
@@ -122,6 +164,84 @@ export class StepButton {
     if (isActive && this.callbacks.onPlayPreview) {
       this.callbacks.onPlayPreview(newNoteIndex);
     }
+  }
+
+  /**
+   * Handle long press start - start timer
+   */
+  private handleLongPressStart(e: TouchEvent | MouseEvent): void {
+    this.clearLongPressTimer();
+    this.isLongPress = false;
+    this.touchHandled = false;
+
+    // Prevent default only for touch events to avoid scrolling/zooming
+    if (e.type === 'touchstart') {
+      e.preventDefault();
+    }
+
+    this.longPressTimer = window.setTimeout(() => {
+      this.handleLongPress();
+    }, this.longPressDuration);
+  }
+
+  /**
+   * Handle long press end - check if long press occurred
+   */
+  private handleLongPressEnd(e: TouchEvent | MouseEvent): void {
+    const wasShortPress = this.longPressTimer !== null;
+    
+    if (this.longPressTimer !== null) {
+      // Timer was still running, so it was a short press
+      this.clearLongPressTimer();
+    }
+    
+    // Prevent default for touch events
+    if (e.type === 'touchend') {
+      e.preventDefault();
+    }
+    
+    // If it was a short press (not a long press), handle the tap
+    if (wasShortPress && !this.isLongPress) {
+      if (e.type === 'touchend') {
+        // For touch events, handle click directly (since we prevented default)
+        this.touchHandled = true; // Flag to prevent click event from also firing
+        this.handleClick();
+      }
+      // For mouse events, let the click handler handle it naturally
+    }
+  }
+
+  /**
+   * Clear long press timer
+   */
+  private clearLongPressTimer(): void {
+    if (this.longPressTimer !== null) {
+      clearTimeout(this.longPressTimer);
+      this.longPressTimer = null;
+    }
+  }
+
+  /**
+   * Handle long press - immediately turn off the step
+   */
+  private handleLongPress(): void {
+    this.clearLongPressTimer();
+    this.isLongPress = true;
+
+    // Immediately set to OFF state
+    this.stepState = {
+      isActive: false,
+      noteIndex: -1,
+      pressCount: this.stepState.pressCount + 1
+    };
+
+    // Update visuals
+    this.updateState();
+
+    // Notify parent of state change
+    this.callbacks.onStateChange(this.stepIndex, { ...this.stepState });
+
+    // Don't play preview sound when turning off
   }
 
   /**

@@ -9,6 +9,37 @@
 </head>
 <body>
     <div class="character-orchestra-app">
+        <!-- Play/Stop Controls -->
+        <div class="play-controls">
+            <button id="playBtn" class="control-btn play-btn">▶ Play</button>
+            <button id="stopBtn" class="control-btn stop-btn">⏹ Stop</button>
+            <div class="tempo-control">
+                <label for="bpm">BPM: <span id="bpmValue">120</span></label>
+                <input type="range" id="bpm" min="60" max="200" value="120" step="1">
+            </div>
+        </div>
+
+        <!-- Usage Instructions -->
+        <div class="usage-instructions">
+            <div class="instructions-content">
+                <h2 class="instructions-title">How to Use</h2>
+                <div class="instructions-list">
+                    <div class="instruction-item">
+                        <span class="instruction-icon">👆</span>
+                        <span><strong>Tap/Click</strong> a step to cycle through notes (C → C# → D → ... → B → OFF)</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="instruction-icon">⏱️</span>
+                        <span><strong>Long Press</strong> (500ms) to immediately turn off a step</span>
+                    </div>
+                    <div class="instruction-item">
+                        <span class="instruction-icon">▶️</span>
+                        <span><strong>Press Play</strong> to start the sequence</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Character Grid -->
         <div class="character-grid-container">
             <div id="characterGrid" class="character-grid">
