@@ -49,7 +49,7 @@ export class CharacterOrchestra {
     this.characters.forEach((_, index) => {
       this.patterns.push({
         characterIndex: index,
-        steps: new Array(4).fill(null).map(() => ({
+        steps: new Array(16).fill(null).map(() => ({
           noteIndex: -1,
           pressCount: 0,
           isActive: false
@@ -199,7 +199,7 @@ export class CharacterOrchestra {
         }
       },
       notes,
-      '4n' // 4th note resolution for 4 steps
+      '16n' // 16th note resolution for 16 steps
     );
 
     this.sequences.set(characterIndex, sequence);
@@ -354,8 +354,8 @@ export class CharacterOrchestra {
       this.updateStepIndicator();
       this.updateCharacterStates();
       // Increment AFTER updating visual so indicator matches playing audio
-      this.currentStep = (this.currentStep + 1) % 4;
-    }, '4n', 0); // 4th note resolution for 4 steps
+      this.currentStep = (this.currentStep + 1) % 16;
+    }, '16n', 0); // 16th note resolution for 16 steps
 
     // Initial update
     this.updateStepIndicator();

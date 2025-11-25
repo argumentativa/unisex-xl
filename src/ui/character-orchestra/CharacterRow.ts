@@ -1,6 +1,6 @@
 /**
  * Character Row Component
- * Row containing character avatar and 4 step buttons
+ * Row containing 16 step buttons for one character
  */
 
 import type { Character } from './Character';
@@ -34,8 +34,8 @@ export class CharacterRow {
     this.element.className = 'character-row';
     this.element.setAttribute('data-character', character.name);
 
-    // Create 4 step buttons with callbacks
-    for (let i = 0; i < 4; i++) {
+    // Create 16 step buttons with callbacks
+    for (let i = 0; i < 16; i++) {
       const stepButton = new StepButton(
         i,
         pattern.steps[i],
@@ -66,7 +66,7 @@ export class CharacterRow {
    * Update a step's state
    */
   updateStep(stepIndex: number, stepState: StepState): void {
-    if (stepIndex >= 0 && stepIndex < 4 && stepIndex < this.stepButtons.length) {
+    if (stepIndex >= 0 && stepIndex < 16 && stepIndex < this.stepButtons.length) {
       this.stepButtons[stepIndex].setStepState(stepState);
     }
   }
@@ -76,13 +76,13 @@ export class CharacterRow {
    */
   updateCurrentStep(stepIndex: number): void {
     // Remove current step from previous button
-    if (this.currentStep >= 0 && this.currentStep < 4 && this.currentStep < this.stepButtons.length) {
+    if (this.currentStep >= 0 && this.currentStep < 16 && this.currentStep < this.stepButtons.length) {
       this.stepButtons[this.currentStep].setCurrentStep(false);
     }
 
     // Set new current step
     this.currentStep = stepIndex;
-    if (this.currentStep >= 0 && this.currentStep < 4 && this.currentStep < this.stepButtons.length) {
+    if (this.currentStep >= 0 && this.currentStep < 16 && this.currentStep < this.stepButtons.length) {
       this.stepButtons[this.currentStep].setCurrentStep(true);
     }
   }
