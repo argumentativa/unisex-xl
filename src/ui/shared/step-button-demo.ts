@@ -1,263 +1,156 @@
 /**
  * Demo Controller for Unified Step Button
- * Shows both Sequencer and Character Orchestra modes
+ * Shows a single button cycling through chromatic notes with hue changes
  */
 
+import * as Tone from 'tone';
 import { StepButton, StepState } from './StepButton';
-import type { Character } from '../character-orchestra/Character';
 
-// Demo character definitions
-const demoCharacters: Character[] = [
-  {
-    id: 'kick',
-    name: 'Kick',
-    emoji: '🥁',
-    baseColor: '#FF0066',
-    canPitch: false,
-    soundUrl: '',
-    defaultNote: 'C1'
-  },
-  {
-    id: 'snare',
-    name: 'Snare',
-    emoji: '🎯',
-    baseColor: '#00FF66',
-    canPitch: false,
-    soundUrl: '',
-    defaultNote: 'D1'
-  },
-  {
-    id: 'bass',
-    name: 'Bass',
-    emoji: '🎸',
-    baseColor: '#6600FF',
-    canPitch: true,
-    soundUrl: '',
-    defaultNote: 'E1'
-  },
-  {
-    id: 'melody',
-    name: 'Melody',
-    emoji: '🎹',
-    baseColor: '#FFD700',
-    canPitch: true,
-    soundUrl: '',
-    defaultNote: 'C4'
-  }
-];
+const CHROMATIC_NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 
 class StepButtonDemo {
-  private sequencerButtons: StepButton[] = [];
-  private characterButtons: StepButton[] = [];
-  private currentStep: number = 0;
-  private isPlaying: boolean = false;
-  private animationInterval: number | null = null;
+  private button: StepButton | null = null;
+  private currentNoteIndex: number = -1; // -1 = OFF state
+  private synth: Tone.Synth | null = null;
+  private audioStarted: boolean = false;
 
   constructor() {
     this.init();
   }
 
   private init(): void {
-    this.createSequencerRow();
-    this.createCharacterRows();
-    this.setupControls();
+    this.initAudio();
+    this.createButton();
   }
 
   /**
-   * Create Sequencer mode row
+   * Initialize Tone.js synth for playing notes
    */
-  private createSequencerRow(): void {
-    const container = document.getElementById('sequencer-demo');
-    if (!container) return;
-
-    const row = document.createElement('div');
-    row.className = 'step-row';
-
-    for (let i = 0; i < 16; i++) {
-      const stepState: StepState = {
-        isActive: i % 4 === 0, // Every 4th step active
-        noteIndex: i % 12,
-        pressCount: 0
-      };
-
-      const button = new StepButton(
-        i,
-        stepState,
-        { mode: 'hue', hue: 220 }, // Blue hue for demo
-        (index) => this.handleSequencerClick(index)
-      );
-
-      this.sequencerButtons.push(button);
-      row.appendChild(button.getElement());
-    }
-
-    container.appendChild(row);
-  }
-
-  /**
-   * Create Character Orchestra mode rows
-   */
-  private createCharacterRows(): void {
-    const container = document.getElementById('character-demo');
-    if (!container) return;
-
-    demoCharacters.forEach((character) => {
-      const rowContainer = document.createElement('div');
-      rowContainer.className = 'character-row-container';
-
-      const label = document.createElement('div');
-      label.className = 'character-label';
-      label.textContent = `${character.emoji} ${character.name}`;
-      rowContainer.appendChild(label);
-
-      const row = document.createElement('div');
-      row.className = 'step-row character-row';
-
-      const buttons: StepButton[] = [];
-
-      for (let i = 0; i < 8; i++) {
-        const stepState: StepState = {
-          isActive: i === 0 || i === 4, // First and middle step active
-          noteIndex: character.canPitch ? i : 0,
-          pressCount: 0
-        };
-
-        const button = new StepButton(
-          i,
-          stepState,
-          { mode: 'character', character },
-          (index) => this.handleCharacterClick(character.id, index, buttons)
-        );
-
-        buttons.push(button);
-        row.appendChild(button.getElement());
+  private initAudio(): void {
+    this.synth = new Tone.Synth({
+      oscillator: { type: 'triangle' },
+      envelope: {
+        attack: 0.01,
+        decay: 0.1,
+        sustain: 0.3,
+        release: 0.5
       }
-
-      this.characterButtons.push(...buttons);
-      rowContainer.appendChild(row);
-      container.appendChild(rowContainer);
-    });
+    }).toDestination();
   }
 
   /**
-   * Handle sequencer button click
+   * Start audio context (required by browsers on first user interaction)
    */
-  private handleSequencerClick(index: number): void {
-    const button = this.sequencerButtons[index];
-    const state = button.getStepState();
-    
-    state.isActive = !state.isActive;
+  private async startAudio(): Promise<void> {
+    if (!this.audioStarted) {
+      await Tone.start();
+      this.audioStarted = true;
+    }
+  }
+
+  /**
+   * Play a note using Tone.js
+   */
+  private playNote(noteIndex: number): void {
+    if (!this.synth || noteIndex < 0) return;
+
+    const noteName = CHROMATIC_NOTES[noteIndex];
+    const octave = 4; // Middle octave
+    const noteWithOctave = `${noteName}${octave}`;
+
+    this.synth.triggerAttackRelease(noteWithOctave, '8n');
+  }
+
+  /**
+   * Create single step button
+   */
+  private createButton(): void {
+    const container = document.getElementById('button-container');
+    if (!container) return;
+
+    // Initial state: OFF
+    const stepState: StepState = {
+      isActive: false,
+      noteIndex: -1,
+      pressCount: 0
+    };
+
+    this.button = new StepButton(
+      0,
+      stepState,
+      { mode: 'hue', hue: 0 }, // Will update on click
+      () => this.handleClick()
+    );
+
+    container.appendChild(this.button.getElement());
+    this.updateStateDisplay();
+  }
+
+  /**
+   * Handle button click - cycle through 12 notes then back to OFF
+   * OFF → C (0°) → C# (30°) → D (60°) → ... → B (330°) → OFF
+   */
+  private async handleClick(): Promise<void> {
+    if (!this.button) return;
+
+    // Start audio on first click (required by browser autoplay policy)
+    await this.startAudio();
+
+    // Advance to next note (or OFF if at B)
+    this.currentNoteIndex = (this.currentNoteIndex + 1) % 13; // 0-11 are notes, 12 wraps to -1 (OFF)
+
+    // If we hit 12, reset to -1 (OFF)
+    if (this.currentNoteIndex === 12) {
+      this.currentNoteIndex = -1;
+    }
+
+    const isActive = this.currentNoteIndex >= 0;
+    const hue = isActive ? this.currentNoteIndex * 30 : 0; // 360° / 12 = 30° per note
+
+    // Play the note if active
+    if (isActive) {
+      this.playNote(this.currentNoteIndex);
+    }
+
+    const state = this.button.getStepState();
+    state.isActive = isActive;
+    state.noteIndex = this.currentNoteIndex >= 0 ? this.currentNoteIndex : 0;
     state.pressCount++;
 
-    if (state.isActive) {
-      state.noteIndex = (state.noteIndex + 1) % 12;
+    // Update button state with new hue
+    this.button = new StepButton(
+      0,
+      state,
+      { mode: 'hue', hue },
+      () => this.handleClick()
+    );
+
+    // Replace button in DOM
+    const container = document.getElementById('button-container');
+    if (container) {
+      container.innerHTML = '';
+      container.appendChild(this.button.getElement());
     }
 
-    button.setStepState(state);
-    
-    // Update interaction level based on press count
-    const interactionLevel = Math.min(state.pressCount, 5);
-    button.setInteractionLevel(interactionLevel);
+    this.updateStateDisplay();
   }
 
   /**
-   * Handle character button click
+   * Update the state display text
    */
-  private handleCharacterClick(characterId: string, index: number, rowButtons: StepButton[]): void {
-    const button = rowButtons[index];
-    const state = button.getStepState();
-    
-    state.isActive = !state.isActive;
-    state.pressCount++;
+  private updateStateDisplay(): void {
+    const stateValue = document.getElementById('state-value');
+    if (!stateValue) return;
 
-    // For melody/bass, cycle through notes
-    const character = demoCharacters.find(c => c.id === characterId);
-    if (character?.canPitch && state.isActive) {
-      state.noteIndex = (state.noteIndex + 1) % 12;
+    if (this.currentNoteIndex === -1) {
+      stateValue.textContent = 'OFF';
+      stateValue.style.color = '#999';
+    } else {
+      const noteName = CHROMATIC_NOTES[this.currentNoteIndex];
+      const hue = this.currentNoteIndex * 30;
+      stateValue.textContent = noteName;
+      stateValue.style.color = `hsl(${hue}, 80%, 40%)`;
     }
-
-    button.setStepState(state);
-  }
-
-  /**
-   * Setup playback controls
-   */
-  private setupControls(): void {
-    const playBtn = document.getElementById('play-btn') as HTMLButtonElement;
-    const stopBtn = document.getElementById('stop-btn') as HTMLButtonElement;
-    const randomizeBtn = document.getElementById('randomize-btn') as HTMLButtonElement;
-
-    playBtn?.addEventListener('click', () => this.startPlayback());
-    stopBtn?.addEventListener('click', () => this.stopPlayback());
-    randomizeBtn?.addEventListener('click', () => this.randomize());
-  }
-
-  /**
-   * Start playback animation
-   */
-  private startPlayback(): void {
-    if (this.isPlaying) return;
-    this.isPlaying = true;
-
-    this.animationInterval = window.setInterval(() => {
-      // Clear previous step highlight
-      this.sequencerButtons.forEach(btn => btn.setCurrentStep(false));
-      this.characterButtons.forEach(btn => btn.setCurrentStep(false));
-
-      // Highlight current step
-      this.sequencerButtons[this.currentStep]?.setCurrentStep(true);
-      
-      // Highlight corresponding steps in character rows (8 steps vs 16)
-      const charStep = Math.floor(this.currentStep / 2);
-      this.characterButtons.forEach((btn, idx) => {
-        if (idx % 8 === charStep) {
-          btn.setCurrentStep(true);
-        }
-      });
-
-      // Move to next step
-      this.currentStep = (this.currentStep + 1) % 16;
-    }, 200); // 120 BPM sixteenth notes
-  }
-
-  /**
-   * Stop playback animation
-   */
-  private stopPlayback(): void {
-    if (!this.isPlaying) return;
-    this.isPlaying = false;
-
-    if (this.animationInterval !== null) {
-      clearInterval(this.animationInterval);
-      this.animationInterval = null;
-    }
-
-    // Clear all highlights
-    this.sequencerButtons.forEach(btn => btn.setCurrentStep(false));
-    this.characterButtons.forEach(btn => btn.setCurrentStep(false));
-    this.currentStep = 0;
-  }
-
-  /**
-   * Randomize patterns
-   */
-  private randomize(): void {
-    // Randomize sequencer
-    this.sequencerButtons.forEach((button, i) => {
-      const state = button.getStepState();
-      state.isActive = Math.random() > 0.5;
-      state.noteIndex = Math.floor(Math.random() * 12);
-      button.setStepState(state);
-      button.setInteractionLevel(Math.floor(Math.random() * 6));
-    });
-
-    // Randomize character buttons
-    this.characterButtons.forEach((button, i) => {
-      const state = button.getStepState();
-      state.isActive = Math.random() > 0.6;
-      state.noteIndex = Math.floor(Math.random() * 12);
-      button.setStepState(state);
-    });
   }
 }
 
