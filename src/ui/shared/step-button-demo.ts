@@ -169,9 +169,9 @@ class StepButtonDemo {
       const hsl = hexToHSL(color);
       const complementaryHue = (hsl.h + 180) % 360;
       
-      // Apply to body with reduced saturation/lightness for subtlety
+      // Apply to body with high saturation for bright contrast
       document.body.style.backgroundColor = 
-        `hsl(${complementaryHue}, 30%, 95%)`;
+        `hsl(${complementaryHue}, 85%, 75%)`;
     }
   }
 }

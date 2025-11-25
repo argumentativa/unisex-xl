@@ -39,13 +39,8 @@
   transform: translateY(-1px);
 }
 
-/* Active state - uses HSL color from CSS variables */
+/* Active state - background color set via inline style or CSS variable */
 .step-button.active {
-  background: hsl(
-    var(--step-hue, 180),
-    var(--step-saturation, 100%),
-    var(--step-lightness, 50%)
-  );
   border: 6px solid white;
   box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.15),

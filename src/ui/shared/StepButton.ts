@@ -236,21 +236,21 @@ export class StepButton {
   }
 
   /**
-   * Apply color for hue mode (Sequencer)
+   * Apply color for hue mode (Sequencer/Demo)
+   * Uses unified COLOR_PALETTE for consistent colors
    */
   private applyHueColor(): void {
-    const saturation = this.calculateSaturation();
-    const lightness = this.calculateLightness();
+    if (!this.stepState.isActive || this.stepState.noteIndex === -1) {
+      // OFF state: let CSS handle it (white background)
+      this.element.style.backgroundColor = '';
+      this.element.style.color = '';
+      return;
+    }
 
-    this.element.style.setProperty('--step-hue', this.hue.toString());
-    this.element.style.setProperty('--step-saturation', `${saturation}%`);
-    this.element.style.setProperty('--step-lightness', `${lightness}%`);
-    this.element.style.setProperty('--row-activity', this.rowActivity.toString());
-
-    // Clear inline styles used by character mode (let CSS take over)
-    this.element.style.backgroundColor = '';
-    this.element.style.border = '';
-    this.element.style.color = '';
+    // Active state: use unified color palette
+    const color = COLOR_PALETTE[this.stepState.noteIndex];
+    this.element.style.backgroundColor = color;
+    this.element.style.color = '#333333';
   }
 
   /**
