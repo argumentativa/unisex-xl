@@ -238,12 +238,28 @@ body {
 /* Step Button - Character Mode - 25% width in 4-column grid */
 .step-button.character-mode {
   width: 100%;
+  aspect-ratio: 1;
   flex-direction: column;
   font-family: 'Comic Sans MS', 'Segoe UI', sans-serif;
+  border-radius: 50%;
+}
+
+.step-button.character-mode.inactive {
+  background: #FFFFFF;
+  border: 1px solid #E9E9EA;
+}
+
+.step-button.character-mode.active {
+  border: 2px solid #4A90E2;
 }
 
 .step-button.character-mode:hover {
-  transform: scale(1.1);
+  transform: scale(1.05);
+}
+
+.step-button.character-mode.current-step {
+  border: 3px solid #4A90E2;
+  transform: scale(1.08);
 }
 
 .step-emoji {

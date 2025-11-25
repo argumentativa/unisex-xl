@@ -244,27 +244,24 @@ export class StepButton {
     if (this.colorConfig.mode !== 'character') return;
 
     const character = this.colorConfig.character;
-    
+
     if (!this.stepState.isActive || this.stepState.noteIndex === -1) {
-      // OFF state: dark gray
-      this.element.style.backgroundColor = 'rgba(42, 42, 46, 0.3)';
-      this.element.style.border = '1px solid rgba(255, 255, 255, 0.3)';
-      this.element.style.color = 'rgba(255, 255, 255, 0.3)';
+      // OFF state: let CSS handle it (white background)
+      this.element.style.backgroundColor = '';
+      this.element.style.color = '';
       return;
     }
 
+    // Active state: apply character color
     if (character.canPitch) {
       // Melody/Bass: lightness increases with pitch
-      const lightness = 25 + (this.stepState.noteIndex / 11) * 50;
+      const lightness = 35 + (this.stepState.noteIndex / 11) * 40;
       this.element.style.backgroundColor = `hsl(${this.hue}, 70%, ${lightness}%)`;
-      this.element.style.border = '2px solid #ffffff';
-      this.element.style.color = '#ffffff';
     } else {
       // Drums: fixed medium lightness
       this.element.style.backgroundColor = `hsl(${this.hue}, 70%, 50%)`;
-      this.element.style.border = '2px solid #ffffff';
-      this.element.style.color = '#ffffff';
     }
+    this.element.style.color = '#ffffff';
   }
 
   /**
