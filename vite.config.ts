@@ -13,20 +13,20 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: 'p5/**/*',
-          dest: 'p5'
+          src: 'p5',
+          dest: ''
         },
         {
-          src: 'strudel/**/*',
-          dest: 'strudel'
+          src: 'strudel',
+          dest: ''
         },
         {
-          src: 'tonejs/**/*',
-          dest: 'tonejs'
+          src: 'tonejs',
+          dest: ''
         },
         {
-          src: 'tonejs-template/**/*',
-          dest: 'tonejs-template'
+          src: 'tonejs-template',
+          dest: ''
         },
         {
           src: 'projects.html',
