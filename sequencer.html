@@ -27,61 +27,25 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNISEX XL - Live Coding Music</title>
-  <script type="module" crossorigin src="/unisex-xl/assets/main-Bk15rnup.js"></script>
+    <title>Step Sequencer - UNISEX XL</title>
+  <script type="module" crossorigin src="/unisex-xl/assets/sequencer-CDY8PDA5.js"></script>
   <link rel="modulepreload" crossorigin href="/unisex-xl/assets/index-D5ZjplQM.js">
   <link rel="modulepreload" crossorigin href="/unisex-xl/assets/audio-RRN3ikcn.js">
   <link rel="stylesheet" crossorigin href="/unisex-xl/assets/index-Dnex1vxz.css">
-  <link rel="stylesheet" crossorigin href="/unisex-xl/assets/main-BYU5vUAj.css">
+  <link rel="stylesheet" crossorigin href="/unisex-xl/assets/sequencer-BwiP0oWi.css">
 </head>
 <body>
-    <div class="app">
+    <div class="sequencer-app">
         <!-- Header -->
-        <header class="header">
+        <header class="sequencer-header">
             <div>
-                <h1 class="logo">UNISEX XL</h1>
-                <span class="subtitle">Live Coding Music</span>
+                <h1 class="sequencer-logo">STEP SEQUENCER</h1>
+                <span class="sequencer-subtitle">16 Steps • 16th Note Resolution • All Tone.js Instruments</span>
             </div>
-            <a href="./gallery.html" style="color: #4af; text-decoration: none; font-family: monospace;">📁 View All Projects (46)</a>
         </header>
 
-        <!-- Main Content -->
-        <div class="main-content">
-            <!-- Code Editor Panel -->
-            <div class="editor-panel">
-                <div class="panel-header">
-                    <h2>Code Editor</h2>
-                    <div style="display: flex; gap: 0.5rem; align-items: center;">
-                        <select id="exampleSelect" class="viz-mode-select">
-                            <option value="basic">Basic</option>
-                            <option value="drums">Drums</option>
-                            <option value="bassline">Bassline</option>
-                            <option value="complex">Complex</option>
-                            <option value="berlinTechno">Berlin Techno</option>
-                        </select>
-                        <button id="runCode" class="btn btn-primary">Run</button>
-                    </div>
-                </div>
-                <div id="editor" class="code-editor"></div>
-            </div>
-
-            <!-- Visualizer Panel -->
-            <div class="visualizer-panel">
-                <div class="panel-header">
-                    <h2>Visualizer</h2>
-                    <select id="vizMode" class="viz-mode-select">
-                        <option value="waveform">Waveform</option>
-                        <option value="frequency">Frequency Bars</option>
-                    </select>
-                </div>
-                <div class="visualizer-container">
-                    <canvas id="visualizer"></canvas>
-                </div>
-            </div>
-        </div>
-
         <!-- Controls -->
-        <div class="controls">
+        <div class="sequencer-controls">
             <div class="transport-controls">
                 <button id="playBtn" class="control-btn play-btn">▶</button>
                 <button id="pauseBtn" class="control-btn">⏸</button>
@@ -93,12 +57,20 @@
             </div>
         </div>
 
+        <!-- Sequencer Grid -->
+        <div class="sequencer-grid-container">
+            <div id="sequencerGrid" class="sequencer-grid">
+                <!-- Instrument rows will be inserted here -->
+            </div>
+        </div>
+
         <!-- Status Bar -->
-        <footer class="status-bar">
-            <span id="statusText">Ready</span>
+        <footer class="sequencer-status-bar">
+            <span id="statusText">Ready - Click steps to create patterns</span>
             <span id="playbackStatus">Stopped</span>
         </footer>
     </div>
 
 </body>
 </html>
+

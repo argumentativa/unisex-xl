@@ -135,7 +135,7 @@
             </div>
             <div class="code-area">
                 <pre id="code">// Industrial Pattern - 157 BPM
-cps(0.654) // 157 BPM
+setcps(0.654) // 157 BPM
 
 stack(
   // Industrial bass with heavy filtering
@@ -143,30 +143,28 @@ stack(
     .slow(2)
     .transpose("<0 0 0 5 7>")
     .s("supersaw")
-    .dist("4:.2")
+    .distort(0.4)
     .lpf(300)
-    .lpq(10)
-    .shape(0.4) // distortion
     .gain(0.8)
     .crush("<16 3>"),
-  
+
   // Aggressive kick with filtering
   s("bd ~ bd ~")
     .gain(1.2)
     .lpf(800)
-    .shape(0.5), // add grit
-  
+    .distort(0.3),
+
   // Snare with distortion
   s("~ cp ~ cp")
     .gain(0.65)
-    .shape(0.3)
+    .distort(0.2)
     .lpf(2000),
-  
+
   // Noise hi-hats
-  s("~ ~ white ~")
-    .hpf(8000) // high-pass for hat character
+  s("~ ~ hh ~")
+    .hpf(8000)
     .gain(0.2)
-    .decay(0.05) // short decay
+    .decay(0.05)
 )</pre>
             </div>
         </div>
@@ -179,36 +177,29 @@ stack(
 
     <!-- Load Libraries -->
     <script src="../libraries/p5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tone@15.0.4/build/Tone.js"></script>
-    <script src="https://unpkg.com/@strudel/core"></script>
-    <script src="https://unpkg.com/@strudel/mini"></script>
-    <script src="https://unpkg.com/@strudel/webaudio"></script>
-    <script src="https://unpkg.com/@strudel/transpiler"></script>
+    <script src="https://unpkg.com/@strudel/web@1.0.3"></script>
 
     <!-- Strudel Control Script -->
     <script>
-        let strudelPattern = null;
         let isPlaying = false;
+        let currentPattern = null;
 
-        // Initialize Strudel
-        const { evaluate, silence } = strudel;
+        // Initialize Strudel on page load
+        initStrudel();
 
         document.getElementById('startStrudel').addEventListener('click', async () => {
             if (!isPlaying) {
                 try {
-                    // Start Tone.js context
-                    await Tone.start();
-                    console.log('🎵 Tone.js started');
-
-                    // Get the code
+                    // Get the code from the pre element
                     const code = document.getElementById('code').textContent;
 
-                    // Evaluate and play the pattern
-                    strudelPattern = await evaluate(code);
-                    
+                    // Evaluate and play the pattern using Strudel's API
+                    // The pattern needs .play() called on it
+                    currentPattern = await evaluate(code);
+
                     isPlaying = true;
                     console.log('▶️ Pattern started!');
-                    
+
                     // Update UI
                     document.getElementById('startStrudel').style.background = '#ffff00';
                     document.getElementById('startStrudel').textContent = '🔊 PLAYING';
@@ -221,10 +212,10 @@ stack(
 
         document.getElementById('stopStrudel').addEventListener('click', () => {
             if (isPlaying) {
-                silence();
+                hush(); // Strudel's stop function
                 isPlaying = false;
                 console.log('⏹️ Pattern stopped');
-                
+
                 // Update UI
                 document.getElementById('startStrudel').style.background = '#00ff00';
                 document.getElementById('startStrudel').textContent = '▶️ START PATTERN';
@@ -249,7 +240,7 @@ stack(
     <!-- ASCII Visualizer Script -->
     <script>
         // Modified version of image-ascii-color-bold.js
-        // Adapted to work in split-screen layout
+        // Adapted to work in split-screen layout with Strudel
 
         let img;
         let size;
@@ -257,18 +248,14 @@ stack(
         let w = 100;
         let h = 75;
 
-        // Tone.js audio analyzers
-        let fft, meter, waveform;
+        // Web Audio API analyzers (native, not Tone.js)
+        let analyser, dataArray;
         let startButton;
         let audioStarted = false;
 
         // Audio reactive values
         let bass = 0, mid = 0, treble = 0, volume = 0;
         let bassSmooth = 0, volumeSmooth = 0;
-
-        const BASS_RANGE = [20, 250];
-        const MID_RANGE = [250, 4000];
-        const TREBLE_RANGE = [4000, 20000];
 
         function preload() {
             img = loadImage("../assets/dandy.jpg");
@@ -306,55 +293,93 @@ stack(
 
         async function startAudio() {
             if (!audioStarted) {
-                await Tone.start();
-                
-                fft = new Tone.FFT(512);
-                fft.smoothing = 0.8;
-                
-                meter = new Tone.Meter();
-                waveform = new Tone.Waveform(512);
-                
-                Tone.Destination.connect(fft);
-                Tone.Destination.connect(meter);
-                Tone.Destination.connect(waveform);
-                
+                // Get Strudel's audio context
+                let audioContext;
+                try {
+                    audioContext = getAudioContext();
+                    console.log('Got Strudel audio context');
+                } catch (e) {
+                    // Fallback: create our own context
+                    audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    console.log('Created fallback audio context');
+                }
+
+                // Resume if suspended
+                if (audioContext.state === 'suspended') {
+                    await audioContext.resume();
+                }
+
+                // Create analyser node
+                analyser = audioContext.createAnalyser();
+                analyser.fftSize = 512;
+                analyser.smoothingTimeConstant = 0.8;
+                dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+                // Connect analyser to destination (for passthrough)
+                analyser.connect(audioContext.destination);
+
+                // Try to intercept Strudel's output by replacing the destination
+                // Strudel's superdough synth engine exposes its output
+                if (typeof getDestination === 'function') {
+                    try {
+                        const strudelDest = getDestination();
+                        // Disconnect from original destination and route through analyser
+                        strudelDest.disconnect();
+                        strudelDest.connect(analyser);
+                        console.log('✅ Connected Strudel destination to analyser');
+                    } catch (e) {
+                        console.log('Could not intercept Strudel destination:', e);
+                    }
+                }
+
                 audioStarted = true;
                 startButton.html('🔊 VISUALIZING');
                 startButton.style('background', '#ff00ff');
-                
-                console.log('✅ Visualizer connected to Tone.js!');
+
+                console.log('✅ Visualizer ready! Start a pattern to see audio reactivity.');
             }
         }
 
-        function getFrequencyEnergy(spectrum, freqRange) {
-            const nyquist = Tone.context.sampleRate / 2;
-            const binCount = spectrum.length;
-            const lowBin = Math.floor((freqRange[0] / nyquist) * binCount);
-            const highBin = Math.floor((freqRange[1] / nyquist) * binCount);
-            
+        function getFrequencyEnergy(lowFreq, highFreq) {
+            if (!analyser || !dataArray) return 0;
+
+            analyser.getByteFrequencyData(dataArray);
+
+            const nyquist = 22050; // Approximate
+            const binCount = dataArray.length;
+            const lowBin = Math.floor((lowFreq / nyquist) * binCount);
+            const highBin = Math.floor((highFreq / nyquist) * binCount);
+
             let sum = 0, count = 0;
             for (let i = lowBin; i <= highBin && i < binCount; i++) {
-                let linear = Math.pow(10, spectrum[i] / 20);
-                sum += linear;
+                sum += dataArray[i];
                 count++;
             }
-            
-            let average = count > 0 ? sum / count : 0;
-            return constrain(average * 800, 0, 255);
+
+            return count > 0 ? sum / count : 0;
+        }
+
+        function getVolume() {
+            if (!analyser || !dataArray) return 0;
+
+            analyser.getByteFrequencyData(dataArray);
+            let sum = 0;
+            for (let i = 0; i < dataArray.length; i++) {
+                sum += dataArray[i];
+            }
+            return sum / dataArray.length / 255; // Normalize to 0-1
         }
 
         function draw() {
             background(0);
 
-            if (audioStarted && fft && meter) {
-                let spectrum = fft.getValue();
-                bass = getFrequencyEnergy(spectrum, BASS_RANGE);
-                mid = getFrequencyEnergy(spectrum, MID_RANGE);
-                treble = getFrequencyEnergy(spectrum, TREBLE_RANGE);
-                
-                let meterValue = meter.getValue();
-                volume = map(constrain(meterValue, -60, 0), -60, 0, 0, 1);
-                
+            if (audioStarted && analyser) {
+                // Get frequency bands using native Web Audio
+                bass = getFrequencyEnergy(20, 250);
+                mid = getFrequencyEnergy(250, 4000);
+                treble = getFrequencyEnergy(4000, 20000);
+                volume = getVolume();
+
                 bassSmooth = lerp(bassSmooth, bass, 0.3);
                 volumeSmooth = lerp(volumeSmooth, volume, 0.2);
             }
