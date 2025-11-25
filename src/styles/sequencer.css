@@ -213,31 +213,13 @@
   height: 44px;
 }
 
-/* Sequencer-specific current step animation */
+/* Sequencer-specific current step animation - removed scale for consistent sizing */
 .step-button.current-step {
-  animation: pulse-step-subtle 0.4s ease-in-out infinite;
+  /* No animation - buttons stay same size */
 }
 
 .step-button.current-step.active {
-  animation: pulse-step-subtle-active 0.4s ease-in-out infinite;
-}
-
-@keyframes pulse-step-subtle {
-  0%, 100% {
-    transform: scale(1.05);
-  }
-  50% {
-    transform: scale(1.08);
-  }
-}
-
-@keyframes pulse-step-subtle-active {
-  0%, 100% {
-    transform: scale(1.08);
-  }
-  50% {
-    transform: scale(1.1);
-  }
+  /* No animation - buttons stay same size */
 }
 
 /* Progressive background gradient based on interaction level */
