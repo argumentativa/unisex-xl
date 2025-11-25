@@ -8,8 +8,8 @@ import { CharacterOrchestra } from './ui/character-orchestra/CharacterOrchestra'
 
 // DOM Elements
 const characterGrid = document.getElementById('characterGrid') as HTMLElement;
-const playBtn = document.getElementById('playBtn') as HTMLButtonElement;
-const stopBtn = document.getElementById('stopBtn') as HTMLButtonElement;
+const playBtn = document.getElementById('playBtn') as HTMLElement;
+const stopBtn = document.getElementById('stopBtn') as HTMLElement;
 const bpmSlider = document.getElementById('bpm') as HTMLInputElement;
 const bpmValue = document.getElementById('bpmValue') as HTMLElement;
 
@@ -19,25 +19,38 @@ const orchestra = new CharacterOrchestra(characterGrid);
 // Initialize UI
 orchestra.init();
 
+/**
+ * Handle button activation (click or keyboard)
+ */
+function handleButtonActivate(element: HTMLElement, handler: () => void): void {
+  element.addEventListener('click', handler);
+  element.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handler();
+    }
+  });
+}
+
 // Play button handler
-playBtn.addEventListener('click', async () => {
+handleButtonActivate(playBtn, async () => {
   if (Tone.context.state !== 'running') {
     await Tone.start();
   }
   orchestra.play();
-  playBtn.disabled = true;
-  stopBtn.disabled = false;
+  playBtn.classList.add('disabled');
+  stopBtn.classList.remove('disabled');
 });
 
 // Stop button handler
-stopBtn.addEventListener('click', () => {
+handleButtonActivate(stopBtn, () => {
   orchestra.stop();
-  playBtn.disabled = false;
-  stopBtn.disabled = true;
+  playBtn.classList.remove('disabled');
+  stopBtn.classList.add('disabled');
 });
 
 // Initialize button states
-stopBtn.disabled = true;
+stopBtn.classList.add('disabled');
 
 // BPM slider handler
 bpmSlider.addEventListener('input', (e) => {

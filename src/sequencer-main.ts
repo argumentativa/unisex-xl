@@ -7,9 +7,9 @@ import { AudioEngine } from './core/audio';
 import { Sequencer } from './ui/sequencer/Sequencer';
 
 // DOM Elements
-const playBtn = document.getElementById('playBtn') as HTMLButtonElement;
-const pauseBtn = document.getElementById('pauseBtn') as HTMLButtonElement;
-const stopBtn = document.getElementById('stopBtn') as HTMLButtonElement;
+const playBtn = document.getElementById('playBtn') as HTMLElement;
+const pauseBtn = document.getElementById('pauseBtn') as HTMLElement;
+const stopBtn = document.getElementById('stopBtn') as HTMLElement;
 const bpmSlider = document.getElementById('bpm') as HTMLInputElement;
 const bpmValue = document.getElementById('bpmValue') as HTMLSpanElement;
 const statusText = document.getElementById('statusText') as HTMLSpanElement;
@@ -30,9 +30,22 @@ function updatePlaybackStatus(status: string): void {
 }
 
 /**
+ * Handle button activation (click or keyboard)
+ */
+function handleButtonActivate(element: HTMLElement, handler: () => void): void {
+  element.addEventListener('click', handler);
+  element.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handler();
+    }
+  });
+}
+
+/**
  * Play button handler
  */
-playBtn.addEventListener('click', async () => {
+handleButtonActivate(playBtn, async () => {
   try {
     await audioEngine.start();
     sequencer.play();
@@ -47,7 +60,7 @@ playBtn.addEventListener('click', async () => {
 /**
  * Pause button handler
  */
-pauseBtn.addEventListener('click', () => {
+handleButtonActivate(pauseBtn, () => {
   sequencer.pause();
   updatePlaybackStatus('Paused');
   statusText.textContent = 'Paused';
@@ -56,7 +69,7 @@ pauseBtn.addEventListener('click', () => {
 /**
  * Stop button handler
  */
-stopBtn.addEventListener('click', () => {
+handleButtonActivate(stopBtn, () => {
   sequencer.stop();
   updatePlaybackStatus('Stopped');
   statusText.textContent = 'Stopped - Click steps to create patterns';

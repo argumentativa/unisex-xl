@@ -21,10 +21,10 @@ let visualizer: Visualizer;
 // DOM Elements
 const editorContainer = document.getElementById('editor') as HTMLElement;
 const visualizerCanvas = document.getElementById('visualizer') as HTMLCanvasElement;
-const runCodeBtn = document.getElementById('runCode') as HTMLButtonElement;
-const playBtn = document.getElementById('playBtn') as HTMLButtonElement;
-const pauseBtn = document.getElementById('pauseBtn') as HTMLButtonElement;
-const stopBtn = document.getElementById('stopBtn') as HTMLButtonElement;
+const runCodeBtn = document.getElementById('runCode') as HTMLElement;
+const playBtn = document.getElementById('playBtn') as HTMLElement;
+const pauseBtn = document.getElementById('pauseBtn') as HTMLElement;
+const stopBtn = document.getElementById('stopBtn') as HTMLElement;
 const bpmSlider = document.getElementById('bpm') as HTMLInputElement;
 const bpmValue = document.getElementById('bpmValue') as HTMLSpanElement;
 const vizModeSelect = document.getElementById('vizMode') as HTMLSelectElement;
@@ -65,9 +65,22 @@ function updatePlaybackState(state: PlaybackState): void {
 }
 
 /**
+ * Handle button activation (click or keyboard)
+ */
+function handleButtonActivate(element: HTMLElement, handler: () => void): void {
+  element.addEventListener('click', handler);
+  element.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handler();
+    }
+  });
+}
+
+/**
  * Run code button handler
  */
-runCodeBtn.addEventListener('click', async () => {
+handleButtonActivate(runCodeBtn, async () => {
   try {
     await audioEngine.start();
     // Update visualizer with analyzer after audio initialization
@@ -84,7 +97,7 @@ runCodeBtn.addEventListener('click', async () => {
 /**
  * Play button handler
  */
-playBtn.addEventListener('click', async () => {
+handleButtonActivate(playBtn, async () => {
   await audioEngine.start();
   // Update visualizer with analyzer after audio initialization
   visualizer.setAnalyzer(audioEngine.getAnalyzer());
@@ -96,7 +109,7 @@ playBtn.addEventListener('click', async () => {
 /**
  * Pause button handler
  */
-pauseBtn.addEventListener('click', () => {
+handleButtonActivate(pauseBtn, () => {
   audioEngine.pause();
   updatePlaybackState('paused');
   statusText.textContent = 'Paused';
@@ -105,7 +118,7 @@ pauseBtn.addEventListener('click', () => {
 /**
  * Stop button handler
  */
-stopBtn.addEventListener('click', () => {
+handleButtonActivate(stopBtn, () => {
   audioEngine.stop();
   updatePlaybackState('stopped');
   statusText.textContent = 'Stopped';

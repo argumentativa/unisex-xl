@@ -31,7 +31,7 @@
                             <option value="complex">Complex</option>
                             <option value="berlinTechno">Berlin Techno</option>
                         </select>
-                        <button id="runCode" class="btn btn-primary">Run</button>
+                        <span id="runCode" class="btn btn-primary" role="button" tabindex="0">Run</span>
                     </div>
                 </div>
                 <div id="editor" class="code-editor"></div>
@@ -55,9 +55,9 @@
         <!-- Controls -->
         <div class="controls">
             <div class="transport-controls">
-                <button id="playBtn" class="control-btn play-btn">▶</button>
-                <button id="pauseBtn" class="control-btn">⏸</button>
-                <button id="stopBtn" class="control-btn">⏹</button>
+                <span id="playBtn" class="control-btn play-btn" role="button" tabindex="0">▶</span>
+                <span id="pauseBtn" class="control-btn" role="button" tabindex="0">⏸</span>
+                <span id="stopBtn" class="control-btn" role="button" tabindex="0">⏹</span>
             </div>
             <div class="control-group">
                 <label for="bpm">BPM: <span id="bpmValue">120</span></label>

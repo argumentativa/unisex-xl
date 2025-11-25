@@ -3,6 +3,7 @@
  * Child-friendly, playful design with character-driven UI
  */
 
+@import './tokens.css';
 @import './step-button.css';
 
 /* Override app.css body styles to allow scrolling */
@@ -13,11 +14,10 @@ body {
 }
 
 :root {
+  /* Legacy variables */
   --color-primary-orange: #FF6B35;
   --color-accent-yellow: #FFD700;
   --color-card-white: #FFFFFF;
-  --color-text-primary: #1A1A1A;
-  --color-text-secondary: #666666;
   --color-blue-accent: #4A90E2;
   --color-blue-hover: #357ABD;
   --border-radius-card: 16px;
@@ -29,6 +29,7 @@ body {
 }
 
 .character-orchestra-app {
+  font-family: var(--ff-body);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -42,135 +43,125 @@ body {
       radial-gradient(circle at 60% 20%, rgba(255, 215, 0, 0.1) 1.5px, transparent 1.5px);
   background-size: 200px 200px, 250px 250px, 180px 180px, 220px 220px;
   background-position: 0 0, 100px 100px, 50px 150px, 150px 50px;
-  font-family: 'Spectral', Georgia, serif;
-  padding: 1.5rem;
-  gap: 1.5rem;
+  padding: var(--spacing-xl);
+  gap: var(--spacing-xl);
+  text-align: left;
 }
 
 /* Header */
 .character-header {
-  padding: 1.5rem 2rem;
-  text-align: center;
-  background: var(--color-card-white);
-  border-radius: var(--border-radius-card);
+  padding: var(--spacing-xl) var(--spacing-2xl);
+  text-align: left;
 }
 
 .character-logo {
-  font-family: 'Archivo', sans-serif;
-  font-size: 2.8rem;
-  font-weight: 800;
-  color: var(--color-primary-orange);
+  font-family: var(--ff-heading);
+  font-size: var(--fs-display);
+  font-weight: var(--fw-bold);
+  color: var(--text-color-primary);
   margin: 0;
-  letter-spacing: 2px;
+  letter-spacing: var(--ls-sm);
+  text-align: left;
 }
 
 .character-subtitle {
-  font-size: 1.2rem;
-  color: var(--color-text-secondary);
-  margin: 0.5rem 0 0 0;
-  font-weight: 500;
+  font-family: var(--ff-body);
+  font-size: var(--fs-h2);
+  color: var(--text-color-secondary);
+  margin: var(--spacing-sm) 0 0 0;
+  font-weight: var(--fw-medium);
+  text-align: left;
 }
 
 /* Helper Guide */
 .helper-guide {
-  padding: 1rem 2rem;
-  background: var(--color-card-white);
-  border-radius: var(--border-radius-card);
-  text-align: center;
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  text-align: left;
 }
 
 .helper-icon {
   font-size: 1.2rem;
-  margin-right: 0.5rem;
+  margin-right: var(--spacing-sm);
 }
 
 .helper-text {
-  font-family: 'Archivo', sans-serif;
-  color: var(--color-text-primary);
-  font-size: 1rem;
-  font-weight: 600;
+  font-family: var(--ff-body);
+  color: var(--text-color-primary);
+  font-size: var(--fs-body-default);
+  font-weight: var(--fw-semibold);
+  text-align: left;
 }
 
 /* Play Controls */
 .play-controls {
-  padding: 1.5rem 2rem;
-  background: var(--color-card-white);
-  border-radius: var(--border-radius-card);
+  padding: var(--spacing-xl) var(--spacing-2xl);
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
+  justify-content: flex-start;
+  gap: var(--spacing-xl);
   flex-wrap: wrap;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-xl);
 }
 
 /* Controls */
 .character-controls {
-  padding: 1.5rem 2rem;
-  background: var(--color-card-white);
-  border-radius: var(--border-radius-card);
+  padding: var(--spacing-xl) var(--spacing-2xl);
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 2rem;
+  justify-content: flex-start;
+  gap: var(--spacing-2xl);
   flex-wrap: wrap;
 }
 
 .control-btn {
-  padding: 1rem 2rem;
-  font-size: 1.4rem;
-  font-weight: 800;
+  font-family: var(--ff-body);
+  padding: 0;
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-bold);
   border: none;
-  border-radius: var(--border-radius-button);
+  background: none;
   cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: 'Spectral', Georgia, serif;
+  color: var(--text-color-link);
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
 .play-btn {
-  background: var(--color-blue-accent);
-  color: white;
-  min-width: 150px;
+  color: var(--color-link);
 }
 
 .play-btn:hover {
-  transform: translateY(-2px) scale(1.02);
-  background: var(--color-blue-hover);
+  color: var(--color-link-hover);
 }
 
 .stop-btn {
-  background: #f44336;
-  color: white;
-  min-width: 150px;
+  color: var(--color-link);
 }
 
 .stop-btn:hover {
-  transform: translateY(-2px) scale(1.02);
-  background: #d32f2f;
+  color: var(--color-link-hover);
 }
 
 .control-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  transform: none !important;
 }
 
 .control-btn:disabled:hover {
-  transform: none !important;
-  background: inherit;
+  color: var(--color-link);
 }
 
 .tempo-control {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--spacing-lg);
 }
 
 .tempo-control label {
-  font-family: 'Archivo', sans-serif;
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: var(--color-text-primary);
+  font-family: var(--ff-body);
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-bold);
+  color: var(--text-color-primary);
 }
 
 .tempo-control input[type="range"] {
@@ -224,7 +215,7 @@ body {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--spacing-lg);
 }
 
 /* Character Row */
@@ -252,7 +243,7 @@ body {
   min-width: 0; /* Allow buttons to shrink below their content size */
   max-width: 100%; /* Prevent buttons from exceeding grid cell */
   /* Inherits border-radius: 25% from base .step-button */
-  /* Inherits font-family: 'Spectral' from body */
+  /* Inherits font-family from body (Inter) */
 }
 
 .step-button.character-mode.inactive {
@@ -287,39 +278,36 @@ body {
 /* Usage Instructions */
 .usage-instructions {
   width: 100%;
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--spacing-xl);
 }
 
 .instructions-content {
-  padding: 1.5rem 2rem;
-  background: var(--color-card-white);
-  border-radius: var(--border-radius-card);
-  box-shadow: var(--shadow-card);
+  padding: var(--spacing-xl) var(--spacing-2xl);
 }
 
 .instructions-title {
-  font-family: 'Archivo', sans-serif;
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: var(--color-primary-orange);
-  margin: 0 0 1rem 0;
-  text-align: center;
+  font-family: var(--ff-heading);
+  font-size: var(--fs-h1);
+  font-weight: var(--fw-bold);
+  color: var(--text-color-primary);
+  margin: 0 0 var(--spacing-lg) 0;
+  text-align: left;
 }
 
 .instructions-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--spacing-md);
 }
 
 .instruction-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  font-family: 'Spectral', Georgia, serif;
-  font-size: 1rem;
-  color: var(--color-text-primary);
-  line-height: 1.5;
+  gap: var(--spacing-md);
+  font-family: var(--ff-body);
+  font-size: var(--fs-body-default);
+  color: var(--text-color-primary);
+  line-height: var(--lh-md);
 }
 
 .instruction-icon {
@@ -328,26 +316,24 @@ body {
 }
 
 .instruction-item strong {
-  color: var(--color-primary-orange);
-  font-weight: 700;
+  color: var(--text-color-primary);
+  font-weight: var(--fw-bold);
 }
 
 /* Status Bar */
-/* Status Bar */
 .character-status-bar {
-  padding: 1rem 2rem;
-  background: var(--color-accent-yellow);
-  border-radius: var(--border-radius-card);
+  font-family: var(--ff-body);
+  padding: var(--spacing-lg) var(--spacing-2xl);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: var(--color-text-primary);
-  font-size: 0.95rem;
-  font-weight: 500;
+  color: var(--text-color-primary);
+  font-size: var(--fs-body-default);
+  font-weight: var(--fw-medium);
 }
 
 #statusText {
-  color: var(--color-text-primary);
+  color: var(--text-color-primary);
 }
 
 /* Celebration Modal */
@@ -447,11 +433,11 @@ body {
 
   .character-controls {
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--spacing-lg);
   }
 
   .instructions-content {
-    padding: 1rem 1.5rem;
+    padding: var(--spacing-lg) var(--spacing-xl);
   }
 
   .instructions-title {

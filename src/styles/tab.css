@@ -1,0 +1,86 @@
+/**
+ * Tab Component
+ * Reusable tab component with active and hover states
+ * Uses design tokens for typography, spacing, and colors
+ * 
+ * Self-contained: imports all required dependencies
+ */
+
+@import './tokens.css';
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: 4px var(--spacing-sm);
+  border-radius: 38px;
+  font-family: var(--ff-body);
+  font-size: var(--fs-label-lg);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-sm);
+  letter-spacing: var(--ls-sm);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  white-space: nowrap;
+}
+
+/* Default State - White background with dark blueish gray text */
+.tab {
+  background-color: var(--color-card-white);
+  color: var(--color-tab-default);
+}
+
+/* Hover State - Medium yellow */
+.tab:hover {
+  background-color: var(--color-tab-hover);
+  color: var(--text-color-primary);
+}
+
+/* Active/Selected State - Black */
+.tab.active {
+  background-color: var(--color-tab-active);
+  color: var(--text-color-inverse);
+}
+
+.tab.active:hover {
+  background-color: var(--color-tab-active);
+  opacity: 0.9;
+}
+
+/* Tab with notification dot */
+.tab .tab-notification {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-tab-default);
+  flex-shrink: 0;
+}
+
+.tab:hover .tab-notification {
+  background-color: var(--text-color-primary);
+}
+
+.tab.active .tab-notification {
+  background-color: var(--text-color-inverse);
+}
+
+/* Tab Container (for grouping tabs) */
+.tab-container {
+  display: flex;
+  gap: var(--spacing-xs);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Quick Links Container */
+.quick-links {
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-2xl);
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+

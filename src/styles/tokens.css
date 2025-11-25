@@ -1,0 +1,96 @@
+/**
+ * Global Design Tokens
+ * Typography, colors, spacing - update here to change entire project
+ */
+
+/* Font Imports */
+@import url('https://fonts.googleapis.com/css2?family=Viaoda+Libre:wght@100;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:root {
+  /* Font Families */
+  --ff-heading: 'Viaoda Libre', Georgia, serif;
+  --ff-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Font Sizes - Fluid responsive with clamp() */
+  --fs-hero: clamp(48px, 8vw, 96px);
+  --fs-display: clamp(24px, 4vw, 32px);
+  --fs-h1: clamp(20px, 3vw, 24px);
+  --fs-h2: clamp(16px, 2.5vw, 18px);
+  --fs-h3: clamp(14px, 2vw, 16px);
+  --fs-h4: clamp(13px, 1.8vw, 15px);
+  --fs-h5: clamp(12px, 1.5vw, 14px);
+  --fs-h6: clamp(11px, 1.2vw, 12px);
+  --fs-body-default: clamp(14px, 1.5vw, 15px);
+  --fs-label-lg: clamp(13px, 1.4vw, 14px);
+  --fs-label-md: clamp(11px, 1.2vw, 12px);
+  --fs-label-sm: clamp(10px, 1vw, 10px);
+  --fs-caption: clamp(11px, 1.2vw, 12px);
+
+  /* Font Weights */
+  --fw-thin: 100;
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  /* Line Heights - Fluid responsive with clamp() */
+  --lh-hero: clamp(58px, 9.5vw, 115px);
+  --lh-xs: clamp(14px, 1.5vw, 16px);
+  --lh-sm: clamp(18px, 2vw, 20px);
+  --lh-md: clamp(22px, 2.5vw, 24px);
+  --lh-lg: clamp(26px, 3vw, 28px);
+  --lh-xl: clamp(38px, 4.5vw, 42px);
+
+  /* Letter Spacing */
+  --ls-sm: -0.2px;
+  --ls-md: -0.1px;
+  --ls-lg: 0px;
+
+  /* Typography Colors (from Figma) */
+  --text-color-primary: #242526;
+  --text-color-secondary: #6b6e70;
+  --text-color-tertiary: #8f9295;
+  --text-color-disabled: #e9e9ea;
+  --text-color-placeholder: #b3b5b7;
+  --text-color-inverse: #ffffff;
+  --text-color-link: #4A90E2;
+  --text-color-link-hover: #357ABD;
+
+  /* Legacy color variables (for backward compatibility) */
+  --color-text-primary: var(--text-color-primary);
+  --color-text-secondary: var(--text-color-secondary);
+  --color-link: var(--text-color-link);
+  --color-link-hover: var(--text-color-link-hover);
+
+  /* Spacing Tokens (4px increments, t-shirt sizes) */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 24px;
+  --spacing-2xl: 32px;
+  --spacing-3xl: 40px;
+  --spacing-4xl: 48px;
+  --spacing-5xl: 64px;
+
+  /* Background Colors */
+  --color-background: #FAF9F6;
+  
+  /* Tab Component Colors */
+  --color-tab-default: #2C3E50; /* Very dark blueish gray */
+  --color-tab-hover: #FFD700; /* Medium yellow */
+  --color-tab-active: #000000; /* Black */
+
+  /* Legacy variables (kept for compatibility) */
+  --color-primary-orange: #FF6B35;
+  --color-accent-yellow: #FFD700;
+  --color-card-white: #FFFFFF;
+  --color-blue-accent: #4A90E2;
+  --color-blue-hover: #357ABD;
+  --border-radius-card: 16px;
+  --border-radius-button: 8px;
+  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+

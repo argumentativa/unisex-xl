@@ -17,10 +17,6 @@ export default defineConfig({
           dest: ''
         },
         {
-          src: 'strudel',
-          dest: ''
-        },
-        {
           src: 'tonejs',
           dest: ''
         },
@@ -31,11 +27,8 @@ export default defineConfig({
         {
           src: 'projects.html',
           dest: ''
-        },
-        {
-          src: 'gallery.html',
-          dest: ''
         }
+        // gallery.html removed - now processed by Vite as a build entry
       ]
     }),
     {
@@ -68,7 +61,8 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         sequencer: resolve(__dirname, 'sequencer.html'),
-        characterOrchestra: resolve(__dirname, 'character-orchestra.html')
+        characterOrchestra: resolve(__dirname, 'character-orchestra.html'),
+        gallery: resolve(__dirname, 'gallery.html')
       }
     }
   }
