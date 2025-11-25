@@ -1,12 +1,60 @@
 /**
  * Demo Controller for Unified Step Button
- * Shows a single button cycling through chromatic notes with hue changes
+ * Shows a single button cycling through chromatic notes with custom color palette
  */
 
 import * as Tone from 'tone';
 import { StepButton, StepState } from './StepButton';
 
 const CHROMATIC_NOTES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+
+// Custom color palette for the 12 chromatic steps
+const COLOR_PALETTE = [
+  '#FFCBA4', // C - Peach
+  '#E2725B', // C# - Terracotta
+  '#FBCEB1', // D - Apricot
+  '#F4D03F', // D# - Golden Hour
+  '#7FCDCD', // E - Aqua Dream
+  '#93E9BE', // F - Seafoam
+  '#4A9B9B', // F# - Teal
+  '#63B3B3', // G - Lagoon
+  '#DCAE96', // G# - Dusty Rose
+  '#B2C9AB', // A - Sage
+  '#C5B4E3', // A# - Lavender Haze
+  '#F8EDD3'  // B - Warm Cream
+];
+
+/**
+ * Convert hex color to HSL
+ */
+function hexToHSL(hex: string): { h: number; s: number; l: number } {
+  const r = parseInt(hex.slice(1, 3), 16) / 255;
+  const g = parseInt(hex.slice(3, 5), 16) / 255;
+  const b = parseInt(hex.slice(5, 7), 16) / 255;
+
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h = 0;
+  let s = 0;
+  const l = (max + min) / 2;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    
+    switch (max) {
+      case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+      case g: h = ((b - r) / d + 2) / 6; break;
+      case b: h = ((r - g) / d + 4) / 6; break;
+    }
+  }
+
+  return {
+    h: Math.round(h * 360),
+    s: Math.round(s * 100),
+    l: Math.round(l * 100)
+  };
+}
 
 class StepButtonDemo {
   private button: StepButton | null = null;
@@ -87,8 +135,8 @@ class StepButtonDemo {
   }
 
   /**
-   * Handle button click - cycle through 12 notes then back to OFF
-   * OFF → C (0°) → C# (30°) → D (60°) → ... → B (330°) → OFF
+   * Handle button click - cycle through 12 notes with custom colors then back to OFF
+   * OFF → C (Peach) → C# (Terracotta) → D (Apricot) → ... → B (Warm Cream) → OFF
    */
   private async handleClick(): Promise<void> {
     if (!this.button) return;
@@ -105,7 +153,9 @@ class StepButtonDemo {
     }
 
     const isActive = this.currentNoteIndex >= 0;
-    const hue = isActive ? this.currentNoteIndex * 30 : 0; // 360° / 12 = 30° per note
+    
+    // Get hue from custom color palette
+    const hue = isActive ? hexToHSL(COLOR_PALETTE[this.currentNoteIndex]).h : 0;
 
     // Play the note if active
     if (isActive) {
@@ -117,7 +167,7 @@ class StepButtonDemo {
     state.noteIndex = this.currentNoteIndex >= 0 ? this.currentNoteIndex : 0;
     state.pressCount++;
 
-    // Update button state with new hue
+    // Update button state with new hue from palette
     this.button = new StepButton(
       0,
       state,
@@ -130,6 +180,14 @@ class StepButtonDemo {
     if (container) {
       container.innerHTML = '';
       container.appendChild(this.button.getElement());
+      
+      // Apply palette color directly to button
+      if (isActive) {
+        const buttonElement = this.button.getElement();
+        buttonElement.style.backgroundColor = COLOR_PALETTE[this.currentNoteIndex];
+        // Update glow to match palette color
+        buttonElement.style.boxShadow = `0 0 30px ${COLOR_PALETTE[this.currentNoteIndex]}`;
+      }
     }
 
     this.updateStateDisplay();
@@ -147,9 +205,9 @@ class StepButtonDemo {
       stateValue.style.color = '#999';
     } else {
       const noteName = CHROMATIC_NOTES[this.currentNoteIndex];
-      const hue = this.currentNoteIndex * 30;
+      const color = COLOR_PALETTE[this.currentNoteIndex];
       stateValue.textContent = noteName;
-      stateValue.style.color = `hsl(${hue}, 100%, 50%)`; // Brighter, more saturated text
+      stateValue.style.color = color; // Use custom palette color
     }
   }
 }
