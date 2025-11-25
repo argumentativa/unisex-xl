@@ -6,12 +6,7 @@
 import * as Tone from 'tone';
 import { CHARACTERS, createCharacterSynth, type Character } from './Character';
 import { CharacterRow } from './CharacterRow';
-
-export interface StepState {
-  noteIndex: number;  // -1 = OFF, 0-11 = chromatic notes
-  pressCount: number; // 0-12 (or 0-1 for drums)
-  isActive: boolean;  // Has at least one active step
-}
+export type { StepState } from '../shared/StepButton';
 
 export interface CharacterPattern {
   characterIndex: number;

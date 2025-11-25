@@ -5,7 +5,7 @@
 
 import type { InstrumentType } from '../../types';
 import type { StepPattern, StepState } from './Sequencer';
-import { StepButton } from './StepButton';
+import { StepButton } from '../shared/StepButton';
 
 export class InstrumentRow {
   private element: HTMLElement;
@@ -52,7 +52,7 @@ export class InstrumentRow {
       const stepButton = new StepButton(
         i,
         pattern.steps[i],
-        hue,
+        { mode: 'hue', hue },
         onStepClick
       );
       this.stepButtons.push(stepButton);

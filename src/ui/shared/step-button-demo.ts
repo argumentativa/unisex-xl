@@ -185,8 +185,6 @@ class StepButtonDemo {
       if (isActive) {
         const buttonElement = this.button.getElement();
         buttonElement.style.backgroundColor = COLOR_PALETTE[this.currentNoteIndex];
-        // Update glow to match palette color
-        buttonElement.style.boxShadow = `0 0 30px ${COLOR_PALETTE[this.currentNoteIndex]}`;
       }
     }
 

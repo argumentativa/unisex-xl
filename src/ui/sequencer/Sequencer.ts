@@ -7,12 +7,7 @@ import * as Tone from 'tone';
 import type { AudioEngine } from '../../core/audio';
 import type { InstrumentType } from '../../types';
 import { InstrumentRow } from './InstrumentRow';
-
-export interface StepState {
-  noteIndex: number; // 0-11 (C, C#, D, D#, E, F, F#, G, G#, A, A#, B)
-  pressCount: number; // Number of times pressed (for saturation)
-  isActive: boolean; // Whether step has been pressed at least once
-}
+export type { StepState } from '../shared/StepButton';
 
 export interface StepPattern {
   instrumentId: InstrumentType;

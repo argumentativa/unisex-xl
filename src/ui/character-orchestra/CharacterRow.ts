@@ -5,7 +5,7 @@
 
 import type { Character } from './Character';
 import type { CharacterPattern, StepState } from './CharacterOrchestra';
-import { StepButton } from './StepButton';
+import { StepButton } from '../shared/StepButton';
 
 export class CharacterRow {
   private element: HTMLElement;
@@ -36,7 +36,7 @@ export class CharacterRow {
       const stepButton = new StepButton(
         i,
         pattern.steps[i],
-        character,
+        { mode: 'character', character },
         onStepClick
       );
       this.stepButtons.push(stepButton);

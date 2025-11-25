@@ -46,7 +46,7 @@
     .step-button {
       width: 80px;
       height: 80px;
-      border: 3px solid rgba(255, 255, 255, 0.5);
+      border: none;
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -59,17 +59,10 @@
 
     .step-button:hover {
       transform: scale(1.1);
-      border-color: rgba(255, 255, 255, 0.9);
     }
 
     .step-button.glow-active {
-      border-color: rgba(255, 255, 255, 0.8);
-      box-shadow: 0 0 30px hsla(
-        var(--step-hue, 0),
-        100%,
-        65%,
-        0.9
-      );
+      /* No glow effect */
     }
 
     .state-display {

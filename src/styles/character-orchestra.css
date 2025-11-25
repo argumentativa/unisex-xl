@@ -233,8 +233,8 @@ body {
 
 /* Steps are directly in the row - no container needed */
 
-/* Step Button - 25% width in 4-column grid */
-.character-step-button {
+/* Step Button - Character Mode - 25% width in 4-column grid */
+.step-button.character-mode {
   width: 100%;
   aspect-ratio: 1;
   border-radius: 50%; /* Circular shape */
@@ -253,7 +253,7 @@ body {
   font-family: 'Comic Sans MS', 'Segoe UI', sans-serif;
 }
 
-.character-step-button.inactive {
+.step-button.character-mode.inactive {
   background: #ffffff; /* White background from Figma */
   border-color: #e9e9ea; /* Light gray border from Figma */
   box-shadow: 
@@ -261,7 +261,7 @@ body {
     0 0 0 1px rgba(0, 0, 0, 0.02) inset; /* Subtle shadows */
 }
 
-.character-step-button.active {
+.step-button.character-mode.active {
   background: #ffffff; /* White background from Figma */
   border-color: #4A90E2; /* Blue stroke for selected/active step */
   border-width: 2px;
@@ -270,11 +270,11 @@ body {
     0 0 0 1px rgba(0, 0, 0, 0.02) inset; /* Base shadows */
 }
 
-.character-step-button:hover {
+.step-button.character-mode:hover {
   transform: scale(1.1);
 }
 
-.character-step-button.current-step {
+.step-button.character-mode.current-step {
   z-index: 10;
   border-width: 2px;
   border-color: #4A90E2; /* Blue accent stroke for current step */
