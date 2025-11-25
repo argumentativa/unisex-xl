@@ -14,7 +14,6 @@ export class CharacterRow {
   private stepButtons: StepButton[];
   private currentStep: number = -1;
   private emotionalState: 'sleepy' | 'awake' | 'performing' = 'sleepy';
-  private scrollContainer: HTMLElement | null = null;
 
   constructor(
     character: Character,
@@ -32,29 +31,17 @@ export class CharacterRow {
     this.element.className = 'character-row';
     this.element.setAttribute('data-character', character.name);
 
-    // Create scrolling container for infinite scroll
-    const scrollWrapper = document.createElement('div');
-    scrollWrapper.className = 'steps-scroll-wrapper';
-    
-    const scrollContainer = document.createElement('div');
-    scrollContainer.className = `steps-scroll-container scroll-${this.getScrollDirection()}`;
-    
-    // Create 8 step buttons (4 visible + 4 duplicate for seamless loop)
-    for (let i = 0; i < 8; i++) {
-      const stepIndex = i % 4; // Cycle through 0-3
+    // Create 4 step buttons directly in the row
+    for (let i = 0; i < 4; i++) {
       const stepButton = new StepButton(
-        stepIndex,
-        pattern.steps[stepIndex],
+        i,
+        pattern.steps[i],
         character,
         onStepClick
       );
       this.stepButtons.push(stepButton);
-      scrollContainer.appendChild(stepButton.getElement());
+      this.element.appendChild(stepButton.getElement());
     }
-
-    scrollWrapper.appendChild(scrollContainer);
-    this.element.appendChild(scrollWrapper);
-    this.scrollContainer = scrollContainer;
   }
 
   /**
@@ -65,53 +52,27 @@ export class CharacterRow {
   }
 
   /**
-   * Get scroll direction based on character index
-   */
-  private getScrollDirection(): string {
-    // Even rows (0, 2, 4, 6): right-to-left
-    // Odd rows (1, 3, 5, 7): left-to-right
-    const characterIndex = this.pattern.characterIndex;
-    return characterIndex % 2 === 0 ? 'right-to-left' : 'left-to-right';
-  }
-
-  /**
-   * Update a step's state (updates both instances in the 8-button loop)
+   * Update a step's state
    */
   updateStep(stepIndex: number, stepState: StepState): void {
-    if (stepIndex >= 0 && stepIndex < 4) {
-      // Update both instances (stepIndex and stepIndex + 4)
-      if (stepIndex < this.stepButtons.length) {
-        this.stepButtons[stepIndex].setStepState(stepState);
-      }
-      if (stepIndex + 4 < this.stepButtons.length) {
-        this.stepButtons[stepIndex + 4].setStepState(stepState);
-      }
+    if (stepIndex >= 0 && stepIndex < 4 && stepIndex < this.stepButtons.length) {
+      this.stepButtons[stepIndex].setStepState(stepState);
     }
   }
 
   /**
-   * Update current step indicator (updates both instances in the loop)
+   * Update current step indicator
    */
   updateCurrentStep(stepIndex: number): void {
-    // Remove current step from previous buttons (both instances)
-    if (this.currentStep >= 0 && this.currentStep < 4) {
-      if (this.currentStep < this.stepButtons.length) {
-        this.stepButtons[this.currentStep].setCurrentStep(false);
-      }
-      if (this.currentStep + 4 < this.stepButtons.length) {
-        this.stepButtons[this.currentStep + 4].setCurrentStep(false);
-      }
+    // Remove current step from previous button
+    if (this.currentStep >= 0 && this.currentStep < 4 && this.currentStep < this.stepButtons.length) {
+      this.stepButtons[this.currentStep].setCurrentStep(false);
     }
 
-    // Set new current step (both instances)
+    // Set new current step
     this.currentStep = stepIndex;
-    if (this.currentStep >= 0 && this.currentStep < 4) {
-      if (this.currentStep < this.stepButtons.length) {
-        this.stepButtons[this.currentStep].setCurrentStep(true);
-      }
-      if (this.currentStep + 4 < this.stepButtons.length) {
-        this.stepButtons[this.currentStep + 4].setCurrentStep(true);
-      }
+    if (this.currentStep >= 0 && this.currentStep < 4 && this.currentStep < this.stepButtons.length) {
+      this.stepButtons[this.currentStep].setCurrentStep(true);
     }
   }
 

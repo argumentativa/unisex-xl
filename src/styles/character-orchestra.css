@@ -3,6 +3,13 @@
  * Child-friendly, playful design with character-driven UI
  */
 
+/* Override app.css body styles to allow scrolling */
+body {
+  height: auto !important;
+  overflow: visible !important;
+  overflow-y: auto !important;
+}
+
 :root {
   --color-primary-orange: #FF6B35;
   --color-accent-yellow: #FFD700;
@@ -23,7 +30,7 @@
 .character-orchestra-app {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
   background: linear-gradient(135deg, var(--color-primary-orange) 0%, #FF8C42 50%, #FFA366 100%);
   background-attachment: fixed;
   /* Subtle star-like decorative pattern */
@@ -35,9 +42,8 @@
   background-size: 200px 200px, 250px 250px, 180px 180px, 220px 220px;
   background-position: 0 0, 100px 100px, 50px 150px, 150px 50px;
   font-family: 'Comic Sans MS', 'Segoe UI', sans-serif;
-  overflow: hidden;
   padding: 1.5rem;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 /* Header */
@@ -191,34 +197,32 @@
 
 /* Character Grid */
 .character-grid-container {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  padding: 0; /* Edge-to-edge layout */
+  width: calc(100vw - 32px); /* 100% viewport width minus 16px margins on each side */
+  margin-left: calc(-1.5rem + 16px); /* Break out of parent padding (1.5rem) + add 16px margin */
+  margin-right: calc(-1.5rem + 16px); /* Break out of parent padding (1.5rem) + add 16px margin */
+  position: relative;
+  z-index: 1;
 }
 
 .character-grid {
   width: 100%;
-  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0; /* Edge-to-edge rows */
+  gap: 1rem;
 }
 
 /* Character Row */
 .character-row {
-  display: flex;
-  align-items: center;
-  padding: 0; /* Edge-to-edge layout */
-  background: transparent; /* Remove white background */
-  border-radius: 0; /* Remove border radius for edge-to-edge */
-  box-shadow: none; /* Remove shadow for edge-to-edge */
-  height: 25vw; /* Exactly 25% of viewport height */
-  min-height: 100px;
-  margin-top: 5vh; /* 5% margin top */
-  margin-bottom: 5vh; /* 5% margin bottom */
-  transition: box-shadow 0.3s ease;
-  width: 100%; /* Full width */
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  padding: 0;
+  background: var(--color-card-white);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--shadow-card);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
 }
 
 .character-row:hover {
@@ -227,58 +231,11 @@
 
 /* Character info removed - not displayed in rows */
 
-/* Steps Scrolling Container */
-.steps-scroll-wrapper {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
+/* Steps are directly in the row - no container needed */
 
-.steps-scroll-container {
-  display: flex;
-  gap: 0; /* No gap - buttons touch edge-to-edge */
-  width: 200%; /* 8 buttons × 25% = 200% */
-  height: 100%;
-  will-change: transform;
-}
-
-/* Right-to-left scrolling (even rows: 0, 2, 4, 6) */
-.steps-scroll-container.scroll-right-to-left {
-  animation: scroll-right-to-left 20s linear infinite;
-}
-
-/* Left-to-right scrolling (odd rows: 1, 3, 5, 7) */
-.steps-scroll-container.scroll-left-to-right {
-  animation: scroll-left-to-right 20s linear infinite;
-}
-
-@keyframes scroll-right-to-left {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%); /* Move by exactly 4 steps (half of 8) */
-  }
-}
-
-@keyframes scroll-left-to-right {
-  0% {
-    transform: translateX(-50%);
-  }
-  100% {
-    transform: translateX(0);
-  }
-}
-
-/* Step Button - Exactly 25% width, edge-to-edge - Figma design */
+/* Step Button - 25% width in 4-column grid */
 .character-step-button {
-  width: 25%; /* Exactly one quarter of viewport */
-  height: 25vw; /* Match width for square aspect ratio */
-  /* Responsive constraints for very small screens */
-  min-width: 44px; /* Match Figma size */
-  min-height: 44px;
+  width: 100%;
   aspect-ratio: 1;
   border-radius: 50%; /* Circular shape */
   border: 1px solid #e9e9ea; /* Light gray border from Figma */
@@ -294,7 +251,6 @@
     0 1px 2px rgba(0, 0, 0, 0.05),
     0 0 0 1px rgba(0, 0, 0, 0.02) inset; /* Subtle shadows from Figma */
   font-family: 'Comic Sans MS', 'Segoe UI', sans-serif;
-  flex-shrink: 0;
 }
 
 .character-step-button.inactive {
@@ -307,12 +263,11 @@
 
 .character-step-button.active {
   background: #ffffff; /* White background from Figma */
-  border-color: #e9e9ea; /* Light gray border from Figma */
+  border-color: #4A90E2; /* Blue stroke for selected/active step */
+  border-width: 2px;
   box-shadow: 
-    0 2px 8px rgba(0, 0, 0, 0.15),
-    0 0 0 1px rgba(0, 0, 0, 0.05) inset,
-    0 0 12px hsla(var(--step-hue, 180), var(--step-saturation, 50%), var(--step-lightness, 50%), 0.3); /* Color glow */
-  animation: step-glow 2s ease-in-out infinite;
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 0 0 1px rgba(0, 0, 0, 0.02) inset; /* Base shadows */
 }
 
 .character-step-button:hover {
@@ -320,34 +275,17 @@
 }
 
 .character-step-button.current-step {
-  animation: step-pulse 0.3s ease-in-out infinite;
   z-index: 10;
   border-width: 2px;
-  border-color: #4A90E2; /* Blue accent for current step */
+  border-color: #4A90E2; /* Blue accent stroke for current step */
   box-shadow: 
-    0 0 0 2px rgba(74, 144, 226, 0.4),
-    0 0 0 4px rgba(74, 144, 226, 0.2),
     0 1px 2px rgba(0, 0, 0, 0.05),
-    0 0 0 1px rgba(0, 0, 0, 0.02) inset;
+    0 0 0 1px rgba(0, 0, 0, 0.02) inset; /* Keep base shadows */
 }
 
-@keyframes step-glow {
-  0%, 100% {
-    box-shadow: 0 0 30px currentColor, 0 4px 12px rgba(0, 0, 0, 0.4);
-  }
-  50% {
-    box-shadow: 0 0 40px currentColor, 0 6px 16px rgba(0, 0, 0, 0.5);
-  }
-}
+/* Glow animation removed - using blue stroke only for selected steps */
 
-@keyframes step-pulse {
-  0%, 100% {
-    transform: scale(1.2);
-  }
-  50% {
-    transform: scale(1.3);
-  }
-}
+/* Pulse animation removed - using stroke only for current step indicator */
 
 .step-emoji {
   font-size: clamp(3rem, 8vw, 6rem);
@@ -363,18 +301,22 @@
 }
 
 /* Status Bar */
+/* Status Bar */
 .character-status-bar {
   padding: 1rem 2rem;
-  background: rgba(0, 0, 0, 0.4);
-  border-top: 3px solid var(--accent-gold);
-  text-align: center;
+  background: var(--color-accent-yellow);
+  border-radius: var(--border-radius-card);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--color-text-primary);
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 #statusText {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: white;
-  text-shadow: var(--text-shadow);
+  color: var(--color-text-primary);
 }
 
 /* Celebration Modal */
@@ -450,16 +392,9 @@
 
 @media (max-width: 768px) {
   .character-step-button {
-    width: 25%; /* Still exactly 25% on mobile */
-    height: 25vw; /* Match width */
-    min-width: 50px;
-    min-height: 50px;
-    border-width: 3px;
-  }
-
-  .steps-scroll-container {
-    gap: 0; /* No gap - edge-to-edge */
-    width: 200%; /* 8 buttons × 25% = 200% */
+    width: 44px;
+    height: 44px;
+    border-width: 1px;
   }
 
   .step-emoji {
