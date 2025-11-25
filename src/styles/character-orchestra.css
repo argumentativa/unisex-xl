@@ -236,8 +236,8 @@ body {
   width: 100%;
   aspect-ratio: 1;
   flex-direction: column;
-  font-family: 'Comic Sans MS', 'Segoe UI', sans-serif;
-  border-radius: 50%;
+  /* Inherits border-radius: 25% from base .step-button */
+  /* Inherits font-family: 'Spectral' from body */
 }
 
 .step-button.character-mode.inactive {
