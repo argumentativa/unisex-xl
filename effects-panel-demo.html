@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Effects Panel Demo - UNISEX XL</title>
+  <link rel="stylesheet" href="./src/styles/app.css">
+  <link rel="stylesheet" href="./src/styles/effects-panel.css">
+</head>
+<body>
+  <div class="effects-demo-app">
+    <header class="demo-header">
+      <h1>Effects Panel Component Demo</h1>
+      <p class="demo-subtitle">Explore per-instrument effects with an intuitive UI</p>
+    </header>
+
+    <div class="demo-controls">
+      <button id="playBtn" class="control-btn">▶ Play Test Tone</button>
+      <button id="stopBtn" class="control-btn">⏹ Stop</button>
+    </div>
+
+    <div class="demo-container">
+      <div id="effectsPanelsContainer" class="effects-panels-container">
+        <!-- Effects panels will be inserted here -->
+      </div>
+    </div>
+
+    <div class="demo-instructions">
+      <h2>How to Use</h2>
+      <ul>
+        <li>Click the <strong>character name</strong> to expand/collapse effects</li>
+        <li>Adjust sliders to hear real-time effect changes</li>
+        <li>Click <strong>Play Test Tone</strong> to hear the instrument with effects</li>
+        <li>Each character has its own independent effect chain</li>
+      </ul>
+    </div>
+  </div>
+
+  <script type="module" src="./src/ui/shared/effects-panel-demo.ts"></script>
+</body>
+</html>
+
