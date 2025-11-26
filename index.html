@@ -28,10 +28,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNISEX XL - Live Coding Music</title>
-  <script type="module" crossorigin src="/unisex-xl/assets/main-Bf0aywwY.js"></script>
-  <link rel="modulepreload" crossorigin href="/unisex-xl/assets/QuickLinks-CczuCusb.js">
-  <link rel="modulepreload" crossorigin href="/unisex-xl/assets/utils-DMAVxa_R.js">
-  <link rel="stylesheet" crossorigin href="/unisex-xl/assets/QuickLinks-D8iRUSoi.css">
+  <script type="module" crossorigin src="/unisex-xl/assets/main-CXKfwXwj.js"></script>
+  <link rel="modulepreload" crossorigin href="/unisex-xl/assets/QuickLinks-DrpVojna.js">
+  <link rel="modulepreload" crossorigin href="/unisex-xl/assets/utils-BOqQI58-.js">
+  <link rel="modulepreload" crossorigin href="/unisex-xl/assets/audio-CjUdy6Ak.js">
+  <link rel="modulepreload" crossorigin href="/unisex-xl/assets/TransportControls-CYD71Jxc.js">
+  <link rel="stylesheet" crossorigin href="/unisex-xl/assets/QuickLinks-DENiajnb.css">
   <link rel="stylesheet" crossorigin href="/unisex-xl/assets/main-BYU5vUAj.css">
 </head>
 <body>
@@ -53,6 +55,7 @@
                 <div class="panel-header">
                     <h2>Code Editor</h2>
                     <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <div id="transportControlsContainer"></div>
                         <select id="exampleSelect" class="viz-mode-select">
                             <option value="basic">Basic</option>
                             <option value="drums">Drums</option>
@@ -81,18 +84,6 @@
             </div>
         </div>
 
-        <!-- Controls -->
-        <div class="controls">
-            <div class="transport-controls">
-                <span id="playBtn" class="control-btn play-btn" role="button" tabindex="0">▶</span>
-                <span id="pauseBtn" class="control-btn" role="button" tabindex="0">⏸</span>
-                <span id="stopBtn" class="control-btn" role="button" tabindex="0">⏹</span>
-            </div>
-            <div class="control-group">
-                <label for="bpm">BPM: <span id="bpmValue">120</span></label>
-                <input type="range" id="bpm" min="60" max="200" value="120" step="1">
-            </div>
-        </div>
 
         <!-- Status Bar -->
         <footer class="status-bar">
