@@ -35,6 +35,9 @@
   outline: none;
   -webkit-appearance: none;
   appearance: none;
+  /* Mobile-friendly touch handling */
+  touch-action: manipulation; /* Prevent double-tap zoom */
+  -webkit-tap-highlight-color: transparent;
 }
 
 .slider::-webkit-slider-thumb {
@@ -63,5 +66,27 @@
   color: var(--text-color-secondary);
   min-width: 45px;
   text-align: right;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .slider {
+    min-width: 120px; /* Smaller min-width on mobile */
+  }
+  
+  .slider-container {
+    gap: var(--spacing-sm); /* Tighter spacing on mobile */
+  }
+  
+  /* Larger touch targets for slider thumbs on mobile */
+  .slider::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+  }
 }
 

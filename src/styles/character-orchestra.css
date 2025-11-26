@@ -405,6 +405,17 @@ body {
 }
 
 @media (max-width: 768px) {
+  .character-orchestra-app {
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
+  
+  .character-grid-container {
+    width: calc(100vw - 16px); /* Adjust for smaller padding */
+    margin-left: calc(-1rem + 8px);
+    margin-right: calc(-1rem + 8px);
+  }
+  
   .character-row {
     gap: clamp(2px, 0.5vw, 4px); /* Smaller gap on mobile */
   }
@@ -437,7 +448,7 @@ body {
   }
 
   .instructions-content {
-    padding: var(--spacing-lg) var(--spacing-xl);
+    padding: var(--spacing-md);
   }
 
   .instructions-title {
@@ -450,6 +461,14 @@ body {
 
   .instruction-icon {
     font-size: 1.2rem;
+  }
+  
+  .play-controls {
+    padding: var(--spacing-md);
+  }
+  
+  .usage-instructions {
+    padding: var(--spacing-md);
   }
 }
 

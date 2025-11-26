@@ -22,6 +22,12 @@ body {
     height: 100vh;
     overflow: hidden;
     text-align: left;
+    /* Mobile optimizations */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Prevent text size adjustment on iOS */
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
 }
 
 .app {
@@ -384,6 +390,13 @@ span {
     text-align: left;
 }
 
+.panel-header-controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
 /* Editor Panel */
 .editor-panel {
     display: flex;
@@ -527,6 +540,12 @@ span {
     color: var(--text-color-link);
     text-decoration: none;
     transition: color 0.2s ease;
+    /* Mobile-friendly touch targets */
+    min-height: 44px; /* iOS recommended minimum */
+    touch-action: manipulation; /* Prevent double-tap zoom */
+    -webkit-tap-highlight-color: transparent; /* Remove default tap highlight */
+    display: inline-flex;
+    align-items: center;
 }
 
 .btn-primary {
@@ -593,12 +612,13 @@ span {
 /* Responsive */
 @media (max-width: 768px) {
     .app {
-        padding: var(--spacing-lg);
-        gap: var(--spacing-lg);
+        padding: var(--spacing-md);
+        gap: var(--spacing-md);
     }
     
     .main-content {
         grid-template-columns: 1fr;
+        gap: var(--spacing-md);
     }
     
     .visualizer-panel {
@@ -608,12 +628,58 @@ span {
     .header {
         flex-direction: column;
         align-items: flex-start;
-        gap: var(--spacing-lg);
+        gap: var(--spacing-md);
+        padding: var(--spacing-md);
     }
     
     .controls {
         flex-wrap: wrap;
-        gap: var(--spacing-lg);
+        gap: var(--spacing-md);
+    }
+    
+    .panel-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-md);
+        padding: var(--spacing-md);
+    }
+    
+    .panel-header h2 {
+        font-size: var(--fs-h3);
+    }
+    
+    .panel-header-controls {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+    
+    .panel-header-controls .transport-controls {
+        width: 100%;
+    }
+    
+    .panel-header-controls .viz-mode-select {
+        width: 100%;
+    }
+    
+    .panel-header-controls .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    /* Ensure code editor is usable on mobile */
+    .code-editor {
+        min-height: 300px;
+    }
+    
+    /* Prevent horizontal scrolling */
+    body {
+        overflow-x: hidden;
+    }
+    
+    .app {
+        overflow-x: hidden;
     }
 }
 

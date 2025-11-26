@@ -23,6 +23,10 @@
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;
   white-space: nowrap;
+  /* Mobile-friendly touch targets */
+  min-height: 44px; /* iOS recommended minimum */
+  touch-action: manipulation; /* Prevent double-tap zoom */
+  -webkit-tap-highlight-color: transparent; /* Remove default tap highlight */
 }
 
 /* Default State - White background with dark blueish gray text */
@@ -82,5 +86,22 @@
   justify-content: center;
   flex-wrap: wrap;
   gap: var(--spacing-xs);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .tab {
+    padding: 8px var(--spacing-md); /* Larger padding on mobile */
+    min-height: 48px; /* Larger touch target on mobile */
+  }
+  
+  .tab-container {
+    gap: var(--spacing-sm); /* More space between tabs on mobile */
+  }
+  
+  .quick-links {
+    padding: var(--spacing-md);
+    gap: var(--spacing-sm);
+  }
 }
 

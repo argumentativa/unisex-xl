@@ -261,6 +261,22 @@ body[data-interaction-level="4"] .sequencer-app {
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+  body {
+    overflow-x: hidden !important;
+  }
+  
+  .sequencer-app {
+    padding: var(--spacing-md);
+    gap: var(--spacing-md);
+  }
+  
+  .sequencer-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+  
   .sequencer-grid {
     gap: var(--spacing-sm);
   }
@@ -272,6 +288,7 @@ body[data-interaction-level="4"] .sequencer-app {
   .step-button {
     width: 36px;
     height: 36px;
+    min-height: 44px; /* Ensure touch target size */
   }
 
   .instrument-label {
@@ -281,8 +298,22 @@ body[data-interaction-level="4"] .sequencer-app {
 
   .sequencer-controls {
     flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-lg);
+    align-items: stretch;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+  }
+  
+  .transport-controls {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .control-group {
+    width: 100%;
+  }
+  
+  .sequencer-grid-container {
+    overflow-x: hidden;
   }
 }
 

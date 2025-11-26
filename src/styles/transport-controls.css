@@ -32,6 +32,10 @@
   align-items: center;
   justify-content: center;
   min-width: 80px;
+  /* Mobile-friendly touch targets */
+  min-height: 44px; /* iOS recommended minimum */
+  touch-action: manipulation; /* Prevent double-tap zoom */
+  -webkit-tap-highlight-color: transparent; /* Remove default tap highlight */
 }
 
 .transport-controls-btn:hover:not(:disabled) {
@@ -79,5 +83,33 @@
 
 .transport-controls-bpm .slider-container {
   gap: var(--spacing-lg);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .transport-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-md);
+  }
+  
+  .transport-controls-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .transport-controls-btn {
+    flex: 1;
+    min-width: 0; /* Allow buttons to shrink */
+    padding: var(--spacing-md);
+  }
+  
+  .transport-controls-bpm {
+    width: 100%;
+  }
+  
+  .transport-controls-bpm .slider-container {
+    width: 100%;
+  }
 }
 
