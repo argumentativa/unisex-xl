@@ -8,7 +8,6 @@ import { CHARACTERS, createCharacterSynth, type Character } from './Character';
 import { CharacterRow } from './CharacterRow';
 import { EffectsPanel } from '../shared/EffectsPanel';
 import { playbackStore } from '../../core/store';
-import type { AudioEngine } from '../../core/audio';
 import type { StepState } from '../shared/StepButton';
 export type { StepState } from '../shared/StepButton';
 
@@ -19,7 +18,6 @@ export interface CharacterPattern {
 
 export class CharacterOrchestra {
   private container: HTMLElement;
-  private audioEngine: AudioEngine | null;
   private characters: Character[];
   private patterns: CharacterPattern[];
   private sequences: Map<number, Tone.Sequence>;
@@ -36,19 +34,16 @@ export class CharacterOrchestra {
   private stepIndicatorEventId: number | null = null;
   private onStateChangeCallbacks: (() => void)[] = [];
 
-  constructor(container: HTMLElement, audioEngine?: AudioEngine) {
+  constructor(container: HTMLElement) {
     this.container = container;
-    this.audioEngine = audioEngine || null;
     this.patterns = [];
     this.sequences = new Map();
     this.characterRows = new Map();
 
     // Initialize characters with full state
+    // Synths are connected to EffectsPanel's effect chain in init()
     this.characters = CHARACTERS.map((charData, _index) => {
       const synth = createCharacterSynth(charData);
-      // Don't connect to AudioEngine effect chain here
-      // EffectsPanel will handle connection when created in init()
-      // Synth will be connected to EffectsPanel's effect chain instead
 
       return {
         ...charData,

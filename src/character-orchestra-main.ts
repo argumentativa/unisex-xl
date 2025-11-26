@@ -3,7 +3,7 @@
  * Simplified version showing only character rows
  */
 
-import { AudioEngine } from './core/audio';
+import * as Tone from 'tone';
 import { CharacterOrchestra } from './ui/character-orchestra/CharacterOrchestra';
 import { TransportControls } from './ui/shared/TransportControls';
 
@@ -11,9 +11,8 @@ import { TransportControls } from './ui/shared/TransportControls';
 const characterGrid = document.getElementById('characterGrid') as HTMLElement;
 const transportControlsContainer = document.getElementById('transportControlsContainer') as HTMLElement;
 
-// Initialize AudioEngine and Character Orchestra
-const audioEngine = new AudioEngine();
-const orchestra = new CharacterOrchestra(characterGrid, audioEngine);
+// Initialize Character Orchestra (no AudioEngine dependency)
+const orchestra = new CharacterOrchestra(characterGrid);
 
 // Initialize UI
 orchestra.init();
@@ -22,7 +21,7 @@ orchestra.init();
 const transportControls = new TransportControls({
   initialBPM: 120,
   onPlay: async () => {
-    await audioEngine.start();
+    await Tone.start(); // Unlock audio context directly
     orchestra.play();
   },
   onStop: () => {
