@@ -1,0 +1,67 @@
+/**
+ * Slider Component Styles
+ * Reusable slider styles for consistent UI across the app
+ */
+
+.slider-control {
+  margin-bottom: var(--spacing-lg);
+}
+
+.slider-control:last-child {
+  margin-bottom: 0;
+}
+
+.slider-label {
+  display: block;
+  font-family: var(--ff-body);
+  font-size: var(--fs-body-default);
+  font-weight: var(--fw-medium);
+  color: var(--text-color-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.slider-container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.slider {
+  flex: 1;
+  min-width: 200px;
+  height: 6px;
+  border-radius: 3px;
+  background: #E0E0E0;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-blue-accent);
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--color-blue-accent);
+  cursor: pointer;
+  border: none;
+}
+
+.slider-value {
+  font-family: var(--ff-body);
+  font-size: var(--fs-label-md);
+  font-weight: var(--fw-semibold);
+  color: var(--text-color-secondary);
+  min-width: 45px;
+  text-align: right;
+}
+

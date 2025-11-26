@@ -81,79 +81,8 @@
   margin-bottom: 0;
 }
 
-.effect-label {
-  display: block;
-  font-family: var(--ff-body);
-  font-size: var(--fs-body-default);
-  font-weight: var(--fw-medium);
-  color: var(--text-color-primary);
-  margin-bottom: var(--spacing-sm);
-}
-
-.effect-slider-container {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
-.effect-slider {
-  flex: 1;
-  height: 6px;
-  border-radius: 3px;
-  background: rgba(0, 0, 0, 0.1);
-  outline: none;
-  -webkit-appearance: none;
-  appearance: none;
-}
-
-.effect-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--color-accent-primary);
-  cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.effect-slider::-webkit-slider-thumb:hover {
-  transform: scale(1.2);
-  box-shadow: 0 0 0 4px rgba(255, 140, 0, 0.2);
-}
-
-.effect-slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--color-accent-primary);
-  cursor: pointer;
-  border: none;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.effect-slider::-moz-range-thumb:hover {
-  transform: scale(1.2);
-  box-shadow: 0 0 0 4px rgba(255, 140, 0, 0.2);
-}
-
-.effect-control.active .effect-slider {
-  background: linear-gradient(
-    to right,
-    var(--color-accent-primary) 0%,
-    var(--color-accent-primary) var(--slider-value, 0%),
-    rgba(0, 0, 0, 0.1) var(--slider-value, 0%)
-  );
-}
-
-.effect-value {
-  font-family: var(--ff-body);
-  font-size: var(--fs-label-md);
-  font-weight: var(--fw-semibold);
-  color: var(--text-color-secondary);
-  min-width: 45px;
-  text-align: right;
-}
+/* Slider styles are now in slider.css - imported globally via app.css */
+/* Keep effect-control specific styles here */
 
 /* Demo-specific styles */
 /* Override app.css body overflow for demo page */

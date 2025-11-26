@@ -1,0 +1,83 @@
+/**
+ * Transport Controls Component Styles
+ * Reusable transport controls (Play, Stop, Pause, BPM) styles
+ */
+
+.transport-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xl);
+  flex-wrap: wrap;
+}
+
+.transport-controls-buttons {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.transport-controls-btn {
+  padding: var(--spacing-md) var(--spacing-xl);
+  background: var(--color-card-white);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  font-family: var(--ff-body);
+  font-size: var(--fs-body-default);
+  font-weight: var(--fw-medium);
+  color: var(--text-color-primary);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+}
+
+.transport-controls-btn:hover:not(:disabled) {
+  background: var(--color-blue-accent);
+  color: var(--text-color-inverse);
+  border-color: var(--color-blue-accent);
+}
+
+.transport-controls-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.transport-controls-btn.active {
+  background: var(--color-blue-accent);
+  color: var(--text-color-inverse);
+  border-color: var(--color-blue-accent);
+}
+
+.transport-controls-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.transport-controls-btn:disabled:hover {
+  background: var(--color-card-white);
+  color: var(--text-color-primary);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+.transport-controls-bpm {
+  display: flex;
+  align-items: center;
+}
+
+/* Ensure slider component fits well in transport controls */
+.transport-controls-bpm .slider-control {
+  margin-bottom: 0;
+}
+
+.transport-controls-bpm .slider-label {
+  margin-bottom: 0;
+  margin-right: var(--spacing-md);
+  font-weight: var(--fw-bold);
+}
+
+.transport-controls-bpm .slider-container {
+  gap: var(--spacing-lg);
+}
+

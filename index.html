@@ -25,6 +25,7 @@
                 <div class="panel-header">
                     <h2>Code Editor</h2>
                     <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <div id="transportControlsContainer"></div>
                         <select id="exampleSelect" class="viz-mode-select">
                             <option value="basic">Basic</option>
                             <option value="drums">Drums</option>
@@ -53,18 +54,6 @@
             </div>
         </div>
 
-        <!-- Controls -->
-        <div class="controls">
-            <div class="transport-controls">
-                <span id="playBtn" class="control-btn play-btn" role="button" tabindex="0">▶</span>
-                <span id="pauseBtn" class="control-btn" role="button" tabindex="0">⏸</span>
-                <span id="stopBtn" class="control-btn" role="button" tabindex="0">⏹</span>
-            </div>
-            <div class="control-group">
-                <label for="bpm">BPM: <span id="bpmValue">120</span></label>
-                <input type="range" id="bpm" min="60" max="200" value="120" step="1">
-            </div>
-        </div>
 
         <!-- Status Bar -->
         <footer class="status-bar">

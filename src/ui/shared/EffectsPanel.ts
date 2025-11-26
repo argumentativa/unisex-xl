@@ -5,6 +5,7 @@
 
 import * as Tone from 'tone';
 import type { EffectType } from '../../types';
+import { Slider } from './Slider';
 
 export interface EffectsPanelOptions {
   characterName: string;
@@ -130,45 +131,22 @@ export class EffectsPanel {
     control.className = 'effect-control';
     control.setAttribute('data-effect', type);
 
-    const labelEl = document.createElement('label');
-    labelEl.className = 'effect-label';
-    labelEl.textContent = label;
-
-    const sliderContainer = document.createElement('div');
-    sliderContainer.className = 'effect-slider-container';
-
-    const slider = document.createElement('input');
-    slider.type = 'range';
-    slider.min = min.toString();
-    slider.max = max.toString();
-    slider.step = step.toString();
-    slider.value = '0';
-    slider.className = 'effect-slider';
-    slider.setAttribute('data-effect-type', type);
-
-    const valueDisplay = document.createElement('span');
-    valueDisplay.className = 'effect-value';
-    valueDisplay.textContent = '0%';
-
-    slider.addEventListener('input', (e) => {
-      const value = parseFloat((e.target as HTMLInputElement).value);
-      this.setEffect(type, value);
-      valueDisplay.textContent = `${Math.round(value * 100)}%`;
-      
-      // Visual feedback
-      control.classList.toggle('active', value > 0);
-      
-      // Update slider background gradient
-      const percentage = (value / (max - min)) * 100;
-      slider.style.setProperty('--slider-value', `${percentage}%`);
+    // Use Slider component
+    const slider = new Slider({
+      label: label,
+      min: min,
+      max: max,
+      step: step,
+      value: 0,
+      displayFormat: 'percentage',
+      onChange: (value) => {
+        this.setEffect(type, value);
+        // Visual feedback - slider component handles active state internally
+        control.classList.toggle('active', value > 0);
+      }
     });
 
-    sliderContainer.appendChild(slider);
-    sliderContainer.appendChild(valueDisplay);
-
-    control.appendChild(labelEl);
-    control.appendChild(sliderContainer);
-
+    control.appendChild(slider.getElement());
     this.content.appendChild(control);
   }
 

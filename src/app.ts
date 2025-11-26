@@ -9,6 +9,7 @@ import { Visualizer } from './ui/visualizer';
 import { getExample, type ExampleName } from './core/examples';
 import { playbackStore } from './core/store';
 import { handleButtonActivate } from './ui/shared/utils';
+import { TransportControls } from './ui/shared/TransportControls';
 
 // Initialize components
 const audioEngine = new AudioEngine();
@@ -20,11 +21,7 @@ let visualizer: Visualizer;
 const editorContainer = document.getElementById('editor') as HTMLElement;
 const visualizerCanvas = document.getElementById('visualizer') as HTMLCanvasElement;
 const runCodeBtn = document.getElementById('runCode') as HTMLElement;
-const playBtn = document.getElementById('playBtn') as HTMLElement;
-const pauseBtn = document.getElementById('pauseBtn') as HTMLElement;
-const stopBtn = document.getElementById('stopBtn') as HTMLElement;
-const bpmSlider = document.getElementById('bpm') as HTMLInputElement;
-const bpmValue = document.getElementById('bpmValue') as HTMLSpanElement;
+const transportControlsContainer = document.getElementById('transportControlsContainer') as HTMLElement;
 const vizModeSelect = document.getElementById('vizMode') as HTMLSelectElement;
 const exampleSelect = document.getElementById('exampleSelect') as HTMLSelectElement;
 const statusText = document.getElementById('statusText') as HTMLSpanElement;
@@ -52,13 +49,38 @@ resizeVisualizer();
 window.addEventListener('resize', resizeVisualizer);
 
 /**
- * Subscribe to playback state changes
+ * Subscribe to playback state changes for status display
  */
 playbackStore.subscribe((state) => {
   playbackStatus.textContent = state.charAt(0).toUpperCase() + state.slice(1);
-  playBtn.classList.toggle('active', state === 'playing');
-  pauseBtn.classList.toggle('active', state === 'paused');
 });
+
+/**
+ * Create transport controls
+ */
+const transportControls = new TransportControls({
+  initialBPM: 120,
+  onPlay: async () => {
+    await audioEngine.start();
+    // Update visualizer with analyzer after audio initialization
+    visualizer.setAnalyzer(audioEngine.getAnalyzer());
+    audioEngine.play();
+    statusText.textContent = 'Playing';
+  },
+  onStop: () => {
+    audioEngine.stop();
+    statusText.textContent = 'Stopped';
+  },
+  onBPMChange: (bpm) => {
+    audioEngine.setBPM(bpm);
+  }
+});
+
+transportControlsContainer.appendChild(transportControls.getElement());
+
+// Get button references for keyboard shortcuts
+const playBtn = transportControls.getElement().querySelector('.play-btn') as HTMLElement;
+const stopBtn = transportControls.getElement().querySelector('.stop-btn') as HTMLElement;
 
 /**
  * Run code button handler
@@ -77,41 +99,7 @@ handleButtonActivate(runCodeBtn, async () => {
   }
 });
 
-/**
- * Play button handler
- */
-handleButtonActivate(playBtn, async () => {
-  await audioEngine.start();
-  // Update visualizer with analyzer after audio initialization
-  visualizer.setAnalyzer(audioEngine.getAnalyzer());
-  audioEngine.play();
-  statusText.textContent = 'Playing';
-});
-
-/**
- * Pause button handler
- */
-handleButtonActivate(pauseBtn, () => {
-  audioEngine.pause();
-  statusText.textContent = 'Paused';
-});
-
-/**
- * Stop button handler
- */
-handleButtonActivate(stopBtn, () => {
-  audioEngine.stop();
-  statusText.textContent = 'Stopped';
-});
-
-/**
- * BPM slider handler
- */
-bpmSlider.addEventListener('input', (e) => {
-  const bpm = parseInt((e.target as HTMLInputElement).value);
-  audioEngine.setBPM(bpm);
-  bpmValue.textContent = bpm.toString();
-});
+// Transport controls are handled by TransportControls component above
 
 /**
  * Visualizer mode change handler
@@ -141,18 +129,19 @@ document.addEventListener('keydown', (e) => {
     runCodeBtn.click();
   }
 
-  // Space to play/pause
+  // Space to play/stop
   if (e.code === 'Space' && e.target === document.body) {
     e.preventDefault();
-    if (playbackStore.getState() === 'playing') {
-      pauseBtn.click();
-    } else {
+    const state = playbackStore.getState();
+    if (state === 'playing' && stopBtn) {
+      stopBtn.click();
+    } else if (playBtn) {
       playBtn.click();
     }
   }
 
   // Escape to stop
-  if (e.key === 'Escape') {
+  if (e.key === 'Escape' && stopBtn) {
     e.preventDefault();
     stopBtn.click();
   }
