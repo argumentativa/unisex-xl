@@ -202,13 +202,13 @@ body {
 
 /* Character Grid */
 .character-grid-container {
-  width: calc(100vw - 32px); /* 100% viewport width minus 16px margins on each side */
-  margin-left: calc(-1.5rem + 16px); /* Break out of parent padding (1.5rem) + add 16px margin */
-  margin-right: calc(-1.5rem + 16px); /* Break out of parent padding (1.5rem) + add 16px margin */
+  width: calc(100% + 2 * var(--spacing-lg)); /* Parent width + 16px margin on each side */
+  margin-left: calc(-1 * var(--spacing-xl) + var(--spacing-lg)); /* Break out of parent padding + add 16px margin */
+  margin-right: calc(-1 * var(--spacing-xl) + var(--spacing-lg)); /* Break out of parent padding + add 16px margin */
   position: relative;
   z-index: 1;
   overflow-x: hidden; /* Prevent horizontal scroll */
-  max-width: 100%; /* Ensure it doesn't exceed viewport */
+  max-width: calc(100vw - 2 * var(--spacing-lg)); /* Ensure it doesn't exceed viewport minus margins */
 }
 
 .character-grid {
@@ -411,9 +411,10 @@ body {
   }
   
   .character-grid-container {
-    width: calc(100vw - 16px); /* Adjust for smaller padding */
-    margin-left: calc(-1rem + 8px);
-    margin-right: calc(-1rem + 8px);
+    width: calc(100% + 2 * var(--spacing-sm)); /* Parent width + 8px margin on each side */
+    margin-left: calc(-1 * var(--spacing-md) + var(--spacing-sm));
+    margin-right: calc(-1 * var(--spacing-md) + var(--spacing-sm));
+    max-width: calc(100vw - 2 * var(--spacing-sm)); /* Ensure it doesn't exceed viewport minus margins */
   }
   
   .character-row {
