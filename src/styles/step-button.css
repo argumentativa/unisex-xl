@@ -3,10 +3,20 @@
  * Shared base styles for step buttons across sequencer and character orchestra
  */
 
-/* Base Step Button */
+/* Step Button Wrapper - Contains button + progress ring */
+.step-button-wrapper {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1; /* Square wrapper */
+}
+
+/* Base Step Button - Circular design */
 .step-button {
+  width: 100%;
+  height: 100%;
   border: 1px solid #D3D3D3;
-  border-radius: 25%;
+  border-radius: 50%; /* Circular button */
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
@@ -79,21 +89,19 @@
   transition: fill 0.2s ease, opacity 0.2s ease;
 }
 
-/* Progress Ring Counter */
+/* Progress Ring Counter - Circular */
 .step-button-progress-ring {
   position: absolute;
-  /* Extend 8px beyond button on each side (full 8px stroke width) */
-  top: -8px;
-  left: -8px;
-  width: calc(100% + 16px);
-  height: calc(100% + 16px);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  z-index: 0; /* Behind button and indicator */
+  z-index: 2; /* Above button background */
   transition: opacity 0.3s ease;
 }
 
 .progress-ring-svg {
   width: 100%;
   height: 100%;
-  overflow: visible;
 }

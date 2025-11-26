@@ -42,6 +42,7 @@ export interface StepButtonCallbacks {
 }
 
 export class StepButton {
+  private wrapper: HTMLDivElement; // Wrapper contains button + progress ring
   private element: HTMLButtonElement;
   private stepIndex: number;
   private stepState: StepState;
@@ -82,6 +83,10 @@ export class StepButton {
       // Extract hue from character's baseColor
       this.hue = this.extractHueFromHex(colorConfig.character.baseColor);
     }
+
+    // Create wrapper div to contain button + progress ring
+    this.wrapper = document.createElement('div');
+    this.wrapper.className = 'step-button-wrapper';
 
     // Create button element
     this.element = document.createElement('button');
@@ -126,7 +131,10 @@ export class StepButton {
       e.preventDefault();
     });
 
-    // Create progress ring (will be positioned around button via CSS)
+    // Append button to wrapper FIRST (before creating progress ring)
+    this.wrapper.appendChild(this.element);
+
+    // Create progress ring (positioned around button via CSS)
     this.createProgressRing();
 
     // Create indicator SVG
@@ -295,10 +303,10 @@ export class StepButton {
   }
 
   /**
-   * Get button element
+   * Get wrapper element (contains button + progress ring)
    */
-  getElement(): HTMLButtonElement {
-    return this.element;
+  getElement(): HTMLElement {
+    return this.wrapper;
   }
 
   /**
@@ -616,40 +624,22 @@ export class StepButton {
   }
 
   /**
-   * Create a rounded rectangle path string
-   * Starting from top-center and going clockwise
-   */
-  private createRoundedRectPath(x: number, y: number, width: number, height: number, radius: number): string {
-    // Start from top-center, go clockwise
-    return `
-      M ${x + width / 2} ${y}
-      L ${x + width - radius} ${y}
-      Q ${x + width} ${y} ${x + width} ${y + radius}
-      L ${x + width} ${y + height - radius}
-      Q ${x + width} ${y + height} ${x + width - radius} ${y + height}
-      L ${x + radius} ${y + height}
-      Q ${x} ${y + height} ${x} ${y + height - radius}
-      L ${x} ${y + radius}
-      Q ${x} ${y} ${x + radius} ${y}
-      L ${x + width / 2} ${y}
-    `.trim();
-  }
-
-  /**
-   * Create progress ring SVG structure and attach to button
-   * Uses 25% corner radius (matching button) and 8px stroke
+   * Create progress ring SVG structure using a circle
+   * Uses 8px stroke width, matching circular button
    */
   private createProgressRing(): void {
     // Container for progress ring - positioned to extend beyond button
     const container = document.createElement('div');
     container.className = 'step-button-progress-ring';
 
-    // Dimensions for the rounded rectangle path
-    const viewBoxSize = 136;
+    // Circle dimensions
+    const viewBoxSize = 100;
     const strokeWidth = 8;
-    const rectSize = 128;
-    const rectOffset = 4; // (136 - 128) / 2 = 4
-    const cornerRadius = 32; // 25% of 128 = 32
+    const radius = (viewBoxSize - strokeWidth) / 2; // 46
+    const center = viewBoxSize / 2; // 50
+
+    // Calculate circumference for stroke-dasharray
+    this.progressPerimeter = 2 * Math.PI * radius;
 
     // Create SVG for progress ring
     this.progressRingSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -662,50 +652,42 @@ export class StepButton {
     this.progressRingSvg.style.left = '0';
     this.progressRingSvg.style.pointerEvents = 'none';
 
-    // Create the rounded rectangle path
-    const pathD = this.createRoundedRectPath(rectOffset, rectOffset, rectSize, rectSize, cornerRadius);
-
     // Background ring (always visible, subtle)
-    const bgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    bgPath.setAttribute('d', pathD);
-    bgPath.setAttribute('fill', 'none');
-    bgPath.setAttribute('stroke', '#e0e0e0');
-    bgPath.setAttribute('stroke-width', String(strokeWidth));
-    this.progressRingBg = bgPath as unknown as SVGRectElement; // Type cast for compatibility
+    const bgCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    bgCircle.setAttribute('cx', String(center));
+    bgCircle.setAttribute('cy', String(center));
+    bgCircle.setAttribute('r', String(radius));
+    bgCircle.setAttribute('fill', 'none');
+    bgCircle.setAttribute('stroke', '#e0e0e0');
+    bgCircle.setAttribute('stroke-width', String(strokeWidth));
+    this.progressRingBg = bgCircle as unknown as SVGRectElement;
 
     // Progress ring (fills based on pressCount)
-    const progressPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    progressPath.setAttribute('d', pathD);
-    progressPath.setAttribute('fill', 'none');
-    progressPath.setAttribute('stroke', '#4A90E2');
-    progressPath.setAttribute('stroke-width', String(strokeWidth));
-    progressPath.setAttribute('stroke-linecap', 'round');
-    this.progressRingPath = progressPath as unknown as SVGRectElement; // Type cast for compatibility
-
-    // Calculate perimeter of rounded rectangle for stroke-dasharray
-    // Formula: 4 straight edges + 4 quarter arcs (using quadratic bezier approximation)
-    // Straight edges: 4 * (128 - 2*32) = 4 * 64 = 256
-    // Quarter arcs: 4 * (π/2 * radius) ≈ 4 * 50.27 = 201
-    // Total ≈ 457
-    const straightEdges = 4 * (rectSize - 2 * cornerRadius);
-    const curvedCorners = 2 * Math.PI * cornerRadius; // Full circle equivalent
-    this.progressPerimeter = straightEdges + curvedCorners;
+    const progressCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    progressCircle.setAttribute('cx', String(center));
+    progressCircle.setAttribute('cy', String(center));
+    progressCircle.setAttribute('r', String(radius));
+    progressCircle.setAttribute('fill', 'none');
+    progressCircle.setAttribute('stroke', '#4A90E2');
+    progressCircle.setAttribute('stroke-width', String(strokeWidth));
+    progressCircle.setAttribute('stroke-linecap', 'round');
+    this.progressRingPath = progressCircle as unknown as SVGRectElement;
 
     // Set up stroke-dasharray for progress animation
-    this.progressRingPath.style.strokeDasharray = `${this.progressPerimeter} ${this.progressPerimeter}`;
+    this.progressRingPath.style.strokeDasharray = `${this.progressPerimeter}`;
     this.progressRingPath.style.strokeDashoffset = `${this.progressPerimeter}`;
     this.progressRingPath.style.transition = 'stroke-dashoffset 0.3s ease, stroke 0.3s ease';
     
-    // Rotate to start progress from bottom-center (matching prototype)
+    // Rotate to start from bottom center (matching prototype)
     this.progressRingPath.style.transform = 'rotate(90deg)';
     this.progressRingPath.style.transformOrigin = 'center';
 
     // Append elements
-    this.progressRingSvg.appendChild(this.progressRingBg);
-    this.progressRingSvg.appendChild(this.progressRingPath);
+    this.progressRingSvg.appendChild(bgCircle);
+    this.progressRingSvg.appendChild(progressCircle);
     container.appendChild(this.progressRingSvg);
 
-    // Store reference and append to button
+    // Store reference and append inside the button (so it scales with button)
     this.progressRingContainer = container;
     this.element.appendChild(container);
   }
