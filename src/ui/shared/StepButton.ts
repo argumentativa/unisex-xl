@@ -56,6 +56,13 @@ export class StepButton {
   private touchHandled: boolean = false; // Flag to prevent double-triggering
   private indicatorSvg: SVGSVGElement | null = null; // SVG indicator element
   private indicatorPaths: SVGPathElement[] = []; // Array of 12 path elements
+  
+  // Progress ring properties
+  private progressRingContainer: HTMLDivElement | null = null;
+  private progressRingSvg: SVGSVGElement | null = null;
+  private progressRingBg: SVGRectElement | null = null;
+  private progressRingPath: SVGRectElement | null = null;
+  private progressPerimeter: number = 0;
 
   constructor(
     stepIndex: number,
@@ -119,6 +126,9 @@ export class StepButton {
       e.preventDefault();
     });
 
+    // Create progress ring (will be positioned around button via CSS)
+    this.createProgressRing();
+
     // Create indicator SVG
     this.createIndicator();
 
@@ -148,10 +158,11 @@ export class StepButton {
     const isActive = newNoteIndex >= 0;
 
     // Update state
+    // pressCount: 0 when OFF, 1-12 when on notes (maps to noteIndex 0-11)
     this.stepState = {
       isActive,
       noteIndex: newNoteIndex,
-      pressCount: this.stepState.pressCount + 1
+      pressCount: isActive ? newNoteIndex + 1 : 0
     };
 
     // Update hue based on note (for hue mode)
@@ -237,7 +248,7 @@ export class StepButton {
     this.stepState = {
       isActive: false,
       noteIndex: -1,
-      pressCount: this.stepState.pressCount + 1
+      pressCount: 0
     };
 
     // Update visuals
@@ -361,6 +372,9 @@ export class StepButton {
 
     // Update indicator
     this.updateIndicator();
+
+    // Update progress ring
+    this.updateProgressRing();
   }
 
   /**
@@ -599,6 +613,116 @@ export class StepButton {
         path.setAttribute('opacity', '0.5');
       }
     }
+  }
+
+  /**
+   * Create progress ring SVG structure and attach to button
+   */
+  private createProgressRing(): void {
+    // Container for progress ring
+    const container = document.createElement('div');
+    container.className = 'step-button-progress-ring';
+
+    // Create SVG for progress ring
+    this.progressRingSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    this.progressRingSvg.setAttribute('class', 'progress-ring-svg');
+    this.progressRingSvg.setAttribute('viewBox', '0 0 136 136');
+    this.progressRingSvg.style.width = '100%';
+    this.progressRingSvg.style.height = '100%';
+    this.progressRingSvg.style.position = 'absolute';
+    this.progressRingSvg.style.top = '0';
+    this.progressRingSvg.style.left = '0';
+    this.progressRingSvg.style.pointerEvents = 'none';
+
+    // Background ring (always visible, subtle)
+    this.progressRingBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    this.progressRingBg.setAttribute('x', '8');
+    this.progressRingBg.setAttribute('y', '8');
+    this.progressRingBg.setAttribute('width', '120');
+    this.progressRingBg.setAttribute('height', '120');
+    this.progressRingBg.setAttribute('rx', '30');
+    this.progressRingBg.setAttribute('ry', '30');
+    this.progressRingBg.setAttribute('fill', 'none');
+    this.progressRingBg.setAttribute('stroke', '#e0e0e0');
+    this.progressRingBg.setAttribute('stroke-width', '8');
+
+    // Progress ring (fills based on pressCount)
+    this.progressRingPath = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    this.progressRingPath.setAttribute('x', '8');
+    this.progressRingPath.setAttribute('y', '8');
+    this.progressRingPath.setAttribute('width', '120');
+    this.progressRingPath.setAttribute('height', '120');
+    this.progressRingPath.setAttribute('rx', '30');
+    this.progressRingPath.setAttribute('ry', '30');
+    this.progressRingPath.setAttribute('fill', 'none');
+    this.progressRingPath.setAttribute('stroke', '#4A90E2');
+    this.progressRingPath.setAttribute('stroke-width', '8');
+    this.progressRingPath.setAttribute('stroke-linecap', 'round');
+
+    // Calculate perimeter of rounded rectangle for stroke-dasharray
+    // Formula: 4 straight edges + 4 quarter circles (1 full circle)
+    const width = 120;
+    const height = 120;
+    const rx = 30;
+    this.progressPerimeter = 2 * (width - 2 * rx) + 2 * (height - 2 * rx) + 2 * Math.PI * rx;
+
+    // Set up stroke-dasharray for progress animation
+    this.progressRingPath.style.strokeDasharray = `${this.progressPerimeter} ${this.progressPerimeter}`;
+    this.progressRingPath.style.strokeDashoffset = `${this.progressPerimeter}`;
+    this.progressRingPath.style.transform = 'rotate(90deg)';
+    this.progressRingPath.style.transformOrigin = '68px 68px'; // Center of 136x136 viewBox
+    this.progressRingPath.style.transition = 'stroke-dashoffset 0.3s ease, stroke 0.3s ease';
+
+    // Append elements
+    this.progressRingSvg.appendChild(this.progressRingBg);
+    this.progressRingSvg.appendChild(this.progressRingPath);
+    container.appendChild(this.progressRingSvg);
+
+    // Store reference and append to button
+    this.progressRingContainer = container;
+    this.element.appendChild(container);
+  }
+
+  /**
+   * Update progress ring visual state based on pressCount
+   */
+  private updateProgressRing(): void {
+    if (!this.progressRingPath || !this.progressRingContainer) return;
+
+    if (!this.stepState.isActive || this.stepState.pressCount === 0) {
+      // Hide progress ring when OFF or no presses
+      this.progressRingContainer.style.opacity = '0';
+      this.progressRingPath.style.strokeDashoffset = `${this.progressPerimeter}`;
+    } else {
+      // Show and update progress ring
+      this.progressRingContainer.style.opacity = '1';
+      
+      // Calculate progress (1-12 presses = 1/12 to 12/12 = full circle)
+      const progress = this.stepState.pressCount / 12;
+      const offset = this.progressPerimeter - (progress * this.progressPerimeter);
+      this.progressRingPath.style.strokeDashoffset = `${offset}`;
+      
+      // Use darker version of current note color
+      const color = COLOR_PALETTE[this.stepState.noteIndex];
+      const darkerColor = this.darkenColor(color, 30);
+      this.progressRingPath.setAttribute('stroke', darkerColor);
+    }
+  }
+
+  /**
+   * Darken a hex color by a percentage
+   */
+  private darkenColor(hex: string, percent: number): string {
+    const r = parseInt(hex.slice(1, 3), 16);
+    const g = parseInt(hex.slice(3, 5), 16);
+    const b = parseInt(hex.slice(5, 7), 16);
+    
+    const factor = (100 - percent) / 100;
+    const newR = Math.round(r * factor);
+    const newG = Math.round(g * factor);
+    const newB = Math.round(b * factor);
+    
+    return `#${newR.toString(16).padStart(2, '0')}${newG.toString(16).padStart(2, '0')}${newB.toString(16).padStart(2, '0')}`;
   }
 }
 
