@@ -616,21 +616,40 @@ export class StepButton {
   }
 
   /**
+   * Create a rounded rectangle path string
+   * Starting from top-center and going clockwise
+   */
+  private createRoundedRectPath(x: number, y: number, width: number, height: number, radius: number): string {
+    // Start from top-center, go clockwise
+    return `
+      M ${x + width / 2} ${y}
+      L ${x + width - radius} ${y}
+      Q ${x + width} ${y} ${x + width} ${y + radius}
+      L ${x + width} ${y + height - radius}
+      Q ${x + width} ${y + height} ${x + width - radius} ${y + height}
+      L ${x + radius} ${y + height}
+      Q ${x} ${y + height} ${x} ${y + height - radius}
+      L ${x} ${y + radius}
+      Q ${x} ${y} ${x + radius} ${y}
+      L ${x + width / 2} ${y}
+    `.trim();
+  }
+
+  /**
    * Create progress ring SVG structure and attach to button
    * Uses 25% corner radius (matching button) and 8px stroke
    */
   private createProgressRing(): void {
-    // Container for progress ring
+    // Container for progress ring - positioned to extend beyond button
     const container = document.createElement('div');
     container.className = 'step-button-progress-ring';
 
-    // SVG dimensions: 100x100 base + 8px padding on each side for stroke
-    // This creates a ring that wraps tightly around the button
-    const viewBoxSize = 116; // 100 + 8 + 8
+    // Dimensions for the rounded rectangle path
+    const viewBoxSize = 136;
     const strokeWidth = 8;
-    const rectSize = 100; // Matches button size (100%)
-    const offset = strokeWidth / 2; // Center stroke on edge: 4px
-    const cornerRadius = rectSize * 0.25; // 25% of rect size = 25
+    const rectSize = 128;
+    const rectOffset = 4; // (136 - 128) / 2 = 4
+    const cornerRadius = 32; // 25% of 128 = 32
 
     // Create SVG for progress ring
     this.progressRingSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -643,42 +662,43 @@ export class StepButton {
     this.progressRingSvg.style.left = '0';
     this.progressRingSvg.style.pointerEvents = 'none';
 
+    // Create the rounded rectangle path
+    const pathD = this.createRoundedRectPath(rectOffset, rectOffset, rectSize, rectSize, cornerRadius);
+
     // Background ring (always visible, subtle)
-    this.progressRingBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    this.progressRingBg.setAttribute('x', String(offset + strokeWidth / 2));
-    this.progressRingBg.setAttribute('y', String(offset + strokeWidth / 2));
-    this.progressRingBg.setAttribute('width', String(rectSize));
-    this.progressRingBg.setAttribute('height', String(rectSize));
-    this.progressRingBg.setAttribute('rx', String(cornerRadius));
-    this.progressRingBg.setAttribute('ry', String(cornerRadius));
-    this.progressRingBg.setAttribute('fill', 'none');
-    this.progressRingBg.setAttribute('stroke', '#e0e0e0');
-    this.progressRingBg.setAttribute('stroke-width', String(strokeWidth));
+    const bgPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    bgPath.setAttribute('d', pathD);
+    bgPath.setAttribute('fill', 'none');
+    bgPath.setAttribute('stroke', '#e0e0e0');
+    bgPath.setAttribute('stroke-width', String(strokeWidth));
+    this.progressRingBg = bgPath as unknown as SVGRectElement; // Type cast for compatibility
 
     // Progress ring (fills based on pressCount)
-    this.progressRingPath = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    this.progressRingPath.setAttribute('x', String(offset + strokeWidth / 2));
-    this.progressRingPath.setAttribute('y', String(offset + strokeWidth / 2));
-    this.progressRingPath.setAttribute('width', String(rectSize));
-    this.progressRingPath.setAttribute('height', String(rectSize));
-    this.progressRingPath.setAttribute('rx', String(cornerRadius));
-    this.progressRingPath.setAttribute('ry', String(cornerRadius));
-    this.progressRingPath.setAttribute('fill', 'none');
-    this.progressRingPath.setAttribute('stroke', '#4A90E2');
-    this.progressRingPath.setAttribute('stroke-width', String(strokeWidth));
-    this.progressRingPath.setAttribute('stroke-linecap', 'round');
+    const progressPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    progressPath.setAttribute('d', pathD);
+    progressPath.setAttribute('fill', 'none');
+    progressPath.setAttribute('stroke', '#4A90E2');
+    progressPath.setAttribute('stroke-width', String(strokeWidth));
+    progressPath.setAttribute('stroke-linecap', 'round');
+    this.progressRingPath = progressPath as unknown as SVGRectElement; // Type cast for compatibility
 
     // Calculate perimeter of rounded rectangle for stroke-dasharray
-    // Formula: 4 straight edges + 4 quarter circles (1 full circle)
-    // With 25% corner radius: rx = 25, straight edges = 100 - 2*25 = 50 each
-    this.progressPerimeter = 2 * (rectSize - 2 * cornerRadius) + 2 * (rectSize - 2 * cornerRadius) + 2 * Math.PI * cornerRadius;
+    // Formula: 4 straight edges + 4 quarter arcs (using quadratic bezier approximation)
+    // Straight edges: 4 * (128 - 2*32) = 4 * 64 = 256
+    // Quarter arcs: 4 * (π/2 * radius) ≈ 4 * 50.27 = 201
+    // Total ≈ 457
+    const straightEdges = 4 * (rectSize - 2 * cornerRadius);
+    const curvedCorners = 2 * Math.PI * cornerRadius; // Full circle equivalent
+    this.progressPerimeter = straightEdges + curvedCorners;
 
     // Set up stroke-dasharray for progress animation
     this.progressRingPath.style.strokeDasharray = `${this.progressPerimeter} ${this.progressPerimeter}`;
     this.progressRingPath.style.strokeDashoffset = `${this.progressPerimeter}`;
-    this.progressRingPath.style.transform = 'rotate(90deg)';
-    this.progressRingPath.style.transformOrigin = `${viewBoxSize / 2}px ${viewBoxSize / 2}px`; // Center of viewBox
     this.progressRingPath.style.transition = 'stroke-dashoffset 0.3s ease, stroke 0.3s ease';
+    
+    // Rotate to start progress from bottom-center (matching prototype)
+    this.progressRingPath.style.transform = 'rotate(90deg)';
+    this.progressRingPath.style.transformOrigin = 'center';
 
     // Append elements
     this.progressRingSvg.appendChild(this.progressRingBg);
