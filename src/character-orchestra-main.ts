@@ -3,8 +3,10 @@
  * Simplified version showing only character rows
  */
 
-import * as Tone from 'tone';
+import { AudioEngine } from './core/audio';
 import { CharacterOrchestra } from './ui/character-orchestra/CharacterOrchestra';
+import { playbackStore } from './core/store';
+import { handleButtonActivate } from './ui/shared/utils';
 
 // DOM Elements
 const characterGrid = document.getElementById('characterGrid') as HTMLElement;
@@ -13,44 +15,31 @@ const stopBtn = document.getElementById('stopBtn') as HTMLElement;
 const bpmSlider = document.getElementById('bpm') as HTMLInputElement;
 const bpmValue = document.getElementById('bpmValue') as HTMLElement;
 
-// Initialize Character Orchestra
-const orchestra = new CharacterOrchestra(characterGrid);
+// Initialize AudioEngine and Character Orchestra
+const audioEngine = new AudioEngine();
+const orchestra = new CharacterOrchestra(characterGrid, audioEngine);
 
 // Initialize UI
 orchestra.init();
 
 /**
- * Handle button activation (click or keyboard)
+ * Subscribe to playback state changes
  */
-function handleButtonActivate(element: HTMLElement, handler: () => void): void {
-  element.addEventListener('click', handler);
-  element.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handler();
-    }
-  });
-}
+playbackStore.subscribe((state) => {
+  playBtn.classList.toggle('disabled', state === 'playing');
+  stopBtn.classList.toggle('disabled', state !== 'playing');
+});
 
 // Play button handler
 handleButtonActivate(playBtn, async () => {
-  if (Tone.context.state !== 'running') {
-    await Tone.start();
-  }
+  await audioEngine.start();
   orchestra.play();
-  playBtn.classList.add('disabled');
-  stopBtn.classList.remove('disabled');
 });
 
 // Stop button handler
 handleButtonActivate(stopBtn, () => {
   orchestra.stop();
-  playBtn.classList.remove('disabled');
-  stopBtn.classList.add('disabled');
 });
-
-// Initialize button states
-stopBtn.classList.add('disabled');
 
 // BPM slider handler
 bpmSlider.addEventListener('input', (e) => {

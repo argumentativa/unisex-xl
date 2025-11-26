@@ -19,6 +19,7 @@ export class AudioEngine {
     this.effects = new Map();
     this.effectChain = [];
     // Don't initialize audio here - wait for user gesture
+    // Transport state sync is handled by playbackStore
   }
 
   /**
@@ -289,6 +290,7 @@ export class AudioEngine {
 
   /**
    * Start transport
+   * Note: playbackStore is updated via Transport event listeners in constructor
    */
   play(): void {
     Tone.Transport.start();
@@ -296,6 +298,7 @@ export class AudioEngine {
 
   /**
    * Pause transport
+   * Note: playbackStore is updated via Transport event listeners in constructor
    */
   pause(): void {
     Tone.Transport.pause();
@@ -303,6 +306,7 @@ export class AudioEngine {
 
   /**
    * Stop transport
+   * Note: playbackStore is updated via Transport event listeners in constructor
    */
   stop(): void {
     Tone.Transport.stop();
@@ -314,6 +318,31 @@ export class AudioEngine {
    */
   getAnalyzer(): Tone.Analyser | null {
     return this.analyzer;
+  }
+
+  /**
+   * Get the effect chain input node
+   * External synths can connect to this to route through the effect chain
+   */
+  getEffectChainInput(): Tone.ToneAudioNode | null {
+    if (!this.initialized || this.effectChain.length === 0) {
+      return null;
+    }
+    return this.effectChain[0];
+  }
+
+  /**
+   * Connect an external audio node to the effect chain
+   * Useful for routing synths from other modules through the shared effects
+   * If AudioEngine is not initialized yet, connects directly to destination as fallback
+   */
+  connectToEffectChain(node: Tone.ToneAudioNode): void {
+    if (!this.initialized || this.effectChain.length === 0) {
+      // Fallback: connect directly to destination if effect chain not ready
+      node.toDestination();
+      return;
+    }
+    node.connect(this.effectChain[0]);
   }
 
   /**

@@ -4,8 +4,9 @@
  */
 
 import * as Tone from 'tone';
-import type { AudioEngine } from '../../core/audio';
+import { AudioEngine } from '../../core/audio';
 import type { InstrumentType } from '../../types';
+import { playbackStore } from '../../core/store';
 import { InstrumentRow } from './InstrumentRow';
 import type { StepState } from '../shared/StepButton';
 export type { StepState } from '../shared/StepButton';
@@ -169,7 +170,12 @@ export class Sequencer {
   private sequences: Map<InstrumentType, Tone.Sequence>;
   private instrumentRows: Map<InstrumentType, InstrumentRow>;
   private currentStep: number = 0;
-  private isPlaying: boolean = false;
+  /**
+   * Get current playing state from store
+   */
+  get isPlaying(): boolean {
+    return playbackStore.getState() === 'playing';
+  }
   private stepIndicatorEventId: number | null = null;
 
   // Instruments configuration - all available Tone.js instruments
@@ -216,8 +222,8 @@ export class Sequencer {
   private getInstrumentInstance(instrumentId: InstrumentType): Tone.ToneAudioNode {
     if (!this.instrumentInstances.has(instrumentId)) {
       const instance = createInstrumentInstance(instrumentId);
-      // Connect to destination (sequencer instruments connect directly)
-      instance.toDestination();
+      // Route through effect chain for shared effects (reverb, delay, etc.)
+      this.audioEngine.connectToEffectChain(instance);
       this.instrumentInstances.set(instrumentId, instance);
     }
     return this.instrumentInstances.get(instrumentId)!;
@@ -453,8 +459,6 @@ export class Sequencer {
   play(): void {
     if (this.isPlaying) return;
 
-    this.isPlaying = true;
-
     // Start transport first
     this.audioEngine.play();
 
@@ -493,8 +497,6 @@ export class Sequencer {
    * Stop playback
    */
   stop(): void {
-    this.isPlaying = false;
-
     // Stop all sequences
     this.sequences.forEach((sequence) => {
       sequence.stop();

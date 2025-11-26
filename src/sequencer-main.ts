@@ -5,6 +5,9 @@
 
 import { AudioEngine } from './core/audio';
 import { Sequencer } from './ui/sequencer/Sequencer';
+import { playbackStore } from './core/store';
+import { handleButtonActivate } from './ui/shared/utils';
+import type { PlaybackState } from './types';
 
 // DOM Elements
 const playBtn = document.getElementById('playBtn') as HTMLElement;
@@ -21,26 +24,14 @@ const audioEngine = new AudioEngine();
 const sequencer = new Sequencer(audioEngine, sequencerGrid);
 
 /**
- * Update playback status display
+ * Subscribe to playback state changes
  */
-function updatePlaybackStatus(status: string): void {
+playbackStore.subscribe((state: PlaybackState) => {
+  const status = state.charAt(0).toUpperCase() + state.slice(1);
   playbackStatus.textContent = status;
-  playBtn.classList.toggle('active', status === 'Playing');
-  pauseBtn.classList.toggle('active', status === 'Paused');
-}
-
-/**
- * Handle button activation (click or keyboard)
- */
-function handleButtonActivate(element: HTMLElement, handler: () => void): void {
-  element.addEventListener('click', handler);
-  element.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handler();
-    }
-  });
-}
+  playBtn.classList.toggle('active', state === 'playing');
+  pauseBtn.classList.toggle('active', state === 'paused');
+});
 
 /**
  * Play button handler
@@ -49,7 +40,6 @@ handleButtonActivate(playBtn, async () => {
   try {
     await audioEngine.start();
     sequencer.play();
-    updatePlaybackStatus('Playing');
     statusText.textContent = 'Playing';
   } catch (error) {
     statusText.textContent = `Error: ${error}`;
@@ -62,7 +52,6 @@ handleButtonActivate(playBtn, async () => {
  */
 handleButtonActivate(pauseBtn, () => {
   sequencer.pause();
-  updatePlaybackStatus('Paused');
   statusText.textContent = 'Paused';
 });
 
@@ -71,7 +60,6 @@ handleButtonActivate(pauseBtn, () => {
  */
 handleButtonActivate(stopBtn, () => {
   sequencer.stop();
-  updatePlaybackStatus('Stopped');
   statusText.textContent = 'Stopped - Click steps to create patterns';
 });
 
@@ -80,8 +68,7 @@ handleButtonActivate(stopBtn, () => {
  */
 bpmSlider.addEventListener('input', (e) => {
   const bpm = parseInt((e.target as HTMLInputElement).value);
-  audioEngine.setBPM(bpm);
-  sequencer.setBPM(bpm);
+  sequencer.setBPM(bpm); // Sequencer delegates to audioEngine
   bpmValue.textContent = bpm.toString();
   statusText.textContent = `BPM: ${bpm}`;
 });

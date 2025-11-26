@@ -7,10 +7,8 @@ import { CodeExecutor } from './core/executor';
 import { Editor } from './ui/editor';
 import { Visualizer } from './ui/visualizer';
 import { getExample, type ExampleName } from './core/examples';
-import type { PlaybackState } from './types';
-
-// Application state
-let playbackState: PlaybackState = 'stopped';
+import { playbackStore } from './core/store';
+import { handleButtonActivate } from './ui/shared/utils';
 
 // Initialize components
 const audioEngine = new AudioEngine();
@@ -54,28 +52,13 @@ resizeVisualizer();
 window.addEventListener('resize', resizeVisualizer);
 
 /**
- * Update playback state
+ * Subscribe to playback state changes
  */
-function updatePlaybackState(state: PlaybackState): void {
-  playbackState = state;
+playbackStore.subscribe((state) => {
   playbackStatus.textContent = state.charAt(0).toUpperCase() + state.slice(1);
-
   playBtn.classList.toggle('active', state === 'playing');
   pauseBtn.classList.toggle('active', state === 'paused');
-}
-
-/**
- * Handle button activation (click or keyboard)
- */
-function handleButtonActivate(element: HTMLElement, handler: () => void): void {
-  element.addEventListener('click', handler);
-  element.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handler();
-    }
-  });
-}
+});
 
 /**
  * Run code button handler
@@ -102,7 +85,6 @@ handleButtonActivate(playBtn, async () => {
   // Update visualizer with analyzer after audio initialization
   visualizer.setAnalyzer(audioEngine.getAnalyzer());
   audioEngine.play();
-  updatePlaybackState('playing');
   statusText.textContent = 'Playing';
 });
 
@@ -111,7 +93,6 @@ handleButtonActivate(playBtn, async () => {
  */
 handleButtonActivate(pauseBtn, () => {
   audioEngine.pause();
-  updatePlaybackState('paused');
   statusText.textContent = 'Paused';
 });
 
@@ -120,7 +101,6 @@ handleButtonActivate(pauseBtn, () => {
  */
 handleButtonActivate(stopBtn, () => {
   audioEngine.stop();
-  updatePlaybackState('stopped');
   statusText.textContent = 'Stopped';
 });
 
@@ -164,7 +144,7 @@ document.addEventListener('keydown', (e) => {
   // Space to play/pause
   if (e.code === 'Space' && e.target === document.body) {
     e.preventDefault();
-    if (playbackState === 'playing') {
+    if (playbackStore.getState() === 'playing') {
       pauseBtn.click();
     } else {
       playBtn.click();

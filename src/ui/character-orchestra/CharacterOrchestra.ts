@@ -6,6 +6,8 @@
 import * as Tone from 'tone';
 import { CHARACTERS, createCharacterSynth, type Character } from './Character';
 import { CharacterRow } from './CharacterRow';
+import { playbackStore } from '../../core/store';
+import type { AudioEngine } from '../../core/audio';
 import type { StepState } from '../shared/StepButton';
 export type { StepState } from '../shared/StepButton';
 
@@ -16,18 +18,25 @@ export interface CharacterPattern {
 
 export class CharacterOrchestra {
   private container: HTMLElement;
+  private audioEngine: AudioEngine | null;
   private characters: Character[];
   private patterns: CharacterPattern[];
   private sequences: Map<number, Tone.Sequence>;
   private characterRows: Map<number, CharacterRow>;
   private currentStep: number = 0;
-  private isPlaying: boolean = false;
+  /**
+   * Get current playing state from store
+   */
+  get isPlaying(): boolean {
+    return playbackStore.getState() === 'playing';
+  }
   private bpm: number = 120;
   private stepIndicatorEventId: number | null = null;
   private onStateChangeCallbacks: (() => void)[] = [];
 
-  constructor(container: HTMLElement) {
+  constructor(container: HTMLElement, audioEngine?: AudioEngine) {
     this.container = container;
+    this.audioEngine = audioEngine || null;
     this.patterns = [];
     this.sequences = new Map();
     this.characterRows = new Map();
@@ -35,8 +44,13 @@ export class CharacterOrchestra {
     // Initialize characters with full state
     this.characters = CHARACTERS.map((charData, _index) => {
       const synth = createCharacterSynth(charData);
-      synth.toDestination();
-      
+      // Route through effect chain if AudioEngine provided, otherwise direct to destination
+      if (this.audioEngine) {
+        this.audioEngine.connectToEffectChain(synth);
+      } else {
+        synth.toDestination();
+      }
+
       return {
         ...charData,
         synth,
@@ -219,11 +233,10 @@ export class CharacterOrchestra {
   play(): void {
     if (this.isPlaying) return;
 
-    this.isPlaying = true;
-
     // Start transport
     Tone.Transport.start();
     Tone.Transport.bpm.value = this.bpm;
+    // Note: playbackStore is updated automatically via Transport event listeners
 
     // Create sequences for all characters
     this.characters.forEach((_, index) => {
@@ -249,7 +262,7 @@ export class CharacterOrchestra {
     if (!this.isPlaying) return;
 
     Tone.Transport.pause();
-    this.isPlaying = false;
+    // Note: playbackStore is updated automatically via Transport event listeners
     this.updateCharacterStates();
   }
 
@@ -257,7 +270,6 @@ export class CharacterOrchestra {
    * Stop playback
    */
   stop(): void {
-    this.isPlaying = false;
 
     // Stop all sequences
     this.sequences.forEach((sequence) => {
@@ -268,6 +280,7 @@ export class CharacterOrchestra {
 
     // Stop transport
     Tone.Transport.stop();
+    // Note: playbackStore is updated automatically via Transport event listeners
 
     // Reset step indicator
     this.currentStep = 0;
