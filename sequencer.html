@@ -28,12 +28,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Step Sequencer - UNISEX XL</title>
-  <script type="module" crossorigin src="/unisex-xl/assets/sequencer-DKoAEEj4.js"></script>
-  <link rel="modulepreload" crossorigin href="/unisex-xl/assets/index-cqQ3Oiz6.js">
-  <link rel="modulepreload" crossorigin href="/unisex-xl/assets/audio-BpxaKL6F.js">
+  <script type="module" crossorigin src="/unisex-xl/assets/sequencer-DVchONAF.js"></script>
+  <link rel="modulepreload" crossorigin href="/unisex-xl/assets/QuickLinks-CczuCusb.js">
+  <link rel="modulepreload" crossorigin href="/unisex-xl/assets/utils-DMAVxa_R.js">
   <link rel="modulepreload" crossorigin href="/unisex-xl/assets/StepButton-nF8kU9YB.js">
-  <link rel="stylesheet" crossorigin href="/unisex-xl/assets/index-C97YlBZ8.css">
-  <link rel="stylesheet" crossorigin href="/unisex-xl/assets/sequencer-CquHnkJr.css">
+  <link rel="stylesheet" crossorigin href="/unisex-xl/assets/QuickLinks-D8iRUSoi.css">
+  <link rel="stylesheet" crossorigin href="/unisex-xl/assets/sequencer-C0QWh9do.css">
 </head>
 <body>
     <div class="sequencer-app">
@@ -43,14 +43,15 @@
                 <h1 class="sequencer-logo">STEP SEQUENCER</h1>
                 <span class="sequencer-subtitle">16 Steps • 16th Note Resolution • All Tone.js Instruments</span>
             </div>
+            <div id="quickLinksContainer"></div>
         </header>
 
         <!-- Controls -->
         <div class="sequencer-controls">
             <div class="transport-controls">
-                <button id="playBtn" class="control-btn play-btn">▶</button>
-                <button id="pauseBtn" class="control-btn">⏸</button>
-                <button id="stopBtn" class="control-btn">⏹</button>
+                <span id="playBtn" class="control-btn play-btn" role="button" tabindex="0">▶</span>
+                <span id="pauseBtn" class="control-btn" role="button" tabindex="0">⏸</span>
+                <span id="stopBtn" class="control-btn" role="button" tabindex="0">⏹</span>
             </div>
             <div class="control-group">
                 <label for="bpm">BPM: <span id="bpmValue">120</span></label>

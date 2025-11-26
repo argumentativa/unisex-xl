@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNISEX XL - P5.js Patterns & Demos</title>
+    <link rel="stylesheet" href="../src/styles/app.css">
     <style>
         * {
             margin: 0;
@@ -111,6 +112,8 @@
     <div class="container">
         <h1>P5.js Patterns & Demos</h1>
         <div class="subtitle">Visual Patterns, Audio-Reactive ASCII Art & Live Coding</div>
+
+        <div id="quickLinksContainer"></div>
 
         <div class="nav-links">
             <a href="../index.html">Main App</a>
@@ -260,5 +263,10 @@
             </p>
         </footer>
     </div>
+
+    <script type="module">
+        import { QuickLinks } from '../src/ui/shared/QuickLinks.ts';
+        QuickLinks.init('quickLinksContainer');
+    </script>
 </body>
 </html>

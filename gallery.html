@@ -1,17 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>self["MonacoEnvironment"] = (function (paths) {
+          return {
+            globalAPI: false,
+            getWorkerUrl : function (moduleId, label) {
+              var result =  paths[label];
+              if (/^((http:)|(https:)|(file:)|(\/\/))/.test(result)) {
+                var currentUrl = String(window.location);
+                var currentOrigin = currentUrl.substr(0, currentUrl.length - window.location.hash.length - window.location.search.length - window.location.pathname.length);
+                if (result.substring(0, currentOrigin.length) !== currentOrigin) {
+                  var js = '/*' + label + '*/importScripts("' + result + '");';
+                  var blob = new Blob([js], { type: 'application/javascript' });
+                  return URL.createObjectURL(blob);
+                }
+              }
+              return result;
+            }
+          };
+        })({
+  "editorWorkerService": "/unisex-xl/monacoeditorwork/editor.worker.bundle.js",
+  "typescript": "/unisex-xl/monacoeditorwork/ts.worker.bundle.js",
+  "json": "/unisex-xl/monacoeditorwork/json.worker.bundle.js",
+  "javascript": "/unisex-xl/monacoeditorwork/ts.worker.bundle.js"
+});</script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNISEX XL - Project Gallery</title>
-    <link rel="stylesheet" href="./src/styles/app.css">
     <style>
         :root {
+            /* Legacy variables */
             --color-primary-orange: #FF6B35;
             --color-accent-yellow: #FFD700;
             --color-card-white: #FFFFFF;
-            --color-text-primary: #1A1A1A;
-            --color-text-secondary: #666666;
             --color-blue-accent: #4A90E2;
             --color-blue-hover: #357ABD;
             --border-radius-card: 16px;
@@ -27,52 +49,36 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, var(--color-primary-orange) 0%, #FF8C42 50%, #FFA366 100%);
-            background-attachment: fixed;
-            /* Subtle star-like decorative pattern */
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(255, 215, 0, 0.15) 2px, transparent 2px),
-                radial-gradient(circle at 80% 70%, rgba(255, 215, 0, 0.15) 2px, transparent 2px),
-                radial-gradient(circle at 40% 80%, rgba(255, 215, 0, 0.1) 1.5px, transparent 1.5px),
-                radial-gradient(circle at 60% 20%, rgba(255, 215, 0, 0.1) 1.5px, transparent 1.5px);
-            background-size: 200px 200px, 250px 250px, 180px 180px, 220px 220px;
-            background-position: 0 0, 100px 100px, 50px 150px, 150px 50px;
+            font-family: var(--ff-body);
+            background: var(--color-background);
             color: var(--color-text-primary);
-            padding: 2rem;
+            padding: var(--spacing-2xl);
             min-height: 100vh !important;
             height: auto !important;
             overflow: visible !important;
             line-height: 1.6;
+            text-align: left;
         }
 
         .gallery-container {
             max-width: 1000px;
             margin: 0 auto;
-            background: var(--color-card-white);
-            border-radius: var(--border-radius-card);
-            box-shadow: var(--shadow-card);
-            padding: 2rem;
+            padding: var(--spacing-2xl);
+            text-align: center;
         }
 
         h1 {
-            color: var(--color-primary-orange);
-            border-bottom: 2px solid var(--color-accent-yellow);
-            padding-bottom: 1rem;
-            margin-bottom: 1rem;
-            font-size: 2rem;
-            font-weight: 700;
+            font-family: var(--ff-heading);
+            color: var(--text-color-primary);
+            padding-bottom: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            font-size: var(--fs-display);
+            font-weight: var(--fw-bold);
+            line-height: var(--lh-xl);
+            letter-spacing: var(--ls-sm);
+            text-align: center;
         }
 
-        h2 {
-            color: var(--color-text-primary);
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
-            font-weight: 600;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
 
         ul {
             list-style: none;
@@ -80,158 +86,142 @@
         }
 
         li {
-            margin-bottom: 1rem;
-            padding: 1rem;
-            background: #F8F9FA;
-            border-radius: var(--border-radius-button);
-            transition: all 0.2s ease;
-        }
-
-        li:hover {
-            background: #F0F0F0;
-            transform: translateX(4px);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
         }
 
         a {
-            color: var(--color-blue-accent);
+            font-family: var(--ff-body);
+            color: var(--text-color-link);
             text-decoration: none;
-            font-weight: 500;
+            font-weight: var(--fw-medium);
             transition: color 0.2s ease;
         }
 
         a:hover {
-            color: var(--color-blue-hover);
+            color: var(--text-color-link-hover);
             text-decoration: underline;
         }
 
         .desc {
-            color: var(--color-text-secondary);
-            margin-left: 0;
-            margin-top: 0.5rem;
-            font-size: 0.95em;
-            line-height: 1.5;
+            font-family: var(--ff-body);
+            color: var(--text-color-secondary);
+            margin: var(--spacing-sm) auto 0;
+            font-size: var(--fs-body-default);
+            line-height: var(--lh-md);
+            text-align: center;
         }
 
         hr {
             border: none;
-            border-top: 2px solid var(--color-accent-yellow);
-            margin: 2rem 0;
+            margin: var(--spacing-2xl) 0;
         }
 
-        .quick-links {
-            background: #F8F9FA;
-            padding: 1rem;
-            border-radius: var(--border-radius-button);
-            margin-bottom: 2rem;
-        }
 
         .footer {
+            font-family: var(--ff-body);
             text-align: center;
-            color: var(--color-text-secondary);
-            margin-top: 2rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            color: var(--text-color-secondary);
+            margin-top: var(--spacing-2xl);
+            padding-top: var(--spacing-lg);
+            font-size: var(--fs-body-default);
         }
     </style>
+  <script type="module" crossorigin src="/unisex-xl/assets/gallery-D7vs8n38.js"></script>
+  <link rel="modulepreload" crossorigin href="/unisex-xl/assets/QuickLinks-CczuCusb.js">
+  <link rel="stylesheet" crossorigin href="/unisex-xl/assets/QuickLinks-D8iRUSoi.css">
 </head>
 <body>
     <div class="gallery-container">
         <h1>UNISEX XL - Project Gallery</h1>
         <p style="color: var(--color-text-secondary); font-size: 1.1rem; margin-bottom: 1.5rem;">46 projects across audio-visual live coding, ASCII art, and interactive demos</p>
 
-        <div class="quick-links">
-            <strong>Quick Links:</strong>
-            <a href="./index.html">Main App</a> |
-            <a href="./sequencer.html">Step Sequencer</a> |
-            <a href="./character-orchestra.html">Character Orchestra</a> |
-            <a href="./p5/index.html">P5.js Hub</a>
-        </div>
+        <div id="quickLinksContainer" class="quick-links"></div>
 
         <hr>
 
-    <h2>Main Applications</h2>
-    <ul>
-        <li><a href="./index.html">UNISEX XL - Live Coding Environment</a>
-            <div class="desc">Main Strudel-based live coding environment with audio visualization</div>
-        </li>
-    </ul>
+    <div class="expandable-section" data-expanded="false">
+        <h2>Main Applications</h2>
+        <div class="expandable-content">
+            <ul>
+                <li><a href="./index.html">UNISEX XL - Live Coding Environment</a>
+                    <div class="desc">Main Tone.js-based live coding environment with audio visualization</div>
+                </li>
+            </ul>
+        </div>
+    </div>
 
-    <h2>Image ASCII Art (9 variants)</h2>
-    <ul>
-        <li><a href="./p5/image-ascii/image-ascii-color-bold-OPTIMIZED-autostart.html">⭐ Auto-Start ASCII (OPTIMIZED)</a>
-            <div class="desc">Performance-optimized audio-reactive ASCII with auto-start - best for live performances</div>
-        </li>
-        <li><a href="./p5/image-ascii/image-ascii-color-bold-strudel.html">⭐ ASCII + Strudel Split Screen</a>
-            <div class="desc">Split-screen: Strudel editor (left) + ASCII visualizer (right)</div>
-        </li>
-        <li><a href="./p5/image-ascii/image-ascii-color-bold.html">⭐ Color Bold ASCII</a>
-            <div class="desc">Audio-reactive ASCII art with bold characters - most popular variant</div>
-        </li>
-        <li><a href="./p5/image-ascii/image-ascii-color-bold-OPTIMIZED.html">OPTIMIZED Color Bold ASCII</a>
-            <div class="desc">Performance-optimized version with better FPS</div>
-        </li>
-        <li><a href="./p5/image-ascii/image-ascii-color-bold-mic.html">Microphone Input ASCII</a>
-            <div class="desc">Audio-reactive ASCII using microphone input</div>
-        </li>
-        <li><a href="./p5/image-ascii/unai.html">Portrait: Unai (OPTIMIZED)</a>
-            <div class="desc">Performance-optimized ASCII portrait with audio reactivity</div>
-        </li>
-        <li><a href="./p5/image-ascii/man.html">Portrait: Man</a>
-            <div class="desc">High-detail ASCII portrait with audio reactivity</div>
-        </li>
-        <li><a href="./p5/image-ascii/image-ascii-color.html">Basic Color ASCII</a>
-            <div class="desc">Simple ASCII art with color preservation</div>
-        </li>
-        <li><a href="./p5/image-ascii/image-ascii.html">Basic Monochrome ASCII</a>
-            <div class="desc">Simple monochrome ASCII art conversion</div>
-        </li>
-    </ul>
+    <div class="expandable-section" data-expanded="false">
+        <h2>Image ASCII Art (9 variants)</h2>
+        <div class="expandable-content">
+            <ul>
+            <li><a href="./p5/image-ascii/image-ascii-color-bold-OPTIMIZED-autostart.html">⭐ Auto-Start ASCII (OPTIMIZED)</a>
+                <div class="desc">Performance-optimized audio-reactive ASCII with auto-start - best for live performances</div>
+            </li>
+            <li><a href="./p5/image-ascii/image-ascii-color-bold.html">⭐ Color Bold ASCII</a>
+                <div class="desc">Audio-reactive ASCII art with bold characters - most popular variant</div>
+            </li>
+            <li><a href="./p5/image-ascii/image-ascii-color-bold-OPTIMIZED.html">OPTIMIZED Color Bold ASCII</a>
+                <div class="desc">Performance-optimized version with better FPS</div>
+            </li>
+            <li><a href="./p5/image-ascii/image-ascii-color-bold-mic.html">Microphone Input ASCII</a>
+                <div class="desc">Audio-reactive ASCII using microphone input</div>
+            </li>
+            <li><a href="./p5/image-ascii/unai.html">Portrait: Unai (OPTIMIZED)</a>
+                <div class="desc">Performance-optimized ASCII portrait with audio reactivity</div>
+            </li>
+            <li><a href="./p5/image-ascii/man.html">Portrait: Man</a>
+                <div class="desc">High-detail ASCII portrait with audio reactivity</div>
+            </li>
+            <li><a href="./p5/image-ascii/image-ascii-color.html">Basic Color ASCII</a>
+                <div class="desc">Simple ASCII art with color preservation</div>
+            </li>
+            <li><a href="./p5/image-ascii/image-ascii.html">Basic Monochrome ASCII</a>
+                <div class="desc">Simple monochrome ASCII art conversion</div>
+            </li>
+            </ul>
+        </div>
+    </div>
 
-    <h2>Video ASCII Art - Webcam (2 variants)</h2>
-    <ul>
-        <li><a href="./p5/video-ascii/video-ascii-bold.html">Bold Webcam ASCII</a>
-            <div class="desc">Enhanced webcam to ASCII with bold characters</div>
-        </li>
-        <li><a href="./p5/video-ascii/video-ascii.html">Basic Webcam ASCII</a>
-            <div class="desc">Real-time webcam to ASCII conversion</div>
-        </li>
-    </ul>
+    <div class="expandable-section" data-expanded="false">
+        <h2>Video ASCII Art - Webcam (2 variants)</h2>
+        <div class="expandable-content">
+            <ul>
+            <li><a href="./p5/video-ascii/video-ascii-bold.html">Bold Webcam ASCII</a>
+                <div class="desc">Enhanced webcam to ASCII with bold characters</div>
+            </li>
+            <li><a href="./p5/video-ascii/video-ascii.html">Basic Webcam ASCII</a>
+                <div class="desc">Real-time webcam to ASCII conversion</div>
+            </li>
+            </ul>
+        </div>
+    </div>
 
-    <h2>Strudel Live Coding Demos</h2>
-    <ul>
-        <li><a href="./p5/strudel-demos/demo-with-strudel.html">⭐ Professional Strudel + ASCII</a>
-            <div class="desc">Full split-screen professional live coding environment (157 BPM default)</div>
-        </li>
-        <li><a href="./strudel/demos/strudel.html">Strudel REPL</a>
-            <div class="desc">Interactive Strudel live coding environment with full REPL</div>
-        </li>
-        <li><a href="./strudel/demos/strudel-webcam-ascii.html">Strudel + Webcam ASCII</a>
-            <div class="desc">Live coding combined with webcam ASCII visualization</div>
-        </li>
-        <li><a href="./p5/strudel-demos/test-tonejs.html">Tone.js Test Pattern</a>
-            <div class="desc">Simple test pattern for audio visualization</div>
-        </li>
-    </ul>
+    <div class="expandable-section" data-expanded="false">
+        <h2>Video Pattern Demos</h2>
+        <div class="expandable-content">
+            <ul>
+            <li><a href="./p5/audio-reactive/index.html">Audio-Reactive Video</a>
+                <div class="desc">Video manipulation with audio-reactive effects</div>
+            </li>
+            <li><a href="./p5/video-ascii/index.html">Video ASCII Pattern</a>
+                <div class="desc">Video to ASCII conversion pattern template</div>
+            </li>
+            <li><a href="./p5/circles/index.html">Circle Visualizations</a>
+                <div class="desc">Circle-based visualizations from video input</div>
+            </li>
+            <li><a href="./p5/snore/index.html">Snore Pattern</a>
+                <div class="desc">Specialized video pattern visualization</div>
+            </li>
+            </ul>
+        </div>
+    </div>
 
-    <h2>Video Pattern Demos</h2>
-    <ul>
-        <li><a href="./p5/audio-reactive/index.html">Audio-Reactive Video</a>
-            <div class="desc">Video manipulation with audio-reactive effects</div>
-        </li>
-        <li><a href="./p5/video-ascii/index.html">Video ASCII Pattern</a>
-            <div class="desc">Video to ASCII conversion pattern template</div>
-        </li>
-        <li><a href="./p5/circles/index.html">Circle Visualizations</a>
-            <div class="desc">Circle-based visualizations from video input</div>
-        </li>
-        <li><a href="./p5/snore/index.html">Snore Pattern</a>
-            <div class="desc">Specialized video pattern visualization</div>
-        </li>
-    </ul>
-
-    <h2>Utilities & Tests</h2>
-    <ul>
+    <div class="expandable-section" data-expanded="false">
+        <h2>Utilities & Tests</h2>
+        <div class="expandable-content">
+            <ul>
         <li><a href="./p5/sketch.html">Basic P5.js Webcam Sketch</a>
             <div class="desc">Simple 64×48 ASCII conversion from webcam - basic template</div>
         </li>
@@ -244,10 +234,14 @@
         <li><a href="./p5/misc/test-animation.html">Animation Test Ground</a>
             <div class="desc">Experimental animation testing ground</div>
         </li>
-    </ul>
+            </ul>
+        </div>
+    </div>
 
-    <h2>Navigation Hubs</h2>
-    <ul>
+    <div class="expandable-section" data-expanded="false">
+        <h2>Navigation Hubs</h2>
+        <div class="expandable-content">
+            <ul>
         <li><a href="./p5/index.html">P5.js Gallery Hub</a>
             <div class="desc">Main P5.js directory index with all organized demos</div>
         </li>
@@ -257,12 +251,15 @@
         <li><!-- Root Demos Hub (path needs updating) -->
             <div class="desc">Navigation to all root-level demos</div>
         </li>
-    </ul>
+            </ul>
+        </div>
+    </div>
 
         <hr>
         <div class="footer">
             <p>UNISEX XL - 46 Projects</p>
         </div>
     </div>
+
 </body>
 </html>
