@@ -6,6 +6,7 @@
 import * as Tone from 'tone';
 import { CHARACTERS, createCharacterSynth, type Character } from './Character';
 import { CharacterRow } from './CharacterRow';
+import { EffectsPanel } from '../shared/EffectsPanel';
 import { playbackStore } from '../../core/store';
 import type { AudioEngine } from '../../core/audio';
 import type { StepState } from '../shared/StepButton';
@@ -23,6 +24,7 @@ export class CharacterOrchestra {
   private patterns: CharacterPattern[];
   private sequences: Map<number, Tone.Sequence>;
   private characterRows: Map<number, CharacterRow>;
+  private effectsPanels: Map<number, EffectsPanel> = new Map();
   private currentStep: number = 0;
   /**
    * Get current playing state from store
@@ -44,12 +46,9 @@ export class CharacterOrchestra {
     // Initialize characters with full state
     this.characters = CHARACTERS.map((charData, _index) => {
       const synth = createCharacterSynth(charData);
-      // Route through effect chain if AudioEngine provided, otherwise direct to destination
-      if (this.audioEngine) {
-        this.audioEngine.connectToEffectChain(synth);
-      } else {
-        synth.toDestination();
-      }
+      // Don't connect to AudioEngine effect chain here
+      // EffectsPanel will handle connection when created in init()
+      // Synth will be connected to EffectsPanel's effect chain instead
 
       return {
         ...charData,
@@ -80,6 +79,8 @@ export class CharacterOrchestra {
 
     this.characters.forEach((character, index) => {
       const pattern = this.patterns[index];
+      
+      // Create character row
       const row = new CharacterRow(
         character,
         pattern,
@@ -95,6 +96,16 @@ export class CharacterOrchestra {
 
       this.characterRows.set(index, row);
       this.container.appendChild(row.getElement());
+
+      // Create effects panel for this character
+      if (character.synth) {
+        const effectsPanel = new EffectsPanel(character.synth, {
+          characterName: character.name,
+          characterIcon: character.emoji
+        });
+        this.effectsPanels.set(index, effectsPanel);
+        this.container.appendChild(effectsPanel.getElement());
+      }
     });
 
     this.updateCharacterStates();
@@ -394,6 +405,25 @@ export class CharacterOrchestra {
     this.characterRows.forEach((row) => {
       row.updateCurrentStep(this.currentStep);
     });
+  }
+
+  /**
+   * Clean up resources
+   */
+  dispose(): void {
+    // Clean up effects panels
+    this.effectsPanels.forEach(panel => panel.dispose());
+    this.effectsPanels.clear();
+    
+    // Clean up sequences
+    this.sequences.forEach(sequence => {
+      sequence.stop();
+      sequence.dispose();
+    });
+    this.sequences.clear();
+    
+    // Stop step indicator
+    this.stopStepIndicator();
   }
 }
 

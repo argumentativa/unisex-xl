@@ -156,10 +156,13 @@
 }
 
 /* Demo-specific styles */
+/* Override app.css body overflow for demo page */
 .effects-demo-app {
   min-height: 100vh;
   padding: var(--spacing-2xl);
   background: var(--color-background);
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .demo-header {

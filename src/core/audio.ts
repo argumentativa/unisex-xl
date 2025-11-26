@@ -124,7 +124,8 @@ export class AudioEngine {
       wet: 0
     });
 
-    const bitcrusher = new Tone.BitCrusher(16);
+    // BitCrusher at low bit depth (4 bits = max crush), control intensity via wet
+    const bitcrusher = new Tone.BitCrusher(4);
     bitcrusher.wet.value = 0;
 
     this.effects.set('reverb', {
@@ -147,7 +148,7 @@ export class AudioEngine {
 
     this.effects.set('bitcrusher', {
       type: 'bitcrusher',
-      value: 16,
+      value: 0,
       instance: bitcrusher
     });
 
@@ -242,34 +243,8 @@ export class AudioEngine {
         (effect.instance as Tone.Distortion).wet.value = value;
         break;
       case 'bitcrusher':
-        const oldCrusher = effect.instance as Tone.BitCrusher;
-        const crusherIndex = this.effectChain.indexOf(oldCrusher);
-
-        if (crusherIndex > 0) {
-          this.effectChain[crusherIndex - 1].disconnect(oldCrusher);
-        }
-        oldCrusher.disconnect();
-        oldCrusher.dispose();
-
-        const newCrusher = new Tone.BitCrusher(Math.round(value));
-        newCrusher.wet.value = value < 16 ? 1 : 0;
-
-        if (crusherIndex > 0) {
-          this.effectChain[crusherIndex - 1].connect(newCrusher);
-        }
-        if (crusherIndex < this.effectChain.length - 1) {
-          newCrusher.connect(this.effectChain[crusherIndex + 1]);
-        }
-
-        this.effectChain[crusherIndex] = newCrusher;
-        effect.instance = newCrusher;
-
-        this.instruments.forEach(inst => {
-          if (inst.instance && inst.enabled) {
-            inst.instance.disconnect();
-            inst.instance.connect(this.effectChain[0]);
-          }
-        });
+        // BitCrusher: use wet parameter for intensity (0 = clean, 1 = full 4-bit crush)
+        (effect.instance as Tone.BitCrusher).wet.value = value;
         break;
     }
   }

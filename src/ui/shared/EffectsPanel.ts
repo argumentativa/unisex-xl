@@ -61,7 +61,8 @@ export class EffectsPanel {
       wet: 0 
     });
     
-    this.bitcrusher = new Tone.BitCrusher(16);
+    // BitCrusher at low bit depth (4 bits = max crush), control intensity via wet
+    this.bitcrusher = new Tone.BitCrusher(4);
     this.bitcrusher.wet.value = 0;
     
     // Build effect chain: distortion → bitcrusher → delay → reverb
@@ -197,29 +198,8 @@ export class EffectsPanel {
         (this.distortion as Tone.Distortion).wet.value = value;
         break;
       case 'bitcrusher':
-        // Bitcrusher: value 0-1 maps to bits 16-1
-        const bits = Math.round(16 - (value * 15));
-        const oldCrusher = this.bitcrusher;
-        const crusherIndex = this.effectChain.indexOf(oldCrusher);
-
-        if (crusherIndex > 0) {
-          this.effectChain[crusherIndex - 1].disconnect(oldCrusher);
-        }
-        oldCrusher.disconnect();
-        oldCrusher.dispose();
-
-        const newCrusher = new Tone.BitCrusher(bits);
-        newCrusher.wet.value = value > 0 ? 1 : 0;
-
-        if (crusherIndex > 0) {
-          this.effectChain[crusherIndex - 1].connect(newCrusher);
-        }
-        if (crusherIndex < this.effectChain.length - 1) {
-          newCrusher.connect(this.effectChain[crusherIndex + 1]);
-        }
-
-        this.effectChain[crusherIndex] = newCrusher;
-        this.bitcrusher = newCrusher;
+        // BitCrusher: use wet parameter for intensity (0 = clean, 1 = full 4-bit crush)
+        this.bitcrusher.wet.value = value;
         break;
     }
 
