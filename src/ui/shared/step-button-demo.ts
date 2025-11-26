@@ -24,7 +24,7 @@ function hexToHSL(hex: string): { h: number; s: number; l: number } {
   if (max !== min) {
     const d = max - min;
     s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    
+
     switch (max) {
       case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
       case g: h = ((b - r) / d + 2) / 6; break;
@@ -144,6 +144,17 @@ class StepButtonDemo {
     }
 
     this.updateStateDisplay(noteIndex);
+    this.updateCounterDisplay(newState.pressCount);
+  }
+
+  /**
+   * Update the counter display
+   */
+  private updateCounterDisplay(pressCount: number): void {
+    const counterDisplay = document.getElementById('counter');
+    if (!counterDisplay) return;
+
+    counterDisplay.innerHTML = `Press count: <strong>${pressCount}</strong> / 12`;
   }
 
   /**
@@ -154,12 +165,12 @@ class StepButtonDemo {
     if (!stateValue) return;
 
     if (noteIndex === -1) {
-      // OFF state: white background, gray text
+      // OFF state
       stateValue.textContent = 'OFF';
       stateValue.style.color = '#999';
-      document.body.style.backgroundColor = 'white';
+      document.body.style.backgroundColor = '#f5f5f5';
     } else {
-      // Active state: complementary background color
+      // Active state: complementary background color for delight
       const noteName = CHROMATIC_NOTES[noteIndex];
       const color = COLOR_PALETTE[noteIndex];
       stateValue.textContent = noteName;
@@ -168,10 +179,9 @@ class StepButtonDemo {
       // Calculate complementary hue for background
       const hsl = hexToHSL(color);
       const complementaryHue = (hsl.h + 180) % 360;
-      
-      // Apply to body with high saturation for bright contrast
-      document.body.style.backgroundColor = 
-        `hsl(${complementaryHue}, 85%, 75%)`;
+
+      // Apply soft complementary background
+      document.body.style.backgroundColor = `hsl(${complementaryHue}, 60%, 85%)`;
     }
   }
 }
