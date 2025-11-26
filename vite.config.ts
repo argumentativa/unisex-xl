@@ -25,6 +25,10 @@ export default defineConfig({
           dest: ''
         },
         {
+          src: 'docs',
+          dest: ''
+        },
+        {
           src: 'projects.html',
           dest: ''
         }
