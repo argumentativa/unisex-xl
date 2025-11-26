@@ -54,6 +54,8 @@ export class StepButton {
   private longPressDuration: number = 500; // milliseconds
   private isLongPress: boolean = false;
   private touchHandled: boolean = false; // Flag to prevent double-triggering
+  private indicatorSvg: SVGSVGElement | null = null; // SVG indicator element
+  private indicatorPaths: SVGPathElement[] = []; // Array of 12 path elements
 
   constructor(
     stepIndex: number,
@@ -116,6 +118,9 @@ export class StepButton {
     this.element.addEventListener('contextmenu', (e) => {
       e.preventDefault();
     });
+
+    // Create indicator SVG
+    this.createIndicator();
 
     // Update initial state
     this.updateState();
@@ -353,6 +358,9 @@ export class StepButton {
     } else {
       this.element.classList.remove('glow-active');
     }
+
+    // Update indicator
+    this.updateIndicator();
   }
 
   /**
@@ -431,7 +439,12 @@ export class StepButton {
       this.renderCharacterContent();
     } else {
       // Sequencer mode: empty button (just color)
+      // Clear content but preserve indicator
+      const indicator = this.element.querySelector('.step-button-indicator');
       this.element.innerHTML = '';
+      if (indicator) {
+        this.element.appendChild(indicator);
+      }
       const noteName = this.getNoteName();
       this.element.setAttribute('aria-label', 
         `Step ${this.stepIndex + 1} - ${noteName} (${this.stepState.pressCount} presses)`
@@ -448,7 +461,12 @@ export class StepButton {
     const character = this.colorConfig.character;
 
     if (!this.stepState.isActive || this.stepState.noteIndex === -1) {
+      // Clear content but preserve indicator SVG
+      const existingIndicator = this.element.querySelector('.step-button-indicator');
       this.element.innerHTML = '';
+      if (existingIndicator) {
+        this.element.appendChild(existingIndicator);
+      }
       this.element.setAttribute('aria-label', `Step ${this.stepIndex + 1} - ${character.name} (off)`);
       return;
     }
@@ -463,13 +481,124 @@ export class StepButton {
       noteLabel.textContent = '♪';
     }
 
+    // Clear content but preserve indicator SVG
+    const existingIndicator = this.element.querySelector('.step-button-indicator');
     this.element.innerHTML = '';
     this.element.appendChild(noteLabel);
+    if (existingIndicator) {
+      this.element.appendChild(existingIndicator);
+    }
 
     const noteText = character.canPitch 
       ? CHROMATIC_NOTES[this.stepState.noteIndex] 
       : '♪';
     this.element.setAttribute('aria-label', `Step ${this.stepIndex + 1} - ${character.name} - ${noteText}`);
+  }
+
+  /**
+   * Create SVG indicator with 12 segments
+   */
+  private createIndicator(): void {
+    // Create SVG container
+    const svgContainer = document.createElement('div');
+    svgContainer.className = 'step-button-indicator';
+    
+    this.indicatorSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    this.indicatorSvg.setAttribute('viewBox', '0 0 100 100');
+    this.indicatorSvg.setAttribute('preserveAspectRatio', 'none');
+    this.indicatorSvg.style.width = '100%';
+    this.indicatorSvg.style.height = '100%';
+    this.indicatorSvg.style.position = 'absolute';
+    this.indicatorSvg.style.top = '0';
+    this.indicatorSvg.style.left = '0';
+    this.indicatorSvg.style.pointerEvents = 'none';
+    this.indicatorSvg.style.overflow = 'visible';
+
+    // Create 12 path segments (30° each)
+    const centerX = 50;
+    const centerY = 50;
+    const radius = 48; // Slightly smaller than viewBox to account for stroke width
+    const innerRadius = radius - 3; // Inner radius for stroke effect
+    
+    for (let i = 0; i < 12; i++) {
+      const startAngle = (i * 30 - 90) * (Math.PI / 180); // Start at top (-90°)
+      const endAngle = ((i + 1) * 30 - 90) * (Math.PI / 180);
+      
+      // Calculate points for arc
+      const x1 = centerX + radius * Math.cos(startAngle);
+      const y1 = centerY + radius * Math.sin(startAngle);
+      const x2 = centerX + radius * Math.cos(endAngle);
+      const y2 = centerY + radius * Math.sin(endAngle);
+      
+      const x3 = centerX + innerRadius * Math.cos(endAngle);
+      const y3 = centerY + innerRadius * Math.sin(endAngle);
+      const x4 = centerX + innerRadius * Math.cos(startAngle);
+      const y4 = centerY + innerRadius * Math.sin(startAngle);
+      
+      // Create path for segment
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      const largeArcFlag = 0; // 30° segments are always small arcs
+      
+      const pathData = `
+        M ${x1} ${y1}
+        A ${radius} ${radius} 0 ${largeArcFlag} 1 ${x2} ${y2}
+        L ${x3} ${y3}
+        A ${innerRadius} ${innerRadius} 0 ${largeArcFlag} 0 ${x4} ${y4}
+        Z
+      `.trim();
+      
+      path.setAttribute('d', pathData);
+      path.setAttribute('fill', '#E0E0E0'); // Default inactive color
+      path.setAttribute('stroke', 'none');
+      path.setAttribute('class', `indicator-segment indicator-segment-${i}`);
+      
+      this.indicatorSvg.appendChild(path);
+      this.indicatorPaths.push(path);
+    }
+    
+    svgContainer.appendChild(this.indicatorSvg);
+    this.element.appendChild(svgContainer);
+    
+    // Initially hide if OFF
+    if (this.stepState.noteIndex === -1) {
+      svgContainer.style.display = 'none';
+    }
+  }
+
+  /**
+   * Update indicator visual state based on current noteIndex
+   */
+  private updateIndicator(): void {
+    if (!this.indicatorSvg || this.indicatorPaths.length === 0) return;
+    
+    const container = this.element.querySelector('.step-button-indicator') as HTMLElement;
+    if (!container) return;
+    
+    // Hide indicator if OFF state
+    if (this.stepState.noteIndex === -1) {
+      container.style.display = 'none';
+      return;
+    }
+    
+    // Show indicator
+    container.style.display = 'block';
+    
+    // Update each segment
+    for (let i = 0; i < 12; i++) {
+      const path = this.indicatorPaths[i];
+      if (!path) continue;
+      
+      if (i === this.stepState.noteIndex) {
+        // Active section: use note color
+        const activeColor = COLOR_PALETTE[this.stepState.noteIndex];
+        path.setAttribute('fill', activeColor);
+        path.setAttribute('opacity', '1');
+      } else {
+        // Inactive sections: gray
+        path.setAttribute('fill', '#E0E0E0');
+        path.setAttribute('opacity', '0.5');
+      }
+    }
   }
 }
 
