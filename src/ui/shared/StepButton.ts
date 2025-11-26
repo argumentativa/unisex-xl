@@ -617,16 +617,25 @@ export class StepButton {
 
   /**
    * Create progress ring SVG structure and attach to button
+   * Uses 25% corner radius (matching button) and 8px stroke
    */
   private createProgressRing(): void {
     // Container for progress ring
     const container = document.createElement('div');
     container.className = 'step-button-progress-ring';
 
+    // SVG dimensions: 100x100 base + 8px padding on each side for stroke
+    // This creates a ring that wraps tightly around the button
+    const viewBoxSize = 116; // 100 + 8 + 8
+    const strokeWidth = 8;
+    const rectSize = 100; // Matches button size (100%)
+    const offset = strokeWidth / 2; // Center stroke on edge: 4px
+    const cornerRadius = rectSize * 0.25; // 25% of rect size = 25
+
     // Create SVG for progress ring
     this.progressRingSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     this.progressRingSvg.setAttribute('class', 'progress-ring-svg');
-    this.progressRingSvg.setAttribute('viewBox', '0 0 136 136');
+    this.progressRingSvg.setAttribute('viewBox', `0 0 ${viewBoxSize} ${viewBoxSize}`);
     this.progressRingSvg.style.width = '100%';
     this.progressRingSvg.style.height = '100%';
     this.progressRingSvg.style.position = 'absolute';
@@ -636,41 +645,39 @@ export class StepButton {
 
     // Background ring (always visible, subtle)
     this.progressRingBg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    this.progressRingBg.setAttribute('x', '8');
-    this.progressRingBg.setAttribute('y', '8');
-    this.progressRingBg.setAttribute('width', '120');
-    this.progressRingBg.setAttribute('height', '120');
-    this.progressRingBg.setAttribute('rx', '30');
-    this.progressRingBg.setAttribute('ry', '30');
+    this.progressRingBg.setAttribute('x', String(offset + strokeWidth / 2));
+    this.progressRingBg.setAttribute('y', String(offset + strokeWidth / 2));
+    this.progressRingBg.setAttribute('width', String(rectSize));
+    this.progressRingBg.setAttribute('height', String(rectSize));
+    this.progressRingBg.setAttribute('rx', String(cornerRadius));
+    this.progressRingBg.setAttribute('ry', String(cornerRadius));
     this.progressRingBg.setAttribute('fill', 'none');
     this.progressRingBg.setAttribute('stroke', '#e0e0e0');
-    this.progressRingBg.setAttribute('stroke-width', '8');
+    this.progressRingBg.setAttribute('stroke-width', String(strokeWidth));
 
     // Progress ring (fills based on pressCount)
     this.progressRingPath = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    this.progressRingPath.setAttribute('x', '8');
-    this.progressRingPath.setAttribute('y', '8');
-    this.progressRingPath.setAttribute('width', '120');
-    this.progressRingPath.setAttribute('height', '120');
-    this.progressRingPath.setAttribute('rx', '30');
-    this.progressRingPath.setAttribute('ry', '30');
+    this.progressRingPath.setAttribute('x', String(offset + strokeWidth / 2));
+    this.progressRingPath.setAttribute('y', String(offset + strokeWidth / 2));
+    this.progressRingPath.setAttribute('width', String(rectSize));
+    this.progressRingPath.setAttribute('height', String(rectSize));
+    this.progressRingPath.setAttribute('rx', String(cornerRadius));
+    this.progressRingPath.setAttribute('ry', String(cornerRadius));
     this.progressRingPath.setAttribute('fill', 'none');
     this.progressRingPath.setAttribute('stroke', '#4A90E2');
-    this.progressRingPath.setAttribute('stroke-width', '8');
+    this.progressRingPath.setAttribute('stroke-width', String(strokeWidth));
     this.progressRingPath.setAttribute('stroke-linecap', 'round');
 
     // Calculate perimeter of rounded rectangle for stroke-dasharray
     // Formula: 4 straight edges + 4 quarter circles (1 full circle)
-    const width = 120;
-    const height = 120;
-    const rx = 30;
-    this.progressPerimeter = 2 * (width - 2 * rx) + 2 * (height - 2 * rx) + 2 * Math.PI * rx;
+    // With 25% corner radius: rx = 25, straight edges = 100 - 2*25 = 50 each
+    this.progressPerimeter = 2 * (rectSize - 2 * cornerRadius) + 2 * (rectSize - 2 * cornerRadius) + 2 * Math.PI * cornerRadius;
 
     // Set up stroke-dasharray for progress animation
     this.progressRingPath.style.strokeDasharray = `${this.progressPerimeter} ${this.progressPerimeter}`;
     this.progressRingPath.style.strokeDashoffset = `${this.progressPerimeter}`;
     this.progressRingPath.style.transform = 'rotate(90deg)';
-    this.progressRingPath.style.transformOrigin = '68px 68px'; // Center of 136x136 viewBox
+    this.progressRingPath.style.transformOrigin = `${viewBoxSize / 2}px ${viewBoxSize / 2}px`; // Center of viewBox
     this.progressRingPath.style.transition = 'stroke-dashoffset 0.3s ease, stroke 0.3s ease';
 
     // Append elements
