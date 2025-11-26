@@ -221,7 +221,7 @@ body {
 /* Character Row */
 .character-row {
   display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr)); /* 8 columns for better tap targets */
+  grid-template-columns: repeat(16, minmax(0, 1fr)); /* 16 columns for full sequence */
   gap: clamp(4px, 0.5vw, 8px); /* Responsive gap that scales with viewport */
   padding: 0;
   background: transparent;

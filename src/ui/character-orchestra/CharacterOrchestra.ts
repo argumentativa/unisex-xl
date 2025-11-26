@@ -13,7 +13,7 @@ export type { StepState } from '../shared/StepButton';
 
 export interface CharacterPattern {
   characterIndex: number;
-  steps: StepState[]; // 8 step states
+  steps: StepState[]; // 16 step states
 }
 
 export class CharacterOrchestra {
@@ -53,11 +53,11 @@ export class CharacterOrchestra {
       };
     });
 
-    // Initialize patterns for each character (8 steps)
+    // Initialize patterns for each character (16 steps)
     this.characters.forEach((_, index) => {
       this.patterns.push({
         characterIndex: index,
-        steps: new Array(8).fill(null).map(() => ({
+        steps: new Array(16).fill(null).map(() => ({
           noteIndex: -1,
           pressCount: 0,
           isActive: false
@@ -222,7 +222,7 @@ export class CharacterOrchestra {
         }
       },
       notes,
-      '8n' // 8th note resolution for 8 steps
+      '16n' // 16th note resolution for 16 steps
     );
 
     this.sequences.set(characterIndex, sequence);
@@ -370,14 +370,14 @@ export class CharacterOrchestra {
     // Reset current step
     this.currentStep = 0;
 
-    // Use Tone.Transport to sync step indicator with audio (8 steps)
+    // Use Tone.Transport to sync step indicator with audio (16 steps)
     // Update visual FIRST at current step, then increment for next iteration
     this.stepIndicatorEventId = Tone.Transport.scheduleRepeat(() => {
       this.updateStepIndicator();
       this.updateCharacterStates();
       // Increment AFTER updating visual so indicator matches playing audio
-      this.currentStep = (this.currentStep + 1) % 8;
-    }, '8n', 0); // 8th note resolution for 8 steps
+      this.currentStep = (this.currentStep + 1) % 16;
+    }, '16n', 0); // 16th note resolution for 16 steps
 
     // Initial update
     this.updateStepIndicator();
