@@ -137,8 +137,8 @@ export class StepButton {
     // Create progress ring (positioned around button via CSS)
     this.createProgressRing();
 
-    // Create indicator SVG
-    this.createIndicator();
+    // Create indicator SVG (commented out - using circular progress ring instead)
+    // this.createIndicator();
 
     // Update initial state
     this.updateState();
@@ -687,9 +687,9 @@ export class StepButton {
     this.progressRingSvg.appendChild(progressCircle);
     container.appendChild(this.progressRingSvg);
 
-    // Store reference and append inside the button (so it scales with button)
+    // Store reference and append to wrapper (as sibling to button, not child)
     this.progressRingContainer = container;
-    this.element.appendChild(container);
+    this.wrapper.insertBefore(container, this.element);
   }
 
   /**

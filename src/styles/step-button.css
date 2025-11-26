@@ -8,7 +8,7 @@
   position: relative;
   display: block;
   width: 100%;
-  aspect-ratio: 1; /* Square wrapper */
+  height: 100%;
 }
 
 /* Base Step Button - Circular design */
@@ -24,7 +24,7 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  overflow: visible; /* Allow progress ring to extend beyond button */
+  overflow: hidden; /* Clip background to circle */
   background-color: hsl(
     var(--step-hue, 0),
     var(--step-saturation, 0%),
